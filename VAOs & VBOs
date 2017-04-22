@@ -1,0 +1,45 @@
+Vertex Array Object (VAO) - object that stores data about a 3D model
+Contains slots that store data called attribute lists
+
+Example VAO:
+------------------------------------
+0 	| Vertext Positions
+------------------------------------
+1 	| Vertex Colors
+------------------------------------
+2 	| Normal Vectors
+------------------------------------
+3 	| Texture Coords
+------------------------------------
+4 	| ...
+------------------------------------
+... |
+------------------------------------
+15 	|
+------------------------------------
+
+Vertex Buffer Object (VBO) - data
+Contains an array of numbers.
+Each VBO can be put into an attribute list in a VAO.
+
+Example VAO:
+------------------------------------
+0 	| VBO 1
+------------------------------------
+1 	| VBO 2
+------------------------------------
+2 	| VBO 3
+------------------------------------
+3 	| ...
+------------------------------------
+4 	| ...
+------------------------------------
+... |
+------------------------------------
+15 	| ...
+------------------------------------
+
+VAOs are stored in memory via IDs.
+
+Every model has a load of data that is stored in a VAO
+Every model is composed of triangles.
