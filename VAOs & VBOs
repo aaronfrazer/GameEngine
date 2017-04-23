@@ -1,3 +1,4 @@
+Tutorial 2: VAOs and VBOs
 Vertex Array Object (VAO) - object that stores data about a 3D model
 Contains slots that store data called attribute lists
 
@@ -44,4 +45,62 @@ VAOs are stored in memory via IDs.
 Every model has a load of data that is stored in a VAO
 Every model is composed of triangles.
 
+Tutorial 3: Rendering with Index Buffers
 Index Buffer - a VBO that tells OpenGL the order to connect vertices
+Index buffers allow us to render quads using less vertices
+
+Tutorial 4: Introduction to Shaders
+Shaders run on the GPU
+Two types of shaders:
+Vertex Shader - executes one time per vertex in the object being rendered
+Uses the vertex data stored in the object's VAO as the input to the vertex shader program
+
+
+Fragment Shader - executes one time per pixel
+Uses the output of the vertex shader to calculate what the final color for the pixel should be
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
