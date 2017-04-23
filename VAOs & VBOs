@@ -43,3 +43,5 @@ VAOs are stored in memory via IDs.
 
 Every model has a load of data that is stored in a VAO
 Every model is composed of triangles.
+
+Index Buffer - a VBO that tells OpenGL the order to connect vertices

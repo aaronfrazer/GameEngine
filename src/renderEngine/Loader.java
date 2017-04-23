@@ -1,6 +1,7 @@
 package renderEngine;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,14 +34,16 @@ public class Loader
 	 * Loads positions into a VAO and returns information about VAO
 	 * as a Raw Model object.
 	 * @param positions - positions of the 
+	 * @param indices - indices ofthe VBO
 	 * @return Raw Model object
 	 */
-	public RawModel loadToVAO(float[] positions)
+	public RawModel loadToVAO(float[] positions, int[] indices)
 	{
 		int vaoID = createVAO();
+		bindIndicesBuffer(indices);
 		storeDataInAttributeList(0, positions);
 		unbindVAO();
-		return new RawModel(vaoID, positions.length / 3);
+		return new RawModel(vaoID, indices.length);
 	}
 	
 	/**
@@ -97,9 +100,35 @@ public class Loader
 	}
 	
 	/**
-	 * Converts float array of data into a float buffer.
-	 * @param data
-	 * @return
+	 * Loads an indices buffer and binds it to a VAO.
+	 * @param indices - 
+	 */
+	private void bindIndicesBuffer(int[] indices)
+	{
+		int vboID = GL15.glGenBuffers();
+		vbos.add(vboID);
+		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboID);
+		IntBuffer buffer = storeDataInIntBuffer(indices);
+		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+	}
+	
+	/**
+	 * Converts an array of ints into a FloatBuffer object.
+	 * @param data - array of ints
+	 * @return buffer - FloatBuffer object
+	 */
+	private IntBuffer storeDataInIntBuffer(int[] data)
+	{
+		IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
+		buffer.put(data);
+		buffer.flip();
+		return buffer;
+	}
+	
+	/**
+	 * Converts an array of floats into a FloatBuffer object.
+	 * @param data - array of floats
+	 * @return buffer - FloatBuffer object
 	 */
 	private FloatBuffer storeDataInFloatBuffer(float[] data)
 	{
