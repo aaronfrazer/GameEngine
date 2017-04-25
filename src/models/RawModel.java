@@ -1,4 +1,4 @@
-package renderEngine;
+package models;
 
 /**
  * A 3D model stored in memory.
