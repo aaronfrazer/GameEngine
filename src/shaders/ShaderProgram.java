@@ -1,13 +1,11 @@
 package shaders;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GLContext;
 
 /**
  * A generic shader program that contains attributes and methods
@@ -44,9 +42,9 @@ public abstract class ShaderProgram
 		programID = GL20.glCreateProgram();
 		GL20.glAttachShader(programID, vertexShaderID);
 		GL20.glAttachShader(programID, fragmentShaderID);
+		bindAttributes();
 		GL20.glLinkProgram(programID);
 		GL20.glValidateProgram(programID);
-		bindAttributes();
 	}
 	
 	/**
