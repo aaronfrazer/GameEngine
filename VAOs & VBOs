@@ -51,17 +51,24 @@ Index buffers allow us to render quads using less vertices
 
 Tutorial 4: Introduction to Shaders
 Shaders run on the GPU
+
 Two types of shaders:
 Vertex Shader - executes one time per vertex in the object being rendered
 Uses the vertex data stored in the object's VAO as the input to the vertex shader program
-
-
 Fragment Shader - executes one time per pixel
 Uses the output of the vertex shader to calculate what the final color for the pixel should be
 
+Tutorial 7: Matrices & Uniform Variables
+2 things to do in the Java code when it comes to manageing uniform variables:
+1. When we load up shaders, we need to get all of the locations of the uniform variables in the shader code to store them.
+2. Need methods that can be called to load values from program to these locations of the uniform variables in the shader code.
 
+An object's transformation consists of three factors:
+Translation (x y z)
+Rotation (rx ry rz)
+Scale (S)
 
-
+We can also use 4x4 matrix
 
 
 

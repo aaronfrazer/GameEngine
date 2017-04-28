@@ -3,9 +3,13 @@ package shaders;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.FloatBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 /**
  * A generic shader program that contains attributes and methods
@@ -31,6 +35,11 @@ public abstract class ShaderProgram
 	private int fragmentShaderID;
 	
 	/**
+	 * FloatBuffer used to load matrices.
+	 */
+	private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
+	
+	/**
 	 * Creates a shader program.
 	 * @param vertexFile - vertex file path
 	 * @param fragmentFile - fragment file path
@@ -45,6 +54,7 @@ public abstract class ShaderProgram
 		bindAttributes();
 		GL20.glLinkProgram(programID);
 		GL20.glValidateProgram(programID);
+		getAllUniformLocations();
 	}
 	
 	/**
@@ -77,9 +87,19 @@ public abstract class ShaderProgram
 	}
 	
 	/**
-	 * Binds inputs in the shader program to one of the attributs in the VAO.
+	 * Returns all uniform variable locations of shader program.
 	 */
-	protected abstract void bindAttributes();
+	protected abstract void getAllUniformLocations();
+	
+	/**
+	 * Returns the location of a uniform variable.
+	 * @param uniformName - name of uniform variable (in shader code)
+	 * @return location of uniform variable
+	 */
+	protected int getUniformLocation(String uniformName)
+	{
+		return GL20.glGetUniformLocation(programID, uniformName);
+	}
 	
 	/**
 	 * Binds an attribute to a variable name.
@@ -90,6 +110,53 @@ public abstract class ShaderProgram
 	{
 		GL20.glBindAttribLocation(programID, attribute, variableName);
 	}
+	
+	/**
+	 * Loads a float into a uniform location.
+ 	 * @param location - position the float is loaded to
+	 * @param value - float value
+	 */
+	protected void loadFloat(int location, float value)
+	{
+		GL20.glUniform1f(location, value);
+	}
+	
+	/**
+	 * Loads a Vector3f into a uniform location.
+	 * @param location - position the 3D vector is loaded to
+	 * @param vector - 3D vector
+	 */
+	protected void loadVector(int location, Vector3f vector)
+	{
+		GL20.glUniform3f(location, vector.x, vector.y, vector.z);
+	}
+	
+	/**
+	 * Loads a Vector3f into a uniform location.
+	 * @param location - position the boolean is loaded to
+	 * @param value - 0 or 1
+	 */
+	protected void loadBoolean(int location, boolean value)
+	{
+		GL20.glUniform1f(location, value ? 1 : 0);
+	}
+	
+	/**
+	 * Loads a matrix into a uniform location.
+	 * @param location - position the matrix is loaded to
+	 * @param matrix - matrix
+	 */
+	protected void loadMatrix(int location, Matrix4f matrix)
+	{
+		matrix.store(matrixBuffer);
+		matrixBuffer.flip();
+		GL20.glUniformMatrix4(location, false, matrixBuffer);
+	}
+	
+	/**
+	 * Binds inputs in the shader program to one of the attributes in the VAO.
+	 */
+	protected abstract void bindAttributes();
 	
 	/**
 	 * Loads up a shader source code file.
