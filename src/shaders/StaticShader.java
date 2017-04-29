@@ -2,6 +2,9 @@ package shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
 
+import entities.Camera;
+import toolbox.Maths;
+
 /**
  * A shader program used to create static models.
  * 
@@ -25,6 +28,16 @@ public class StaticShader extends ShaderProgram
 	private int location_transformationMatrix;
 	
 	/**
+	 * Location of projection matrix.
+	 */
+	private int location_projectionMatrix;
+	
+	/**
+	 * Location of view matrix.
+	 */
+	private int location_viewMatrix;
+	
+	/**
 	 * Creates a static shader program.
 	 */
 	public StaticShader()
@@ -43,14 +56,35 @@ public class StaticShader extends ShaderProgram
 	protected void getAllUniformLocations()
 	{
 		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
+		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
+		location_viewMatrix = super.getUniformLocation("viewMatrix");
 	}
 	
 	/**
-	 * Loads a transformation matrix a uniform variable (in vertex shader code).
-	 * @param matrix
+	 * Loads a transformation matrix to a uniform variable (in vertex shader code).
+	 * @param matrix - transformation matrix
 	 */
 	public void loadTransformationMatrix(Matrix4f matrix)
 	{
 		super.loadMatrix(location_transformationMatrix, matrix);
+	}
+	
+	/**
+	 * Loads a projection matrix to a unifrom variable (in vertex shader code).
+	 * @param projection - projection matrix
+	 */
+	public void loadProjectionMatrix(Matrix4f projection)
+	{
+		super.loadMatrix(location_projectionMatrix, projection);
+	}
+	
+	/**
+	 * Loads a view matrix to a unifrom variable (in vertex shader code).
+	 * @param camera - camera
+	 */
+	public void loadViewMatrix(Camera camera)
+	{
+		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+		super.loadMatrix(location_viewMatrix, viewMatrix);
 	}
 }
