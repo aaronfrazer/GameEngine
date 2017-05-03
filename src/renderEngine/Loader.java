@@ -42,11 +42,10 @@ public class Loader
 	private List<Integer> textures = new ArrayList<Integer>();
 	
 	/**
-	 * Loads positions into a VAO and returns information about VAO
-	 * as a Raw Model object.
-	 * @param positions - positions of the 
-	 * @param textureCoords - texture coordinates
-	 * @param indices - indices ofthe VBO
+	 * Loads positions into a VAO and returns information about VAO as a Raw Model object.
+	 * @param positions - array of vertex positions
+	 * @param textureCoords - array of texture coordinate vertices
+	 * @param indices - array of indices that determines which vertices are connected
 	 * @return Raw Model object
 	 */
 	public RawModel loadToVAO(float[] positions, float[] textureCoords, int[] indices)

@@ -1,8 +1,5 @@
 package engineTester;
 
-import static org.lwjgl.opengl.GL11.GL_VERSION;
-import static org.lwjgl.opengl.GL11.glGetString;
-
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
