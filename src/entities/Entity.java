@@ -76,6 +76,8 @@ public class Entity
 		this.rotX += dx;
 		this.rotY += dy;
 		this.rotZ += dz;
+		
+		System.out.println("Y = " + rotY);
 	}
 	
 	/**
