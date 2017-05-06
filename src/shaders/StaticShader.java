@@ -16,12 +16,12 @@ public class StaticShader extends ShaderProgram
 	/**
 	 * Filepath of vertex shader file.
 	 */
-	private static final String VERTEX_FILE = "src/shaders/vertexShader.txt";
+	private static final String VERTEX_FILE = "src/shaders/vertexShader.glsl";
 	
 	/**
 	 * Filepath of fragment shader file.
 	 */
-	private static final String FRAGMENT_FILE = "src/shaders/fragmentShader.txt";
+	private static final String FRAGMENT_FILE = "src/shaders/fragmentShader.glsl";
 
 	/**
 	 * Location of transformation matrix.
