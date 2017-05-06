@@ -74,7 +74,7 @@ public abstract class ShaderProgram
 	}
 	
 	/**
-	 * Deletes fragment and vertex shaders.
+	 * Deletes fragment and vertex shaders from this shader program.
 	 */
 	public void cleanUp()
 	{

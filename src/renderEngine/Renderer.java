@@ -1,5 +1,8 @@
 package renderEngine;
 
+import java.util.List;
+import java.util.Map;
+
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -15,7 +18,7 @@ import textures.ModelTexture;
 import toolbox.Maths;
 
 /**
- * Renders a model from a VAO.
+ * Responsible for rendering a model from a VAO.
  * 
  * @author Aaron Frazer
  */
@@ -44,13 +47,24 @@ public class Renderer
 	private Matrix4f projectionMatrix;
 	
 	/**
-	 * Constructor that creates projection matrix.
-	 * The projection matrix is set up only once.  Therefore this
-	 * method should be only run one time!
+	 * Instance of static shader.
+	 */
+	private StaticShader shader;
+	
+	/**
+	 * Constructor that creates a projection matrix.
+	 * The projection matrix is to be set up only once.
+	 * This method should be only run once.
 	 * @param shader - shader program
 	 */
 	public Renderer(StaticShader shader)
 	{
+		this.shader = shader;
+		
+		// Don't render backside of model (for optimization)
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glCullFace(GL11.GL_BACK);
+		
 		createProjectionMatrix();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -65,33 +79,73 @@ public class Renderer
 	{
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glClearColor(0.0f, 0.0f, 0.0f, 1); // black color
+		GL11.glClearColor(0.5f, 0.0f, 0.0f, 1); // red color
 	}
 	
 	/**
-	 * Renders an entity.
-	 * @param entity - entity
-	 * @param shader - entity's transformation
+	 * Renders a hashmap of textured models and entities.
+	 * @param entities - hashmap of texturedModels and entities to be rendered
 	 */
-	public void render(Entity entity, StaticShader shader)
+	public void render(Map<TexturedModel, List<Entity>> entities)
 	{
-		TexturedModel model = entity.getModel();
+		for (TexturedModel model : entities.keySet())
+		{
+			prepareTexturedModel(model);
+			List<Entity> batch = entities.get(model);
+			
+			for (Entity entity : batch)
+			{
+				prepareInstance(entity);
+				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+			}
+			
+			unbindTexturedModel();
+		}
+	}
+	
+	/**
+	 * Prepares a textured model.
+	 * @param model - model to be prepared
+	 */
+	private void prepareTexturedModel(TexturedModel model)
+	{
 		RawModel rawModel = model.getRawModel();
+		// Bind raw model
 		GL30.glBindVertexArray(rawModel.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
-		shader.loadTransformationMatrix(transformationMatrix);
+		
+		
 		ModelTexture texture = model.getTexture();
+		
+		// Load shine settings
 		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
+		
+		// Bind model's texture
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
-		GL11.glDrawElements(GL11.GL_TRIANGLES, rawModel.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+	}
+	
+	/**
+	 * Unbinds attributed of a textured model.
+	 */
+	private void unbindTexturedModel()
+	{
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
 		GL20.glDisableVertexAttribArray(2);
 		GL30.glBindVertexArray(0);
+	}
+	
+	/**
+	 * Prepares an entity of a textured model.
+	 * @param entity - instance of entity
+	 */
+	private void prepareInstance(Entity entity)
+	{
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
+		shader.loadTransformationMatrix(transformationMatrix);
 	}
 	
 	/**
