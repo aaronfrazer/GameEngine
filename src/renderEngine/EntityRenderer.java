@@ -3,7 +3,6 @@ package renderEngine;
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -22,30 +21,8 @@ import toolbox.Maths;
  * 
  * @author Aaron Frazer
  */
-public class Renderer
-{
-	/**
-	 * Field of view is the exent the observable world that is seen at
-	 * any given moment.
-	 */
-	private static final float FOV = 70;
-	
-	/**
-	 * Near plane is the closest location that will be rendered.
-	 */
-	private static final float NEAR_PLANE = 0.1f;
-	
-	/**
-	 * Far plane is the farthest location that will be rendered.
-	 */
-	private static final float FAR_PLANE = 1000;
-	
-	/**
-	 * Projection matrix is a square matrix that gives a vector
-	 * space projection from a subspace.
-	 */
-	private Matrix4f projectionMatrix;
-	
+public class EntityRenderer
+{	
 	/**
 	 * Instance of static shader.
 	 */
@@ -57,29 +34,13 @@ public class Renderer
 	 * This method should be only run once.
 	 * @param shader - shader program
 	 */
-	public Renderer(StaticShader shader)
+	public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix)
 	{
 		this.shader = shader;
 		
-		// Don't render backside of model (for optimization)
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glCullFace(GL11.GL_BACK);
-		
-		createProjectionMatrix();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
-	}
-	
-	/**
-	 * Prepares OpenGL to render the game.
-	 * Called once every frame.
-	 */
-	public void prepare()
-	{
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glClearColor(0.5f, 0.0f, 0.0f, 1); // red color
 	}
 	
 	/**
@@ -148,23 +109,4 @@ public class Renderer
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 	
-	/**
-	 * Creates a projeciton matrix (don't worry about how the math works
-	 * in this method).
-	 */
-	private void createProjectionMatrix()
-	{
-        float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
-        float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV/2f))) * aspectRatio);
-        float x_scale = y_scale / aspectRatio;
-        float frustum_length = FAR_PLANE - NEAR_PLANE;
-        
-        projectionMatrix = new Matrix4f();
-        projectionMatrix.m00 = x_scale;
-        projectionMatrix.m11 = y_scale;
-        projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
-        projectionMatrix.m23 = -1;
-        projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
-        projectionMatrix.m33 = 0;
-    }
 }
