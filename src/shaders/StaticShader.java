@@ -49,6 +49,16 @@ public class StaticShader extends ShaderProgram
 	private int location_lightColour;
 	
 	/**
+	 * Location of texture's shine damper.
+	 */
+	private int location_shineDamper;
+	
+	/**
+	 * Location of texture's reflectivity
+	 */
+	private int location_reflectivity;
+	
+	/**
 	 * Creates a static shader program.
 	 */
 	public StaticShader()
@@ -72,6 +82,19 @@ public class StaticShader extends ShaderProgram
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_lightPosition = super.getUniformLocation("lightPosition");
 		location_lightColour = super.getUniformLocation("lightColour");
+		location_shineDamper = super.getUniformLocation("shineDamper");
+		location_reflectivity = super.getUniformLocation("reflectivity");
+	}
+	
+	/**
+	 * Loads a texture's properties to a uniform variable (in vertex shader code).
+	 * @param damper - texture's damper
+	 * @param reflectivity - texture's reflectivity
+	 */
+	public void loadShineVariables(float damper, float reflectivity)
+	{
+		super.loadFloat(location_shineDamper, damper);
+		super.loadFloat(location_reflectivity, reflectivity);
 	}
 	
 	/**
