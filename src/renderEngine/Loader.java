@@ -43,17 +43,23 @@ public class Loader
 	
 	/**
 	 * Loads positions into a VAO and returns information about VAO as a Raw Model object.
+	 * At the moment there are three things stored in each position of the VAO:
+	 * 0. Positions
+	 * 1. Texture Coordinates
+	 * 2. Normals
 	 * @param positions - array of vertex positions
 	 * @param textureCoords - array of texture coordinate vertices
+	 * @param normals - array of normals
 	 * @param indices - array of indices that determines which vertices are connected
 	 * @return Raw Model object
 	 */
-	public RawModel loadToVAO(float[] positions, float[] textureCoords, int[] indices)
+	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices)
 	{
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices);
 		storeDataInAttributeList(0, 3, positions);
 		storeDataInAttributeList(1, 2, textureCoords);
+		storeDataInAttributeList(2, 3, normals);
 		unbindVAO();
 		return new RawModel(vaoID, indices.length);
 	}
@@ -112,7 +118,7 @@ public class Loader
 	}
 	
 	/**
-	 * Stores the data into an attribute list of a VAO.
+	 * Stores data into an attribute list of a VAO.
 	 * @param attributeNumber - number of attribute list
 	 * @param coordinateSize - size of coordinate (2D or 3D)
 	 * @param data - data to be stored
