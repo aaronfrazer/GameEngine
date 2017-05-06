@@ -23,6 +23,18 @@ public class ModelTexture
 	private float reflectivity = 0;
 	
 	/**
+	 * Does model have transparency?
+	 */
+	private boolean hasTransparency = false;
+	
+	/**
+	 * Does model implement fake lighting?
+	 * Fake lighting is used for objects that need help
+	 * with lighting
+	 */
+	private boolean useFakeLighting = false;
+
+	/**
 	 * Returns the shininess of the texture.
 	 * @return shineDamper - shininess
 	 */
@@ -74,5 +86,41 @@ public class ModelTexture
 	public int getID()
 	{
 		return textureID;
+	}
+	
+	/**
+	 * Returns true if this model is transparent.
+	 * @return hasTrancparency
+	 */
+	public boolean isHasTransparency()
+	{
+		return hasTransparency;
+	}
+
+	/**
+	 * Sets the transcparency of this model.
+	 * @param hasTransparency
+	 */
+	public void setHasTransparency(boolean hasTransparency)
+	{
+		this.hasTransparency = hasTransparency;
+	}
+	
+	/**
+	 * Returns true if this model uses fake lighting
+	 * @return useFakeLighting
+	 */
+	public boolean isUseFakeLighting()
+	{
+		return useFakeLighting;
+	}
+
+	/**
+	 * Sets the fake lighting of this model
+	 * @param useFakeLighting
+	 */
+	public void setUseFakeLighting(boolean useFakeLighting)
+	{
+		this.useFakeLighting = useFakeLighting;
 	}
 }

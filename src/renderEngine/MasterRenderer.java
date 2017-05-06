@@ -75,14 +75,30 @@ public class MasterRenderer
 	
 	public MasterRenderer()
 	{
-		// Don't render backside of model (for optimization)
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glCullFace(GL11.GL_BACK);
+		enableCulling();
 		
 		createProjectionMatrix();
 		renderer = new EntityRenderer(shader, projectionMatrix);
 		
 		terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
+	}
+	
+	/**
+	 * Enables backface culling.
+	 * Doesn't render backside of model (for optimization).
+	 */
+	public static void enableCulling()
+	{
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glCullFace(GL11.GL_BACK);
+	}
+	
+	/**
+	 * Disables backface culling.
+	 */
+	public static void disableCulling()
+	{
+		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
 	
 	/**

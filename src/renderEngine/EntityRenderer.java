@@ -77,8 +77,14 @@ public class EntityRenderer
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
 		
-		
 		ModelTexture texture = model.getTexture();
+		if (texture.isHasTransparency())
+		{
+			MasterRenderer.disableCulling();
+		}
+		
+		// Load fake variable lighting
+		shader.loadFakeLightingVariable(texture.isUseFakeLighting());
 		
 		// Load shine settings
 		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
@@ -93,6 +99,7 @@ public class EntityRenderer
 	 */
 	private void unbindTexturedModel()
 	{
+		MasterRenderer.enableCulling();
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
 		GL20.glDisableVertexAttribArray(2);

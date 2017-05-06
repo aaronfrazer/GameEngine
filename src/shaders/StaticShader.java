@@ -59,6 +59,11 @@ public class StaticShader extends ShaderProgram
 	private int location_reflectivity;
 	
 	/**
+	 * Location of texture's useFakeLighting variable
+	 */
+	private int location_useFakeLighting;
+	
+	/**
 	 * Creates a static shader program.
 	 */
 	public StaticShader()
@@ -84,6 +89,16 @@ public class StaticShader extends ShaderProgram
 		location_lightColour = super.getUniformLocation("lightColour");
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
+		location_useFakeLighting = super.getUniformLocation("useFakeLighting");
+	}
+	
+	/**
+	 * Loads useFakeLighting variable into a uniform variable (in vertex shader code)
+	 * @param useFake
+	 */
+	public void loadFakeLightingVariable(boolean useFake)
+	{
+		super.loadBoolean(location_useFakeLighting, useFake);
 	}
 	
 	/**
