@@ -19,8 +19,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 import models.RawModel;
 
 /**
- * Loads 3D models into memory by storing positional data about the
- * model in a VAO.
+ * Loads 3D models into memory by storing positional data about the model in a VAO.
  * 
  * @author Aaron Frazer
  */
@@ -42,7 +41,7 @@ public class Loader
 	private List<Integer> textures = new ArrayList<Integer>();
 	
 	/**
-	 * Loads positions into a VAO and returns information about VAO as a Raw Model object.
+	 * Loads positions into a VAO and returns information about VAO as a RawModel object.
 	 * At the moment there are three things stored in each position of the VAO:
 	 * 0. Positions
 	 * 1. Texture Coordinates
@@ -51,7 +50,7 @@ public class Loader
 	 * @param textureCoords - array of texture coordinate vertices
 	 * @param normals - array of normals
 	 * @param indices - array of indices that determines which vertices are connected
-	 * @return Raw Model object
+	 * @return a RawModel object
 	 */
 	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices)
 	{
@@ -61,6 +60,7 @@ public class Loader
 		storeDataInAttributeList(1, 2, textureCoords);
 		storeDataInAttributeList(2, 3, normals);
 		unbindVAO();
+		
 		return new RawModel(vaoID, indices.length);
 	}
 	
