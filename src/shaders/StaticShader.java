@@ -1,6 +1,7 @@
 package shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Light;
@@ -14,47 +15,47 @@ import toolbox.Maths;
 public class StaticShader extends ShaderProgram
 {
 	/**
-	 * Filepath of vertex shader file.
+	 * Filepath of vertex shader file
 	 */
 	private static final String VERTEX_FILE = "src/shaders/vertexShader.glsl";
 	
 	/**
-	 * Filepath of fragment shader file.
+	 * Filepath of fragment shader file
 	 */
 	private static final String FRAGMENT_FILE = "src/shaders/fragmentShader.glsl";
 
 	/**
-	 * Location of transformation matrix.
+	 * Location of transformation matrix variable
 	 */
 	private int location_transformationMatrix;
 	
 	/**
-	 * Location of projection matrix.
+	 * Location of projection matrix variable
 	 */
 	private int location_projectionMatrix;
 	
 	/**
-	 * Location of view matrix.
+	 * Location of view matrix variable
 	 */
 	private int location_viewMatrix;
 	
 	/**
-	 * Location of the light position.
+	 * Location of the light position variable
 	 */
 	private int location_lightPosition;
 	
 	/**
-	 * Location of the light color.
+	 * Location of the light color variable
 	 */
 	private int location_lightColour;
 	
 	/**
-	 * Location of texture's shine damper.
+	 * Location of texture's shine damper variable
 	 */
 	private int location_shineDamper;
 	
 	/**
-	 * Location of texture's reflectivity
+	 * Location of texture's reflectivity variable
 	 */
 	private int location_reflectivity;
 	
@@ -62,6 +63,11 @@ public class StaticShader extends ShaderProgram
 	 * Location of texture's useFakeLighting variable
 	 */
 	private int location_useFakeLighting;
+	
+	/**
+	 * Location of the sky color variable
+	 */
+	private int location_skyColour;
 	
 	/**
 	 * Creates a static shader program.
@@ -90,6 +96,18 @@ public class StaticShader extends ShaderProgram
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		location_useFakeLighting = super.getUniformLocation("useFakeLighting");
+		location_skyColour = super.getUniformLocation("skyColour");
+	}
+	
+	/**
+	 * Loads a sky color to a uniform variable (in vertex shader)
+	 * @param r - red
+	 * @param g - green
+	 * @param b - blue
+	 */
+	public void loadSkyColour(float r, float g, float b)
+	{
+		super.loadVector(location_skyColour, new Vector3f(r, b, g));
 	}
 	
 	/**

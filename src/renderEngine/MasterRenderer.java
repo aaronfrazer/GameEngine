@@ -40,6 +40,13 @@ public class MasterRenderer
 	 */
 	private static final float FAR_PLANE = 1000;
 	
+	/**
+	 * RGB color values for the sky
+	 */
+	private static final float  RED = 0.5f, 
+								GREEN = 0.5f, 
+								BLUE = 0.5f;
+	
 	private Matrix4f projectionMatrix;
 	
 	/**
@@ -111,12 +118,14 @@ public class MasterRenderer
 		prepare();
 		
 		shader.start();
+		shader.loadSkyColour(RED, GREEN, BLUE);
 		shader.loadLight(sun);
 		shader.loadViewMatrix(camera);
 		renderer.render(entities);
 		shader.stop();
 		
 		terrainShader.start();
+		terrainShader.loadSkyColour(RED, GREEN, BLUE);
 		terrainShader.loadLight(sun);
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);
@@ -171,7 +180,7 @@ public class MasterRenderer
 	{
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glClearColor(0.3f, 0.5f, 1.0f, 1); // blue color
+		GL11.glClearColor(RED, GREEN, BLUE, 1); // blue color
 	}
 	
 	/**

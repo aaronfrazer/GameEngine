@@ -1,6 +1,7 @@
 package shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Light;
@@ -59,6 +60,11 @@ public class TerrainShader extends ShaderProgram
 	private int location_reflectivity;
 	
 	/**
+	 * Location of sky colour variable
+	 */
+	private int location_skyColour;
+	
+	/**
 	 * Creates a static shader program.
 	 */
 	public TerrainShader()
@@ -84,6 +90,18 @@ public class TerrainShader extends ShaderProgram
 		location_lightColour = super.getUniformLocation("lightColour");
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
+		location_skyColour = super.getUniformLocation("skyColour");
+	}
+	
+	/**
+	 * Loads a sky colour value to a uniform variable (in vertex shader code).
+	 * @param r - red
+	 * @param g - green
+	 * @param b - blue
+	 */
+	public void loadSkyColour(float r, float g, float b)
+	{
+		super.loadVector(location_skyColour, new Vector3f(r, g, b));
 	}
 	
 	/**
