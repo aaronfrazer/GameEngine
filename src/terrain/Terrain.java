@@ -2,7 +2,8 @@ package terrain;
 
 import models.RawModel;
 import renderEngine.Loader;
-import textures.ModelTexture;
+import textures.TerrainTexture;
+import textures.TerrainTexturePack;
 
 /**
  * Represents a terrain in the game.
@@ -32,9 +33,14 @@ public class Terrain
 	private RawModel model;
 	
 	/**
-	 * Terrain texture
+	 * Terrain texture pack that contains 4 textures it will be using
 	 */
-	private ModelTexture texture;
+	private TerrainTexturePack texturePack;
+	
+	/**
+	 * Blend map of terrain of where 4 textures should be rendered
+	 */
+	private TerrainTexture blendMap;
 	
 	/**
 	 * Constructs a terrain.
@@ -43,9 +49,10 @@ public class Terrain
 	 * @param loader - loader
 	 * @param texture - texture of terrain
 	 */
-	public Terrain(int gridX, int gridZ, Loader loader, ModelTexture texture)
+	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap)
 	{
-		this.texture = texture;
+		this.texturePack = texturePack;
+		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
 		this.z = gridZ * SIZE;
 		this.model = generateTerrain(loader);
@@ -105,6 +112,25 @@ public class Terrain
 	}
 
 	/**
+	 * Returns this terrain's texture pack.
+	 * @return texturePack - texture pack
+	 */
+	public TerrainTexturePack getTexturePack()
+	{
+		return texturePack;
+	}
+
+	/**
+	 * Returns this terrain's blend map.
+	 * @return blendMap - blend map
+	 */
+	public TerrainTexture getBlendMap()
+	{
+		return blendMap;
+	}
+
+
+	/**
 	 * Returns the z coordinate of this terrain.
 	 * @return z - z coordinate
 	 */
@@ -121,13 +147,5 @@ public class Terrain
 	{
 		return model;
 	}
-
-	/**
-	 * Returns the texture of this terrain.
-	 * @return texture - terrain texture
-	 */
-	public ModelTexture getTexture()
-	{
-		return texture;
-	}
+	
 }

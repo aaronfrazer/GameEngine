@@ -19,6 +19,8 @@ import renderEngine.Loader;
 import renderEngine.MasterRenderer;
 import terrain.Terrain;
 import textures.ModelTexture;
+import textures.TerrainTexture;
+import textures.TerrainTexturePack;
 
 /**
  * Main game loop responsible for running our game.
@@ -38,12 +40,24 @@ public class MainGameLoop
 		
 		Loader loader = new Loader();
 		
-		// Load a tree (new parser)
+		//********** TERRAIN TEXTURES **********
+		
+		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassTexture"));
+		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirtTexture"));
+		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("grassFlowersTexture"));
+		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("pathTexture"));
+
+		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
+		
+		//**************************************
+		
+		// Load a tree
 		ModelData treeModelData = OBJFileLoader.loadOBJ("treeModel");
 		RawModel treeRawModel = loader.loadToVAO(treeModelData.getVertices(), treeModelData.getTextureCoords(), treeModelData.getNormals(), treeModelData.getIndices());
 		TexturedModel treeTexturedModel = new TexturedModel(treeRawModel, new ModelTexture(loader.loadTexture("treeTexture")));
 		
-		// Load a dragon (new parser)
+		// Load a dragon
 		ModelData dragonModelData = OBJFileLoader.loadOBJ("dragonModel");
 		RawModel dragonRawModel = loader.loadToVAO(dragonModelData.getVertices(), dragonModelData.getTextureCoords(), dragonModelData.getNormals(), dragonModelData.getIndices());
 		TexturedModel dragonTexturedModel = new TexturedModel(dragonRawModel, new ModelTexture(loader.loadTexture("brownTexture")));
@@ -52,20 +66,20 @@ public class MainGameLoop
 		dragonModelTexture.setReflectivity(1);
 		Entity dragonEntity = new Entity(dragonTexturedModel, new Vector3f(200, 0, 280), 0, 0, 0, 1);
 
-		// Load a stall (new parser)
+		// Load a stall
 		ModelData stallModelData = OBJFileLoader.loadOBJ("stallModel");
 		RawModel stallRawModel = loader.loadToVAO(stallModelData.getVertices(), stallModelData.getTextureCoords(), stallModelData.getNormals(), stallModelData.getIndices());
 		TexturedModel stallTexturedModel = new TexturedModel(stallRawModel, new ModelTexture(loader.loadTexture("stallTexture")));
 		Entity stallEntity = new Entity(stallTexturedModel, new Vector3f(180, 0, 260), 0, 180, 0, 1);
 		
-		// Load a grass model (new parser)
+		// Load a grass model
 		ModelData grassModelData = OBJFileLoader.loadOBJ("grassModel");
 		RawModel grassRawModel = loader.loadToVAO(grassModelData.getVertices(), grassModelData.getTextureCoords(), grassModelData.getNormals(), grassModelData.getIndices());
-		TexturedModel grassTexturedModel = new TexturedModel(grassRawModel, new ModelTexture(loader.loadTexture("grassTexture")));
+		TexturedModel grassTexturedModel = new TexturedModel(grassRawModel, new ModelTexture(loader.loadTexture("grass")));
 		grassTexturedModel.getTexture().setHasTransparency(true);
 		grassTexturedModel.getTexture().setUseFakeLighting(true);
 		
-		// Load a fern model (new parser)
+		// Load a fern model
 		ModelData fernModelData = OBJFileLoader.loadOBJ("fernModel");
 		RawModel fernRawModel = loader.loadToVAO(fernModelData.getVertices(), fernModelData.getTextureCoords(), fernModelData.getNormals(), fernModelData.getIndices());
 		TexturedModel fernTexturedModel = new TexturedModel(fernRawModel, new ModelTexture(loader.loadTexture("fernTexture")));
@@ -85,8 +99,8 @@ public class MainGameLoop
 		// Use grid positions with a negative z component if you want
 		// the terrains to render in front of the camera
 		// E.g. (0, -1) or (1, -1) etc.
-		Terrain terrain = new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("grass")));
-		Terrain terrain2 = new Terrain(1, 0, loader, new ModelTexture(loader.loadTexture("grass")));
+		Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap);
+		Terrain terrain2 = new Terrain(1, 0, loader, texturePack, blendMap);
 		
 		// Render a light
 		Light light = new Light(new Vector3f(3000, 2000, 2000), new Vector3f(1, 1, 1));
@@ -108,7 +122,7 @@ public class MainGameLoop
 
 			for (Entity entity : entities)
 			{
-				entity.increaseRotation(0, 1, 0);
+//				entity.increaseRotation(0, 1, 0);
 				renderer.processEntity(entity);
 			}
 			

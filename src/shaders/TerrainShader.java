@@ -25,37 +25,37 @@ public class TerrainShader extends ShaderProgram
 	private static final String FRAGMENT_FILE = "src/shaders/terrainFragmentShader.glsl";
 
 	/**
-	 * Location of transformation matrix.
+	 * Location of transformation matrix variable
 	 */
 	private int location_transformationMatrix;
 	
 	/**
-	 * Location of projection matrix.
+	 * Location of projection matrix variable
 	 */
 	private int location_projectionMatrix;
 	
 	/**
-	 * Location of view matrix.
+	 * Location of view matrix variable
 	 */
 	private int location_viewMatrix;
 	
 	/**
-	 * Location of the light position.
+	 * Location of the light position variable
 	 */
 	private int location_lightPosition;
 	
 	/**
-	 * Location of the light color.
+	 * Location of the light color variable
 	 */
 	private int location_lightColour;
 	
 	/**
-	 * Location of texture's shine damper.
+	 * Location of texture's shine damper variable
 	 */
 	private int location_shineDamper;
 	
 	/**
-	 * Location of texture's reflectivity
+	 * Location of texture's reflectivity variable
 	 */
 	private int location_reflectivity;
 	
@@ -63,6 +63,31 @@ public class TerrainShader extends ShaderProgram
 	 * Location of sky colour variable
 	 */
 	private int location_skyColour;
+	
+	/**
+	 * Location of background texture variable
+	 */
+	private int location_backgroundTexture;
+	
+	/**
+	 * Location of red texture variable
+	 */
+	private int location_rTexture;
+	
+	/**
+	 * Location of green texture variable
+	 */
+	private int location_gTexture;
+	
+	/**
+	 * Location of blue texture variable
+	 */
+	private int location_bTexture;
+	
+	/**
+	 * Location of blend map variable
+	 */
+	private int location_blendMap;
 	
 	/**
 	 * Creates a static shader program.
@@ -91,6 +116,23 @@ public class TerrainShader extends ShaderProgram
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		location_skyColour = super.getUniformLocation("skyColour");
+		location_backgroundTexture = super.getUniformLocation("backgroundTexture");
+		location_rTexture = super.getUniformLocation("rTexture");
+		location_gTexture = super.getUniformLocation("gTexture");
+		location_bTexture = super.getUniformLocation("bTexture");
+		location_blendMap = super.getUniformLocation("blendMap");
+	}
+	
+	/**
+	 * Loads up an int to each sample2Ds to indicate which texture unit they should be referencing.
+	 */
+	public void connectTextureUnits()
+	{
+		super.loadInt(location_backgroundTexture, 0);
+		super.loadInt(location_rTexture, 1);
+		super.loadInt(location_gTexture, 2);
+		super.loadInt(location_bTexture, 3);
+		super.loadInt(location_blendMap, 4);
 	}
 	
 	/**

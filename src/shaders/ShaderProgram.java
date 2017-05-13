@@ -122,6 +122,16 @@ public abstract class ShaderProgram
 	}
 	
 	/**
+	 * Loads an int into a uniform location.
+ 	 * @param location - position the int is loaded to
+	 * @param value - int value
+	 */
+	protected void loadInt(int location, int value)
+	{
+		GL20.glUniform1i(location, value);
+	}
+	
+	/**
 	 * Loads a Vector3f into a uniform location.
 	 * @param location - position the 3D vector is loaded to
 	 * @param vector - 3D vector
