@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
-import entities.Camera;
+import cameras.CameraManager;
+import cameras.FreeRoamCamera;
+import cameras.ThirdPersonCamera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
@@ -114,23 +117,27 @@ public class MainGameLoop
 		//**************************************
 
 		//********** CAMERA CREATION **********
-		Camera camera = new Camera(player);
+		ThirdPersonCamera tpcamera = new ThirdPersonCamera(player);
+		FreeRoamCamera frcamera = new FreeRoamCamera(new Vector3f(300, 0, 350));
 		//**************************************
 		
 		MasterRenderer renderer = new MasterRenderer();
 		
+		CameraManager cameraManager = new CameraManager();
+		cameraManager.addCamera(tpcamera);
+		cameraManager.addCamera(frcamera);
+		cameraManager.setCurrentCamera(tpcamera);
+		
 		while (!Display.isCloseRequested()) { // loops until exit button pushed
 
-			camera.move();
+			cameraManager.getCurrentCamera().move();
 			player.move();
+			
 			renderer.processEntity(player);
-			
-			
-			renderer.processTerrain(terrain);
-			renderer.processTerrain(terrain2);
-
 			renderer.processEntity(dragonEntity);
 			renderer.processEntity(stallEntity);
+			renderer.processTerrain(terrain);
+			renderer.processTerrain(terrain2);
 
 			for (Entity entity : entities)
 			{
@@ -138,7 +145,18 @@ public class MainGameLoop
 				renderer.processEntity(entity);
 			}
 			
-			renderer.render(light, camera);
+			renderer.render(light, cameraManager.getCurrentCamera());
+			
+			
+			// TODO: put this in a method of CameraManager
+			if (Keyboard.isKeyDown(Keyboard.KEY_C))
+			{
+				cameraManager.setCurrentCamera(frcamera);
+			} else
+			{
+				cameraManager.setCurrentCamera(tpcamera);
+			}
+			
 			// game logic
 			
 			DisplayManager.updateDisplay();
