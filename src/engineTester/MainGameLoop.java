@@ -106,20 +106,18 @@ public class MainGameLoop
 		// Render a light
 		Light light = new Light(new Vector3f(3000, 2000, 2000), new Vector3f(1, 1, 1));
 		
-		// Create the camera
-		Camera camera = new Camera(200, 10, 300);
-		
-		MasterRenderer renderer = new MasterRenderer();
-		
-		// Create the player
-//		RawModel bunnyModel = OBJLoader.loadObjModel("stanfordBunny", loader);
-//		TexturedModel stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(loader.loadTexture("white")));
-		
+		//********** PLAYER CREATION **********
 		ModelData bunnyModelData = OBJFileLoader.loadOBJ("stanfordBunny");
 		RawModel bunnyRawModel = loader.loadToVAO(bunnyModelData.getVertices(), bunnyModelData.getTextureCoords(), bunnyModelData.getNormals(), bunnyModelData.getIndices());
 		TexturedModel bunnyTexturedModel = new TexturedModel(bunnyRawModel, new ModelTexture(loader.loadTexture("brownTexture")));
-		
 		Player player = new Player(bunnyTexturedModel, new Vector3f(200, 0, 280), 0, 0, 0, 1);
+		//**************************************
+
+		//********** CAMERA CREATION **********
+		Camera camera = new Camera(player);
+		//**************************************
+		
+		MasterRenderer renderer = new MasterRenderer();
 		
 		while (!Display.isCloseRequested()) { // loops until exit button pushed
 
