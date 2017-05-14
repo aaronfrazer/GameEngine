@@ -22,7 +22,7 @@ public class OBJFileLoader
 	/**
 	 * Location of folder for OBJ files
 	 */
-	private static final String RES_LOC = "res/";
+	private static final String RES_LOC = "res/models/";
 
 	/**
 	 * Loads an OBJ file and returns the OBJ's model data.

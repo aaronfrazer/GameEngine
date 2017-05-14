@@ -4,7 +4,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
- * A virtual camera.
+ * A virtual third-person camera that follows the player around the world.
  * 
  * @author Aaron Frazer
  */

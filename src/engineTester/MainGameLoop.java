@@ -107,10 +107,10 @@ public class MainGameLoop
 		Light light = new Light(new Vector3f(3000, 2000, 2000), new Vector3f(1, 1, 1));
 		
 		//********** PLAYER CREATION **********
-		ModelData bunnyModelData = OBJFileLoader.loadOBJ("stanfordBunny");
+		ModelData bunnyModelData = OBJFileLoader.loadOBJ("r2-d2");
 		RawModel bunnyRawModel = loader.loadToVAO(bunnyModelData.getVertices(), bunnyModelData.getTextureCoords(), bunnyModelData.getNormals(), bunnyModelData.getIndices());
-		TexturedModel bunnyTexturedModel = new TexturedModel(bunnyRawModel, new ModelTexture(loader.loadTexture("brownTexture")));
-		Player player = new Player(bunnyTexturedModel, new Vector3f(200, 0, 280), 0, 0, 0, 1);
+		TexturedModel bunnyTexturedModel = new TexturedModel(bunnyRawModel, new ModelTexture(loader.loadTexture("r2d2Texture")));
+		Player player = new Player(bunnyTexturedModel, new Vector3f(200, 0, 280), 0, 0, 0, 0.025f);
 		//**************************************
 
 		//********** CAMERA CREATION **********

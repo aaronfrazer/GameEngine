@@ -74,7 +74,7 @@ public class Loader
 	{
 		Texture texture = null;
 		try {
-			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/"+fileName+".png"));
+			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/textures/"+fileName+".png"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -82,6 +82,7 @@ public class Loader
 		}
 		int textureID = texture.getTextureID();
 		textures.add(textureID);
+		
 		return textureID;
 	}
 	
@@ -114,6 +115,7 @@ public class Loader
 		int vaoID = GL30.glGenVertexArrays();
 		vaos.add(vaoID);
 		GL30.glBindVertexArray(vaoID);
+		
 		return vaoID;
 	}
 	
@@ -166,6 +168,7 @@ public class Loader
 		IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
 		buffer.put(data);
 		buffer.flip();
+		
 		return buffer;
 	}
 	
@@ -179,6 +182,7 @@ public class Loader
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
 		buffer.put(data);
 		buffer.flip();
+		
 		return buffer;
 	}
 }
