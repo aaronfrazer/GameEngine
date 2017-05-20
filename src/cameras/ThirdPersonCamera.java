@@ -5,7 +5,13 @@ import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Player;
+import toolbox.InputHelper;
 
+/**
+ * A third-person camera that is always attached to a player.
+ * 
+ * @author Aaron Frazer
+ */
 public class ThirdPersonCamera extends Camera
 {
 	/**
@@ -70,8 +76,7 @@ public class ThirdPersonCamera extends Camera
 	}
 	
 	/**
-	 * Calculates the horizontal distance of the camera
-	 * in relation to the player.
+	 * Calculates the horizontal distance of the camera in relation to the player.
 	 * @return horizontalDistance - horizontal camera distance
 	 */
 	private float calculateHorizontalDistance()
@@ -87,8 +92,7 @@ public class ThirdPersonCamera extends Camera
 	}
 	
 	/**
-	 * Calculates the vertical distance of the camera
-	 * in relation to the player.
+	 * Calculates the vertical distance of the camera in relation to the player.
 	 * @return verticalDistance - vertical camera distance
 	 */
 	private float calculateVerticalDistance()
@@ -104,8 +108,7 @@ public class ThirdPersonCamera extends Camera
 	}
 	
 	/**
-	 * Calculates how far the camera is zoomed in relation to
-	 * the player.
+	 * Calculates how far the camera is zoomed in relation to the player.
 	 */
 	private void calculateZoom()
 	{
@@ -118,7 +121,7 @@ public class ThirdPersonCamera extends Camera
 	 */
 	private void calculatePitch()
 	{
-		if (Mouse.isButtonDown(1))
+		if (InputHelper.isButtonDown(1))
 		{
 			float pitchChange = Mouse.getDY() * 0.1f;
 			pitch -= pitchChange;
@@ -136,7 +139,7 @@ public class ThirdPersonCamera extends Camera
 	 */
 	private void calculateAngleAroundPlayer()
 	{
-		if (Mouse.isButtonDown(0))
+		if (InputHelper.isButtonDown(0))
 		{
 			float angleChange = Mouse.getDX() * 0.3f;
 			angleAroundPlayer -= angleChange;

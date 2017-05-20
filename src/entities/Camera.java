@@ -1,6 +1,5 @@
 package entities;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -32,14 +31,12 @@ public abstract class Camera
 	
 	/**
 	 * Moves the camera.
+	 * 
+	 * To be called in the main game loop.
 	 */
 	public void move()
 	{
-		if (Keyboard.isKeyDown(Keyboard.KEY_U))
-		{
-			System.out.println("change camera code");
-			
-		}
+		
 	}
 
 	/**

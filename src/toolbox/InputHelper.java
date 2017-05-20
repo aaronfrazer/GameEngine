@@ -26,7 +26,7 @@ public class InputHelper
 	private static InputHelper input = new InputHelper();
 	
 	/**
-	 * The state of the button or mouse press.
+	 * State of key or mouse button
 	 */
 	private enum EventState {
 		NONE,
@@ -67,10 +67,7 @@ public class InputHelper
 	}
 	
 	/**
-	 * Updates the keyboard and mouse inputs by checking if they are
-	 * down, pressed, released, or none.
-	 * 
-	 * This method should always be called before code that uses inputs.
+	 * Updates keyboard and mouse inputs.
 	 */
 	private void updateInputs()
 	{
@@ -162,28 +159,61 @@ public class InputHelper
     }
 	
     //Static version of methods (called from anywhere, return singleton instance value)
+    /**
+     * Checks to see if a key is currently being held down.
+     * @param key - keycode to check
+     * @return true if the key is down
+     */
     public static boolean isKeyDown(int key){
         return input.KeyDown(key);
     }
+    /**
+     * Checks to see if a key is pressed a single time.
+     * @param key - keycode to check
+     * @return true if the key is pressed
+     */
     public static boolean isKeyPressed(int key){
         return input.KeyPressed(key);
     }
+    /**
+     * Checks to see if a key is released.
+     * @param key - keycode to check
+     * @return true if the key is released
+     */
     public static boolean isKeyReleased(int key){
         return input.KeyReleased(key);
     }
-    public static boolean isButtonDown(int key){
-        return input.MouseButtonDown(key);
+    /**
+     * Checks to see if a mouse button is currently being held down.
+     * @param button - index of the button
+     * @return true if the mouse button is down
+     */
+    public static boolean isButtonDown(int button){
+        return input.MouseButtonDown(button);
     }
-    public static boolean isButtonPressed(int key){
-        return input.MouseButtonPressed(key);
+    /**
+     * Checks to see if a mouse button is pressed a single time.
+     * @param button - index of the button
+     * @return true if the mouse button is pressed
+     */
+    public static boolean isButtonPressed(int button){
+        return input.MouseButtonPressed(button);
     }
-    public static boolean isButtonReleased(int key){
-        return input.MouseButtonReleased(key);
+    /**
+     * Checks to see if a mouse button is released.
+     * @param button - index of the button
+     * @return true if the button is released
+     */
+    public static boolean isButtonReleased(int button){
+        return input.MouseButtonReleased(button);
     }
     
-    /**
-     * Calls the singleton updateInputs() method of the InputHelper class.
-     */
+	/**
+	 * Updates the keyboard and mouse inputs by checking if they are
+	 * down, pressed, released, or none.
+	 * 
+	 * This method should always be called before code that uses inputs.
+	 */
     public static void update(){
         input.updateInputs();
     }

@@ -1,5 +1,11 @@
 Want to add:
-First Person Camera
-Free Roaming Camera
+1. More functionality to the FreeRoamCamera
+	- Ability to move where the camera is facing
+	
+2. More functionality for all cameras
+	- Make the camera an entity that can be seen
+	- Toggle camera entity on/off
+	
+3. Create a FirstPersonCamera class
 
-These will be in two different classes
+4. Create a BirdsEyeCamera class

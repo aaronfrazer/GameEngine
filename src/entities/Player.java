@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import models.TexturedModel;
 import renderEngine.DisplayManager;
+import toolbox.InputHelper;
 
 /**
  * An entity that represents a player.
@@ -74,6 +75,8 @@ public class Player extends Entity
 	
 	/**
 	 * Moves this player.
+	 * 
+	 * To be called inside the main game loop.
 	 */
 	public void move()
 	{
@@ -116,23 +119,23 @@ public class Player extends Entity
 	 */
 	public void checkInputs()
 	{
-		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+		if (InputHelper.isKeyDown(Keyboard.KEY_W)) {
 			this.currentSpeed = RUN_SPEED;
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+		} else if (InputHelper.isKeyDown(Keyboard.KEY_S)) {
 			this.currentSpeed = -RUN_SPEED;
 		} else {
 			this.currentSpeed = 0;
 		}
 		
-		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+		if (InputHelper.isKeyDown(Keyboard.KEY_D)) {
 			this.currentTurnSpeed = -TURN_SPEED;
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
+		} else if (InputHelper.isKeyDown(Keyboard.KEY_A)) {
 			this.currentTurnSpeed = TURN_SPEED;
 		} else {
 			this.currentTurnSpeed = 0;
 		}
 	
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+		if (InputHelper.isKeyDown(Keyboard.KEY_SPACE)) {
 			jump();
 		}
 	}

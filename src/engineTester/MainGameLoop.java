@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -131,8 +130,11 @@ public class MainGameLoop
 		
 		while (!Display.isCloseRequested()) { // loops until exit button pushed
 
-			cameraManager.getCurrentCamera().move();
-			player.move();
+		    InputHelper.update();
+			
+			cameraManager.update(cameraManager); // update current camera selected
+			cameraManager.getCurrentCamera().move(); // move current camera
+			player.move(); // move player
 			
 			renderer.processEntity(player);
 			renderer.processEntity(dragonEntity);
@@ -148,33 +150,21 @@ public class MainGameLoop
 			
 			renderer.render(light, cameraManager.getCurrentCamera());
 			
-
-		    InputHelper.update(); //Should go before other code that uses the inputs
-			
-			//Mouse test    
-			if(InputHelper.isButtonPressed(0))
-			    System.out.println("Left Mouse button pressed");
-			if(InputHelper.isButtonDown(0))
-			    System.out.println("Left Mouse button down");
-			if(InputHelper.isButtonReleased(0))
-			    System.out.println("Left Mouse button released");
-
-			//Keyboard Test
-			if(InputHelper.isKeyPressed(Keyboard.KEY_T))
-			    System.out.println("Space key pressed");
-			if(InputHelper.isKeyDown(Keyboard.KEY_T))
-			    System.out.println("Space key down");
-			if(InputHelper.isKeyReleased(Keyboard.KEY_T))
-			    System.out.println("Space key released");
-			
-			// TODO: put this in a method of CameraManager
-			if (InputHelper.isKeyPressed(Keyboard.KEY_N))
-			{
-				cameraManager.setCurrentCamera(frcamera);
-			} else
-			{
-				cameraManager.setCurrentCamera(tpcamera);
-			}
+//			//Mouse test    
+//			if(InputHelper.isButtonPressed(0))
+//			    System.out.println("Left Mouse button pressed");
+//			if(InputHelper.isButtonDown(0))
+//			    System.out.println("Left Mouse button down");
+//			if(InputHelper.isButtonReleased(0))
+//			    System.out.println("Left Mouse button released");
+//
+//			//Keyboard Test
+//			if(InputHelper.isKeyPressed(Keyboard.KEY_T))
+//			    System.out.println("Space key pressed");
+//			if(InputHelper.isKeyDown(Keyboard.KEY_T))
+//			    System.out.println("Space key down");
+//			if(InputHelper.isKeyReleased(Keyboard.KEY_T))
+//			    System.out.println("Space key released");
 			
 			// game logic
 			
