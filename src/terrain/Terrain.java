@@ -25,7 +25,7 @@ public class Terrain
 	/**
 	 * Size of terrain
 	 */
-	private static final float SIZE = 800;
+	public static final float SIZE = 800;
 	
 	/**
 	 * Maximum height of terrain

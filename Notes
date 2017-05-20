@@ -8,3 +8,7 @@ Create a BirdsEyeCamera class
 	
 More functionality to the FreeRoamCamera
 	- Ability to move where the camera is facing
+	- Ability to have the camera zoom in/out
+	
+Create multiple terrains
+	- Create two terrains and make sure collision detection works on both terrains for a player

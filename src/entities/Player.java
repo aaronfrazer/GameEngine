@@ -21,6 +21,11 @@ public class Player extends Entity
 	private static final float RUN_SPEED = 20;
 	
 	/**
+	 * Player sprint speed measured in units per second
+	 */
+	private static final float SPRINT_SPEED = 100;
+	
+	/**
 	 * Player turn speed measured in degrees per second
 	 */
 	private static final float TURN_SPEED = 160;
@@ -36,15 +41,10 @@ public class Player extends Entity
 	private static final float JUMP_POWER = 30;
 	
 	/**
-	 * Height of terrain (so that player doesn't fall through terrain)
-	 */
-	private static final float TERRAIN_HEIGHT = 0;
-	
-	/**
 	 * Current speed of player
 	 */
 	private float currentSpeed = 0;
-	
+
 	/**
 	 * Current turn speed of player
 	 */
@@ -108,7 +108,7 @@ public class Player extends Entity
 	}
 
 	/**
-	 * Makes the player move upwards.
+	 * Makes the player jump.
 	 */
 	private void jump()
 	{
@@ -124,34 +124,39 @@ public class Player extends Entity
 	 */
 	public void checkInputs()
 	{
-		if (InputHelper.isKeyDown(Keyboard.KEY_W)) {
-			this.currentSpeed = RUN_SPEED;
-		} else if (InputHelper.isKeyDown(Keyboard.KEY_S)) {
-			this.currentSpeed = -RUN_SPEED;
-		} else {
+		if (InputHelper.isKeyDown(Keyboard.KEY_W))
+		{
+			if (InputHelper.isKeyDown(Keyboard.KEY_LSHIFT))
+				this.currentSpeed = SPRINT_SPEED;
+			else
+				this.currentSpeed = RUN_SPEED;
+			
+		} else if (InputHelper.isKeyDown(Keyboard.KEY_S))
+		{
+			if (InputHelper.isKeyDown(Keyboard.KEY_LSHIFT))
+				this.currentSpeed = -SPRINT_SPEED / 2;
+			else
+				this.currentSpeed = -RUN_SPEED;
+			
+		} else
+		{
 			this.currentSpeed = 0;
 		}
 		
-		if (InputHelper.isKeyDown(Keyboard.KEY_D)) {
+		if (InputHelper.isKeyDown(Keyboard.KEY_D))
+		{
 			this.currentTurnSpeed = -TURN_SPEED;
-		} else if (InputHelper.isKeyDown(Keyboard.KEY_A)) {
+		} else if (InputHelper.isKeyDown(Keyboard.KEY_A))
+		{
 			this.currentTurnSpeed = TURN_SPEED;
-		} else {
+		} else
+		{
 			this.currentTurnSpeed = 0;
 		}
 	
-		if (InputHelper.isKeyDown(Keyboard.KEY_SPACE)) {
+		if (InputHelper.isKeyDown(Keyboard.KEY_SPACE))
+		{
 			jump();
-		}
+		}		
 	}
-
-	/**
-	 * Returns the current turn speed of the player.
-	 * @return currentTurnSpeed - player turn speed
-	 */
-	public float getCurrentTurnSpeed()
-	{
-		return currentTurnSpeed;
-	}
-	
 }

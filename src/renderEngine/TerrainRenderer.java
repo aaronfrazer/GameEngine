@@ -71,6 +71,10 @@ public class TerrainRenderer
 		// Load shine settings
 		// TODO: Add shine to terrains
 		shader.loadShineVariables(1, 0);
+		
+		// Use this to enable triangle-vision
+//		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+//		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 	}
 	
 	/**
