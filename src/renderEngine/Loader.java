@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
@@ -67,6 +68,7 @@ public class Loader
 
 	/**
 	 * Loads up a texture into OpenGL.
+	 * Implements mipmapping for textures that are farther away from camera.
 	 * @param fileName - filepath of texture
 	 * @return textureID - the loaded texture's ID
 	 */
@@ -75,6 +77,9 @@ public class Loader
 		Texture texture = null;
 		try {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/textures/"+fileName+".png"));
+			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -0.8f); // TODO: Pull the -0.8f variable out into a global variable - it is the amount of mipmapping
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

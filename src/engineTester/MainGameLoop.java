@@ -120,7 +120,7 @@ public class MainGameLoop
 		//********** CAMERA CREATION **********
 		ThirdPersonCamera tpcamera = new ThirdPersonCamera(player);
 		FirstPersonCamera fpcamera = new FirstPersonCamera(player);
-		FreeRoamCamera frcamera = new FreeRoamCamera(new Vector3f(300, 0, 350));
+		FreeRoamCamera frcamera = new FreeRoamCamera(new Vector3f(300, 10, 350));
 		//**************************************
 		
 		MasterRenderer renderer = new MasterRenderer();
@@ -129,7 +129,7 @@ public class MainGameLoop
 		cameraManager.addCamera(tpcamera);
 		cameraManager.addCamera(frcamera);
 		cameraManager.addCamera(fpcamera);
-		cameraManager.setCurrentCamera(fpcamera);
+		cameraManager.setCurrentCamera(frcamera);
 		
 		while (!Display.isCloseRequested()) { // loops until exit button pushed
 
