@@ -104,8 +104,8 @@ public class MainGameLoop
 		// Use grid positions with a negative z component if you want
 		// the terrains to render in front of the camera
 		// E.g. (0, -1) or (1, -1) etc.
-		Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap);
-		Terrain terrain2 = new Terrain(1, 0, loader, texturePack, blendMap);
+		Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap, "heightmap");
+		Terrain terrain2 = new Terrain(1, 0, loader, texturePack, blendMap, "heightmap");
 		
 		// Render a light
 		Light light = new Light(new Vector3f(3000, 2000, 2000), new Vector3f(1, 1, 1));

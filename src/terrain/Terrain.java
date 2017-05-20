@@ -1,5 +1,13 @@
 package terrain;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import org.lwjgl.util.vector.Vector3f;
+
 import models.RawModel;
 import renderEngine.Loader;
 import textures.TerrainTexture;
@@ -18,9 +26,14 @@ public class Terrain
 	private static final float SIZE = 800;
 	
 	/**
-	 * Number of vertices on each side of terrain
+	 * Maximum height of terrain
 	 */
-	private static final int VERTEX_COUNT = 128;
+	private static final float MAX_HEIGHT = 40;
+	
+	/**
+	 * Maximum color value that a pixel on the height map can have
+	 */
+	private static final float MAX_PIXEL_COLOUR = 256 * 256 * 256;
 	
 	/**
 	 * World coordinates
@@ -48,45 +61,62 @@ public class Terrain
 	 * @param gridZ - z coordinate
 	 * @param loader - loader
 	 * @param texture - texture of terrain
+	 * @param heightMap - height map filename
 	 */
-	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap)
+	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap, String heightMap)
 	{
 		this.texturePack = texturePack;
 		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
 		this.z = gridZ * SIZE;
-		this.model = generateTerrain(loader);
+		this.model = generateTerrain(loader, heightMap);
 	}
 	
-
 	/**
-	 * Generates a flat terrain.
+	 * Generates a terrain using a height map.
 	 * @param loader - loader
+	 * @param heightMap - name of height map
 	 * @return model of terrain
 	 */
-	private RawModel generateTerrain(Loader loader){
+	private RawModel generateTerrain(Loader loader, String heightMap){
+		
+		BufferedImage image = null;
+		
+		try {
+			image = ImageIO.read(new File("res/heightmaps/" + heightMap + ".png"));
+		} catch (IOException e) { e.printStackTrace(); }
+		
+		int VERTEX_COUNT = image.getHeight();
+		
 		int count = VERTEX_COUNT * VERTEX_COUNT;
 		float[] vertices = new float[count * 3];
 		float[] normals = new float[count * 3];
 		float[] textureCoords = new float[count*2];
 		int[] indices = new int[6*(VERTEX_COUNT-1)*(VERTEX_COUNT-1)];
 		int vertexPointer = 0;
-		for(int i=0;i<VERTEX_COUNT;i++){
-			for(int j=0;j<VERTEX_COUNT;j++){
+		for(int i=0;i<VERTEX_COUNT;i++)
+		{
+			for(int j=0;j<VERTEX_COUNT;j++)
+			{
 				vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT - 1) * SIZE;
-				vertices[vertexPointer*3+1] = 0;
+				vertices[vertexPointer*3+1] = getHeight(j, i, image);
 				vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT - 1) * SIZE;
-				normals[vertexPointer*3] = 0;
-				normals[vertexPointer*3+1] = 1;
-				normals[vertexPointer*3+2] = 0;
+				
+				Vector3f normal = calculateNormal(j, i, image);
+				
+				normals[vertexPointer*3] = normal.x;
+				normals[vertexPointer*3+1] = normal.y;
+				normals[vertexPointer*3+2] = normal.z;
 				textureCoords[vertexPointer*2] = (float)j/((float)VERTEX_COUNT - 1);
 				textureCoords[vertexPointer*2+1] = (float)i/((float)VERTEX_COUNT - 1);
 				vertexPointer++;
 			}
 		}
 		int pointer = 0;
-		for(int gz=0;gz<VERTEX_COUNT-1;gz++){
-			for(int gx=0;gx<VERTEX_COUNT-1;gx++){
+		for(int gz=0;gz<VERTEX_COUNT-1;gz++)
+		{
+			for(int gx=0;gx<VERTEX_COUNT-1;gx++)
+			{
 				int topLeft = (gz*VERTEX_COUNT)+gx;
 				int topRight = topLeft + 1;
 				int bottomLeft = ((gz+1)*VERTEX_COUNT)+gx;
@@ -99,9 +129,53 @@ public class Terrain
 				indices[pointer++] = bottomRight;
 			}
 		}
+		
 		return loader.loadToVAO(vertices, textureCoords, normals, indices);
 	}
-
+	
+	/**
+	 * Returns a normal of a pixel.
+	 * @param x - x coordinate of vertex
+	 * @param y - y coordinate of vertex
+	 * @param image - buffered image of heightmap
+	 * @return normal - normal as a Vector3f
+	 */
+	private Vector3f calculateNormal(int x, int y, BufferedImage image)
+	{
+		float heightL = getHeight(x - 1, y, image);
+		float heightR = getHeight(x + 1, y, image);
+		float heightD = getHeight(x, y - 1, image);
+		float heightU = getHeight(x, y + 1, image);
+		
+		Vector3f normal = new Vector3f(heightL - heightR, 2f, heightD - heightU);
+		normal.normalise();
+		
+		return normal;
+	}
+	
+	/**
+	 * Returns the height represented by a pixel on the height map.
+	 * @param x - x coordinate of pixel
+	 * @param y - y coordinate of pixel
+	 * @param image - buffered image
+	 * @return
+	 */
+	private float getHeight(int x, int y, BufferedImage image)
+	{
+		if (x < 0 || x >= image.getHeight() || y < 0 || y >= image.getHeight())
+		{
+			return 0;
+		}
+		
+		float height = image.getRGB(x, y);
+		
+		height += MAX_PIXEL_COLOUR / 2f;
+		height /= MAX_PIXEL_COLOUR / 2f;
+		height *= MAX_HEIGHT;
+		
+		return height;
+	}
+	
 	/**
 	 * Returns the x coordinate of this terrain.
 	 * @return x - x coordinate
