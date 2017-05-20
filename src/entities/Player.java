@@ -139,5 +139,14 @@ public class Player extends Entity
 			jump();
 		}
 	}
+
+	/**
+	 * Returns the current turn speed of the player.
+	 * @return currentTurnSpeed - player turn speed
+	 */
+	public float getCurrentTurnSpeed()
+	{
+		return currentTurnSpeed;
+	}
 	
 }

@@ -139,11 +139,11 @@ public class ThirdPersonCamera extends Camera
 	 */
 	private void calculateAngleAroundPlayer()
 	{
-		if (InputHelper.isButtonDown(0))
-		{
-			float angleChange = Mouse.getDX() * 0.3f;
-			angleAroundPlayer -= angleChange;
-		}
+//		if (InputHelper.isButtonDown(0))
+//		{
+//			float angleChange = Mouse.getDX() * 0.3f;
+//			angleAroundPlayer -= angleChange;
+//		}
 	}
 	
 }

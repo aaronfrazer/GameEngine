@@ -79,12 +79,12 @@ public class CameraManager
 			cm.setCurrentCamera(1);
 		}
 		
-//		if (InputHelper.isKeyPressed(Keyboard.KEY_3))
-//		{
-//			System.out.println("Switch to 1st person camera");
-//			cm.setCurrentCamera(2);
-//		}
-//		
+		if (InputHelper.isKeyPressed(Keyboard.KEY_3))
+		{
+			System.out.println("Switch to 1st person camera");
+			cm.setCurrentCamera(2);
+		}
+		
 //		if (InputHelper.isKeyPressed(Keyboard.KEY_4))
 //		{
 //			System.out.println("Switch to birds eye camera");

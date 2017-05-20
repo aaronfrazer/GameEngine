@@ -8,6 +8,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
 import cameras.CameraManager;
+import cameras.FirstPersonCamera;
 import cameras.FreeRoamCamera;
 import cameras.ThirdPersonCamera;
 import entities.Entity;
@@ -118,6 +119,7 @@ public class MainGameLoop
 
 		//********** CAMERA CREATION **********
 		ThirdPersonCamera tpcamera = new ThirdPersonCamera(player);
+		FirstPersonCamera fpcamera = new FirstPersonCamera(player);
 		FreeRoamCamera frcamera = new FreeRoamCamera(new Vector3f(300, 0, 350));
 		//**************************************
 		
@@ -126,7 +128,8 @@ public class MainGameLoop
 		CameraManager cameraManager = new CameraManager();
 		cameraManager.addCamera(tpcamera);
 		cameraManager.addCamera(frcamera);
-		cameraManager.setCurrentCamera(tpcamera);
+		cameraManager.addCamera(fpcamera);
+		cameraManager.setCurrentCamera(fpcamera);
 		
 		while (!Display.isCloseRequested()) { // loops until exit button pushed
 
