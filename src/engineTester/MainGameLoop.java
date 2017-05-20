@@ -25,6 +25,7 @@ import terrain.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
+import toolbox.InputHelper;
 
 /**
  * Main game loop responsible for running our game.
@@ -147,9 +148,27 @@ public class MainGameLoop
 			
 			renderer.render(light, cameraManager.getCurrentCamera());
 			
+
+		    InputHelper.update(); //Should go before other code that uses the inputs
+			
+			//Mouse test    
+			if(InputHelper.isButtonPressed(0))
+			    System.out.println("Left Mouse button pressed");
+			if(InputHelper.isButtonDown(0))
+			    System.out.println("Left Mouse button down");
+			if(InputHelper.isButtonReleased(0))
+			    System.out.println("Left Mouse button released");
+
+			//Keyboard Test
+			if(InputHelper.isKeyPressed(Keyboard.KEY_T))
+			    System.out.println("Space key pressed");
+			if(InputHelper.isKeyDown(Keyboard.KEY_T))
+			    System.out.println("Space key down");
+			if(InputHelper.isKeyReleased(Keyboard.KEY_T))
+			    System.out.println("Space key released");
 			
 			// TODO: put this in a method of CameraManager
-			if (Keyboard.isKeyDown(Keyboard.KEY_C))
+			if (InputHelper.isKeyPressed(Keyboard.KEY_N))
 			{
 				cameraManager.setCurrentCamera(frcamera);
 			} else
