@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import models.TexturedModel;
 import renderEngine.DisplayManager;
+import terrain.Terrain;
 import toolbox.InputHelper;
 
 /**
@@ -35,7 +36,7 @@ public class Player extends Entity
 	private static final float JUMP_POWER = 30;
 	
 	/**
-	 * Height of the terrain (so that player doesn't fall through terrain)
+	 * Height of terrain (so that player doesn't fall through terrain)
 	 */
 	private static final float TERRAIN_HEIGHT = 0;
 	
@@ -75,10 +76,10 @@ public class Player extends Entity
 	
 	/**
 	 * Moves this player.
-	 * 
 	 * To be called inside the main game loop.
+	 * @param terrain - terrain player is standing on
 	 */
-	public void move()
+	public void move(Terrain terrain)
 	{
 		checkInputs();
 		
@@ -94,11 +95,15 @@ public class Player extends Entity
 		// Falling
 		upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
 		super.increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
-		if (super.getPosition().y < TERRAIN_HEIGHT)
+		
+		float terrainHeight = terrain.getHeightOfTerrain(super.getPosition().x, super.getPosition().z);
+		
+		// Colision detection for falling
+		if (super.getPosition().y < terrainHeight)
 		{
 			upwardsSpeed = 0;
 			isInAir = false;
-			super.getPosition().y = TERRAIN_HEIGHT;
+			super.getPosition().y = terrainHeight;
 		}
 	}
 

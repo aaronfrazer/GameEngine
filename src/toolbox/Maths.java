@@ -1,12 +1,13 @@
 package toolbox;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 
 /**
- * Contains all useful math formulas.
+ * Contains useful math formulas for game engine.
  * 
  * @author Aaron Frazer
  */
@@ -30,6 +31,7 @@ public class Maths
 		Matrix4f.rotate((float) Math.toRadians(ry), new Vector3f(0,1,0), matrix, matrix);
 		Matrix4f.rotate((float) Math.toRadians(rz), new Vector3f(0,0,1), matrix, matrix);
 		Matrix4f.scale(new Vector3f(scale,scale,scale), matrix, matrix);
+		
 		return matrix;
 	}
 	
@@ -47,6 +49,27 @@ public class Maths
 		Vector3f cameraPos = camera.getPosition();
 		Vector3f negativeCameraPos = new Vector3f(-cameraPos.x,-cameraPos.y,-cameraPos.z);
 		Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
+		
 		return viewMatrix;
+	}
+
+	/**
+	 * Returns the height of triangle at a player's position.
+	 * Takes in three 3D vectors (three points on triangle) and a 2D vector of the player's coordinates.
+	 * 
+	 * @param p1 - first point of triangle
+	 * @param p2 - second point of triangle
+	 * @param p3 - third point of triangle
+	 * @param pos - x,y coordinate of player
+	 * @return - height of traingle
+	 */
+	public static float barryCentric(Vector3f p1, Vector3f p2, Vector3f p3, Vector2f pos) 
+	{
+		float det = (p2.z - p3.z) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.z - p3.z);
+		float l1 = ((p2.z - p3.z) * (pos.x - p3.x) + (p3.x - p2.x) * (pos.y - p3.z)) / det;
+		float l2 = ((p3.z - p1.z) * (pos.x - p3.x) + (p1.x - p3.x) * (pos.y - p3.z)) / det;
+		float l3 = 1.0f - l1 - l2;
+		
+		return l1 * p1.y + l2 * p2.y + l3 * p3.y;
 	}
 }

@@ -90,22 +90,43 @@ public class MainGameLoop
 		TexturedModel fernTexturedModel = new TexturedModel(fernRawModel, new ModelTexture(loader.loadTexture("fernTexture")));
 		fernTexturedModel.getTexture().setHasTransparency(true);
 
-		
-		// Randomly generate trees, grass and ferns
-		List<Entity> entities = new ArrayList<Entity>();
-		Random random = new Random();
-		for (int i = 0; i < 100; i++)
-		{
-			entities.add(new Entity(treeTexturedModel, new Vector3f(random.nextFloat() * 800 - 400, 0, random.nextFloat() * 600), 0, 0, 0, 3));
-			entities.add(new Entity(grassTexturedModel, new Vector3f(random.nextFloat() * 800 - 400, 0, random.nextFloat() * 600), 0, 0, 0, 1));
-			entities.add(new Entity(fernTexturedModel, new Vector3f(random.nextFloat() * 800 - 400, 0, random.nextFloat() * 600), 0, 0, 0, 0.6f));
-		}
-		
 		// Use grid positions with a negative z component if you want
 		// the terrains to render in front of the camera
 		// E.g. (0, -1) or (1, -1) etc.
 		Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap, "heightmap");
-		Terrain terrain2 = new Terrain(1, 0, loader, texturePack, blendMap, "heightmap");
+		
+		// Randomly generate trees, grass and ferns
+		List<Entity> entities = new ArrayList<Entity>();
+		Random random = new Random(676452);
+		for (int i = 0; i < 400; i++)
+		{
+			if (i % 20 == 0)
+			{
+				float x = random.nextFloat() * 800; // random number between 0 and 800 (terrain size)
+				float z = random.nextFloat() * 800; // random number between 0 and 800 (terrain size)
+				float y = terrain.getHeightOfTerrain(x, z);
+				
+				Entity treeEntity = new Entity(treeTexturedModel, new Vector3f(x,y,z), 0, 0, 0, 30f);
+
+				System.out.println("          Tree Enity: " + "(" + Math.floor(x) + ", " + Math.floor(y) + ", " + Math.floor(z) + ")");
+				
+				entities.add(treeEntity);	
+			}
+			if (i % 5 == 0)
+			{
+				float x = random.nextFloat() * 800;
+				float z = random.nextFloat() * 800;
+				float y = terrain.getHeightOfTerrain(x, z);
+				
+				Entity grassEntity = new Entity(grassTexturedModel, new Vector3f(x,y,z), 0, 0, 0, 1);
+				Entity fernEntity = new Entity(fernTexturedModel, new Vector3f(x,y,z), 0, 0, 0, 0.6f);
+				
+				System.out.println("Grass and Fern Enity: " + "(" + Math.floor(x) + ", " + Math.floor(y) + ", " + Math.floor(z) + ")");
+				
+				entities.add(grassEntity);
+				entities.add(fernEntity);	
+			}
+		}
 		
 		// Render a light
 		Light light = new Light(new Vector3f(3000, 2000, 2000), new Vector3f(1, 1, 1));
@@ -137,13 +158,12 @@ public class MainGameLoop
 			
 			cameraManager.update(cameraManager); // update current camera selected
 			cameraManager.getCurrentCamera().move(); // move current camera
-			player.move(); // move player
+			player.move(terrain); // move player
 			
 			renderer.processEntity(player);
 			renderer.processEntity(dragonEntity);
 			renderer.processEntity(stallEntity);
 			renderer.processTerrain(terrain);
-			renderer.processTerrain(terrain2);
 
 			for (Entity entity : entities)
 			{
