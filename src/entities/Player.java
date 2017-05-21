@@ -75,7 +75,7 @@ public class Player extends Entity
 	}
 	
 	/**
-	 * Moves this player.
+	 * Moves this player on a terrain.
 	 * To be called inside the main game loop.
 	 * @param terrain - terrain player is standing on
 	 */
@@ -105,6 +105,8 @@ public class Player extends Entity
 			isInAir = false;
 			super.getPosition().y = terrainHeight;
 		}
+		
+		// TODO: Add collision detection for terrain so that player does not go outside of boundaries
 	}
 
 	/**

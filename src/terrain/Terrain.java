@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import entities.Entity;
 import models.RawModel;
 import renderEngine.Loader;
 import textures.TerrainTexture;
@@ -26,7 +27,7 @@ public class Terrain
 	 * Size of terrain
 	 */
 	public static final float SIZE = 800;
-	
+
 	/**
 	 * Maximum height of terrain
 	 */
@@ -164,8 +165,8 @@ public class Terrain
 	
 	/**
 	 * Returns the height of terrain for a given (x,y) coordinate.
-	 * @param worldX
-	 * @param worldY
+	 * @param worldX - x coordinate of terrain
+	 * @param worldY - y coordinate of terrain
 	 * @return answer - height of terrain
 	 */
 	public float getHeightOfTerrain(float worldX, float worldY)
@@ -265,6 +266,39 @@ public class Terrain
 	public RawModel getModel()
 	{
 		return model;
+	}
+	
+	/**
+	 * Returns the size of the terrain.
+	 * @return SIZE - terrain size
+	 */
+	public static float getSize()
+	{
+		return SIZE;
+	}
+
+	/**
+	 * Checks if an entity is inside the x and z coordinates of this terrain.
+	 * @param player - entity to be checked
+	 * @return true if entity is inside
+	 */
+	public boolean isEntityInsideTerrain(Entity entity)
+	{
+		if (getX() <= entity.getPosition().x) // if terrain.x < player.x
+		{
+			if (getX() + Terrain.getSize() > entity.getPosition().x) // if terrain.x
+			{
+				if (getZ() <= entity.getPosition().z)
+				{
+					if (getZ() + Terrain.getSize() > entity.getPosition().z)
+					{
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 }

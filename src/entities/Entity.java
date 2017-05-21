@@ -97,8 +97,8 @@ public class Entity
 	}
 
 	/**
-	 * Returns the entity's position as a Vector3f object.
-	 * @return position - position
+	 * Returns this entity's position as a Vector3f object.
+	 * @return position - position of entity
 	 */
 	public Vector3f getPosition()
 	{

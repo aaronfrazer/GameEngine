@@ -136,7 +136,7 @@ public class MasterRenderer
 	}
 	
 	/**
-	 * Adds a terrain to the list of terrains.
+	 * Renders a terrain to the screen.
 	 * @param terrain - terrain to be added
 	 */
 	public void processTerrain(Terrain terrain)
