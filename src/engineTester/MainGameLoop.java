@@ -122,7 +122,7 @@ public class MainGameLoop
 					float y = terrain.getHeightOfTerrain(x, z);
 					Entity treeEntity = new Entity(treeTexturedModel, new Vector3f(x,y,z), 0, 0, 0, 3f);
 					entities.add(treeEntity);
-					System.out.println("Tree Enity Added: " + "(" + Math.floor(x) + ", " + Math.floor(y) + ", " + Math.floor(z) + ")");
+//					System.out.println("Tree Enity Added: " + "(" + Math.floor(x) + ", " + Math.floor(y) + ", " + Math.floor(z) + ")");
 				}
 				if (i % 5 == 0)
 				{

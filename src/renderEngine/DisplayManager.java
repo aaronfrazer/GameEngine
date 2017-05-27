@@ -24,7 +24,7 @@ public class DisplayManager
 	 * Height of the display
 	 */
 	private static final int HEIGHT = 720;
-	
+
 	/**
 	 * FPS the game is run at.
 	 */
@@ -52,6 +52,7 @@ public class DisplayManager
 			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
 			Display.create(new PixelFormat(), attribs);
 			Display.setTitle("Our Game Display!");
+			Display.setResizable(true); // Resizable window
 		} catch (LWJGLException e)
 		{
 			e.printStackTrace();
@@ -66,6 +67,11 @@ public class DisplayManager
 	 */
 	public static void updateDisplay()
 	{
+		if (Display.wasResized())
+		{
+			GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+		}
+
 		Display.sync(FPS_CAP);
 		Display.update();
 		long currentFrameTime = getCurrentTime();
