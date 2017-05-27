@@ -30,9 +30,15 @@ public class ModelTexture
 	/**
 	 * Does model implement fake lighting?
 	 * Fake lighting is used for objects that need help
-	 * with lighting
+	 * with lighting.
 	 */
 	private boolean useFakeLighting = false;
+
+	/**
+	 * Number of rows in texture atlas
+	 * Set to 1 for a single texture (no atlas)
+	 */
+	private int numberOfRows = 1;
 
 	/**
 	 * Returns the shininess of the texture.
@@ -122,5 +128,22 @@ public class ModelTexture
 	public void setUseFakeLighting(boolean useFakeLighting)
 	{
 		this.useFakeLighting = useFakeLighting;
+	}
+
+	/**
+	 * Returns the number of rows used by the texture atlas for this texture.
+	 * @return numberOfRows
+	 */
+	public int getNumberOfRows()
+	{
+		return numberOfRows;
+	}
+
+	/**
+	 * Sets the number of rows used by the texture atlas for this texture.
+	 * @param numberOfRows
+	 */
+	public void setNumberOfRows(int numberOfRows) {
+		this.numberOfRows = numberOfRows;
 	}
 }

@@ -1,20 +1,19 @@
 package renderEngine;
 
-import java.util.List;
-import java.util.Map;
-
+import entities.Entity;
+import models.RawModel;
+import models.TexturedModel;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
-
-import entities.Entity;
-import models.RawModel;
-import models.TexturedModel;
 import shaders.StaticShader;
 import textures.ModelTexture;
 import toolbox.Maths;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Responsible for rendering a model from a VAO.
@@ -78,6 +77,10 @@ public class EntityRenderer
 		GL20.glEnableVertexAttribArray(2);
 		
 		ModelTexture texture = model.getTexture();
+
+		// Load number of rows from texture atlas
+		shader.loadNumberOfRows(texture.getNumberOfRows());
+
 		if (texture.isHasTransparency())
 		{
 			MasterRenderer.disableCulling();
@@ -114,6 +117,7 @@ public class EntityRenderer
 	{
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
+		shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
 	}
 	
 }

@@ -1,6 +1,7 @@
 package shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
@@ -9,6 +10,9 @@ import toolbox.Maths;
 
 /**
  * A shader program used to create static models.
+ *
+ * The program takes in a vertex shader or fragment shader (GLSL file)
+ * and is able to access variables in the Java program.
  * 
  * @author Aaron Frazer
  */
@@ -65,10 +69,20 @@ public class StaticShader extends ShaderProgram
 	private int location_useFakeLighting;
 	
 	/**
-	 * Location of the sky color variable
+	 * Location of sky color variable
 	 */
 	private int location_skyColour;
-	
+
+	/**
+	 * Location of numberOfRows variable
+	 */
+	private int location_numberOfRows;
+
+	/**
+	 * Location of offset variable
+	 */
+	private int location_offset;
+
 	/**
 	 * Creates a static shader program.
 	 */
@@ -97,8 +111,29 @@ public class StaticShader extends ShaderProgram
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		location_useFakeLighting = super.getUniformLocation("useFakeLighting");
 		location_skyColour = super.getUniformLocation("skyColour");
+		location_numberOfRows = super.getUniformLocation("numberOfRows");
+		location_offset = super.getUniformLocation("offset");
 	}
-	
+
+	/**
+	 * Loads numberOfRows to a uniform variable (in vertex shader)
+	 * @param numberOfRows - number of rows in texture atlas
+	 */
+	public void loadNumberOfRows(int numberOfRows)
+	{
+		super.loadFloat(location_numberOfRows, numberOfRows);
+	}
+
+	/**
+	 * Loads offset variables to a uniform variable (in vertex shader)
+	 * @param x - x offset
+	 * @param y - y offset
+	 */
+	public void loadOffset(float x, float y)
+	{
+		super.load2DVector(location_offset, new Vector2f(x, y));
+	}
+
 	/**
 	 * Loads a sky color to a uniform variable (in vertex shader)
 	 * @param r - red
@@ -107,7 +142,7 @@ public class StaticShader extends ShaderProgram
 	 */
 	public void loadSkyColour(float r, float g, float b)
 	{
-		super.loadVector(location_skyColour, new Vector3f(r, b, g));
+		super.load3DVector(location_skyColour, new Vector3f(r, b, g));
 	}
 	
 	/**
@@ -154,8 +189,8 @@ public class StaticShader extends ShaderProgram
 	 */
 	public void loadLight(Light light)
 	{
-		super.loadVector(location_lightPosition, light.getPosition());
-		super.loadVector(location_lightColour, light.getColour());
+		super.load3DVector(location_lightPosition, light.getPosition());
+		super.load3DVector(location_lightColour, light.getColour());
 	}
 	
 	/**

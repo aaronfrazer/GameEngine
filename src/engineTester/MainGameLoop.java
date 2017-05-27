@@ -1,12 +1,5 @@
 package engineTester;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import org.lwjgl.opengl.Display;
-import org.lwjgl.util.vector.Vector3f;
-
 import cameras.CameraManager;
 import cameras.FirstPersonCamera;
 import cameras.FreeRoamCamera;
@@ -18,6 +11,8 @@ import models.RawModel;
 import models.TexturedModel;
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector3f;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -26,6 +21,10 @@ import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
 import toolbox.InputHelper;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Main game loop responsible for running our game.
@@ -88,22 +87,24 @@ public class MainGameLoop
 		Vector3f stallCoords = new Vector3f(stallX, stallY, stallZ);
 		Entity stallEntity = new Entity(stallTexturedModel, stallCoords, 0, 0, 0, 1);
 
-        // Tree (worldly)
+        // Tree (many)
         ModelData treeModelData = OBJFileLoader.loadOBJ("treeModel");
         RawModel treeRawModel = loader.loadToVAO(treeModelData.getVertices(), treeModelData.getTextureCoords(), treeModelData.getNormals(), treeModelData.getIndices());
         TexturedModel treeTexturedModel = new TexturedModel(treeRawModel, new ModelTexture(loader.loadTexture("treeTexture")));
 
-        // Grass (worldly)
+        // Grass (many)
 		ModelData grassModelData = OBJFileLoader.loadOBJ("grassModel");
 		RawModel grassRawModel = loader.loadToVAO(grassModelData.getVertices(), grassModelData.getTextureCoords(), grassModelData.getNormals(), grassModelData.getIndices());
 		TexturedModel grassTexturedModel = new TexturedModel(grassRawModel, new ModelTexture(loader.loadTexture("grassbushTexture")));
 		grassTexturedModel.getTexture().setHasTransparency(true);
 		grassTexturedModel.getTexture().setUseFakeLighting(true);
 
-		// Fern (worldly)
+		// Fern (many)
 		ModelData fernModelData = OBJFileLoader.loadOBJ("fernModel");
 		RawModel fernRawModel = loader.loadToVAO(fernModelData.getVertices(), fernModelData.getTextureCoords(), fernModelData.getNormals(), fernModelData.getIndices());
-		TexturedModel fernTexturedModel = new TexturedModel(fernRawModel, new ModelTexture(loader.loadTexture("fernTexture")));
+		ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fernTextureAtlas"));
+		fernTextureAtlas.setNumberOfRows(2);
+		TexturedModel fernTexturedModel = new TexturedModel(fernRawModel, fernTextureAtlas);
 		fernTexturedModel.getTexture().setHasTransparency(true);
 		//**************************************
 
@@ -120,7 +121,7 @@ public class MainGameLoop
 					float z = random.nextInt((int) Terrain.getSize() * 2) + terrain.getZ();
 					float y = terrain.getHeightOfTerrain(x, z);
 					Entity treeEntity = new Entity(treeTexturedModel, new Vector3f(x,y,z), 0, 0, 0, 3f);
-					entities.add(treeEntity);	
+					entities.add(treeEntity);
 					System.out.println("Tree Enity Added: " + "(" + Math.floor(x) + ", " + Math.floor(y) + ", " + Math.floor(z) + ")");
 				}
 				if (i % 5 == 0)
@@ -128,8 +129,17 @@ public class MainGameLoop
 					float x = random.nextInt((int) Terrain.getSize() * 2) + terrain.getX();
 					float z = random.nextInt((int) Terrain.getSize() * 2) + terrain.getZ();
 					float y = terrain.getHeightOfTerrain(x, z);
-					Entity grassEntity = new Entity(grassTexturedModel, new Vector3f(x,y,z), 0, 0, 0, 3f);
+					Entity grassEntity = new Entity(grassTexturedModel, new Vector3f(x,y,z), 0, 0, 0, 2f);
 					entities.add(grassEntity);
+				}
+				if (i % 2 == 0)
+				{
+					float x = random.nextInt((int) Terrain.getSize() * 2) + terrain.getX();
+					float z = random.nextInt((int) Terrain.getSize() * 2) + terrain.getZ();
+					float y = terrain.getHeightOfTerrain(x, z);
+					int rand = random.nextInt(4);
+					Entity fernEntity = new Entity(fernTexturedModel, rand, new Vector3f(x,y,z), 0, 0, 0, 1f);
+					entities.add(fernEntity);
 				}
 			}
 		}
