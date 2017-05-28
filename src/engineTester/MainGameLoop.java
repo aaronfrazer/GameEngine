@@ -7,11 +7,14 @@ import cameras.ThirdPersonCamera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
+import guis.GuiRenderer;
+import guis.GuiTexture;
 import models.RawModel;
 import models.TexturedModel;
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
@@ -28,22 +31,23 @@ import java.util.Random;
 
 /**
  * Main game loop responsible for running our game.
- * 
+ *
  * @author Aaron Frazer
  */
 public class MainGameLoop
 {
-	
+
 	/**
 	 * Runs the game.  Used to test multiple terrains.
+	 *
 	 * @param args - arguments
 	 */
 	public static void main(String[] args)
 	{
 		DisplayManager.createDisplay();
-		
+
 		Loader loader = new Loader();
-		
+
 		//********** TERRAIN TEXTURES **********
 		TerrainTexture grassTexture = new TerrainTexture(loader.loadTexture("grassTexture"));
 		TerrainTexture sandTexture = new TerrainTexture(loader.loadTexture("sandTexture"));
@@ -55,11 +59,11 @@ public class MainGameLoop
 		TerrainTexturePack texturePack2 = new TerrainTexturePack(sandTexture, rTexture, gTexture, bTexture);
 		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
 		//**************************************
-		
+
 		// Create two terrains
 		Terrain terrain1 = new Terrain(0, 0, loader, texturePack1, blendMap, "heightmap");
 		Terrain terrain2 = new Terrain(0, -1, loader, texturePack2, blendMap, "heightmap");
-		
+
 		// Create an arraylist for terrains
 		ArrayList<Terrain> terrainList = new ArrayList<>();
 		terrainList.add(terrain1);
@@ -87,12 +91,12 @@ public class MainGameLoop
 		Vector3f stallCoords = new Vector3f(stallX, stallY, stallZ);
 		Entity stallEntity = new Entity(stallTexturedModel, stallCoords, 0, 0, 0, 1);
 
-        // Tree (many)
-        ModelData treeModelData = OBJFileLoader.loadOBJ("treeModel");
-        RawModel treeRawModel = loader.loadToVAO(treeModelData.getVertices(), treeModelData.getTextureCoords(), treeModelData.getNormals(), treeModelData.getIndices());
-        TexturedModel treeTexturedModel = new TexturedModel(treeRawModel, new ModelTexture(loader.loadTexture("treeTexture")));
+		// Tree (many)
+		ModelData treeModelData = OBJFileLoader.loadOBJ("treeModel");
+		RawModel treeRawModel = loader.loadToVAO(treeModelData.getVertices(), treeModelData.getTextureCoords(), treeModelData.getNormals(), treeModelData.getIndices());
+		TexturedModel treeTexturedModel = new TexturedModel(treeRawModel, new ModelTexture(loader.loadTexture("treeTexture")));
 
-        // Grass (many)
+		// Grass (many)
 		ModelData grassModelData = OBJFileLoader.loadOBJ("grassModel");
 		RawModel grassRawModel = loader.loadToVAO(grassModelData.getVertices(), grassModelData.getTextureCoords(), grassModelData.getNormals(), grassModelData.getIndices());
 		TexturedModel grassTexturedModel = new TexturedModel(grassRawModel, new ModelTexture(loader.loadTexture("grassbushTexture")));
@@ -120,7 +124,7 @@ public class MainGameLoop
 					float x = random.nextInt((int) Terrain.getSize() * 2) + terrain.getX();
 					float z = random.nextInt((int) Terrain.getSize() * 2) + terrain.getZ();
 					float y = terrain.getHeightOfTerrain(x, z);
-					Entity treeEntity = new Entity(treeTexturedModel, new Vector3f(x,y,z), 0, 0, 0, 3f);
+					Entity treeEntity = new Entity(treeTexturedModel, new Vector3f(x, y, z), 0, 0, 0, 3f);
 					entities.add(treeEntity);
 //					System.out.println("Tree Enity Added: " + "(" + Math.floor(x) + ", " + Math.floor(y) + ", " + Math.floor(z) + ")");
 				}
@@ -129,7 +133,7 @@ public class MainGameLoop
 					float x = random.nextInt((int) Terrain.getSize() * 2) + terrain.getX();
 					float z = random.nextInt((int) Terrain.getSize() * 2) + terrain.getZ();
 					float y = terrain.getHeightOfTerrain(x, z);
-					Entity grassEntity = new Entity(grassTexturedModel, new Vector3f(x,y,z), 0, 0, 0, 2f);
+					Entity grassEntity = new Entity(grassTexturedModel, new Vector3f(x, y, z), 0, 0, 0, 2f);
 					entities.add(grassEntity);
 				}
 				if (i % 2 == 0)
@@ -138,15 +142,15 @@ public class MainGameLoop
 					float z = random.nextInt((int) Terrain.getSize() * 2) + terrain.getZ();
 					float y = terrain.getHeightOfTerrain(x, z);
 					int rand = random.nextInt(4);
-					Entity fernEntity = new Entity(fernTexturedModel, rand, new Vector3f(x,y,z), 0, 0, 0, 1f);
+					Entity fernEntity = new Entity(fernTexturedModel, rand, new Vector3f(x, y, z), 0, 0, 0, 1f);
 					entities.add(fernEntity);
 				}
 			}
 		}
 
-        //********** LIGHT CREATION **********
+		//********** LIGHT CREATION **********
 		Light light = new Light(new Vector3f(3000, 2000, 2000), new Vector3f(1, 1, 1));
-        //**************************************
+		//************************************
 
 		//********** PLAYER CREATION **********
 		ModelData bunnyModelData = OBJFileLoader.loadOBJ("bluedevilModel");
@@ -160,22 +164,32 @@ public class MainGameLoop
 		FirstPersonCamera fpcamera = new FirstPersonCamera(player);
 		FreeRoamCamera frcamera = new FreeRoamCamera(new Vector3f(300, 10, 350));
 		//**************************************
-		
-		MasterRenderer renderer = new MasterRenderer();
-		
+
 		CameraManager cameraManager = new CameraManager();
 		cameraManager.addCamera(tpcamera);
 		cameraManager.addCamera(frcamera);
 		cameraManager.addCamera(fpcamera);
 		cameraManager.setCurrentCamera(tpcamera);
-		
+
+		MasterRenderer renderer = new MasterRenderer();
+
+		//********** GUI TEXTURES **********
+		List<GuiTexture> guis = new ArrayList<>();
+		GuiTexture gui1 = new GuiTexture(loader.loadTexture("socuwanTexture"), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+		guis.add(gui1);
+		GuiTexture gui2 = new GuiTexture(loader.loadTexture("thinmatrixTexture"), new Vector2f(0.3f, 0.75f), new Vector2f(0.4f, 0.4f));
+		guis.add(gui2);
+
+		GuiRenderer guiRenderer = new GuiRenderer(loader);
+		//**********************************
+
 		while (!Display.isCloseRequested()) { // loops until exit button pushed
 
-		    InputHelper.update();
-			
+			InputHelper.update();
+
 			cameraManager.update(cameraManager); // update current camera selected
 			cameraManager.getCurrentCamera().move(); // move current camera
-			
+
 			for (Terrain terrain : terrainList)
 			{
 				if (terrain.isEntityInsideTerrain(player))
@@ -185,24 +199,27 @@ public class MainGameLoop
 				}
 			}
 
-            for (Entity entity : entities)
-            {
+			for (Entity entity : entities)
+			{
 //				entity.increaseRotation(0, 1, 0);
-                renderer.processEntity(entity);
-            }
-			
+				renderer.processEntity(entity);
+			}
+
 			renderer.processEntity(player);
 			renderer.processEntity(stallEntity);
 			renderer.processEntity(dragonEntity);
 
 
 			renderer.render(light, cameraManager.getCurrentCamera());
-			
+
+			guiRenderer.render(guis);
+
 			// game logic
-			
+
 			DisplayManager.updateDisplay();
 		}
-		
+
+		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();

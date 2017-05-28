@@ -1,21 +1,20 @@
 package renderEngine;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Matrix4f;
-
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import models.TexturedModel;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Matrix4f;
 import shaders.StaticShader;
 import shaders.TerrainShader;
 import terrain.Terrain;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Responsible for handling all rendering code in the game.
@@ -73,12 +72,12 @@ public class MasterRenderer
 	 * Hashmap that contains all textured models and respective entities that need to be
 	 * rendered for a particular frame.
 	 */
-	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
+	private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
 	
 	/**
 	 * List of terrains to be rendered
 	 */
-	private List<Terrain> terrains = new ArrayList<Terrain>();
+	private List<Terrain> terrains = new ArrayList<>();
 	
 	public MasterRenderer()
 	{
@@ -94,7 +93,7 @@ public class MasterRenderer
 	 * Enables backface culling.
 	 * Doesn't render backside of model (for optimization).
 	 */
-	public static void enableCulling()
+	static void enableCulling()
 	{
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glCullFace(GL11.GL_BACK);
@@ -103,7 +102,7 @@ public class MasterRenderer
 	/**
 	 * Disables backface culling.
 	 */
-	public static void disableCulling()
+	static void disableCulling()
 	{
 		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
@@ -157,14 +156,14 @@ public class MasterRenderer
 			batch.add(entity);
 		} else 
 		{
-			List<Entity> newBatch = new ArrayList<Entity>();
+			List<Entity> newBatch = new ArrayList<>();
 			newBatch.add(entity);
 			entities.put(entityModel, newBatch);
 		}
 	}
 	
 	/**
-	 * Cleans up shaders.  Called when game gets closed.
+	 * Cleans up vertex and fragment shaders.  Called when game is closed.
 	 */
 	public void cleanUp()
 	{
@@ -176,7 +175,7 @@ public class MasterRenderer
 	 * Prepares OpenGL to render the game.
 	 * Called once every frame.
 	 */
-	public void prepare()
+	private void prepare()
 	{
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
