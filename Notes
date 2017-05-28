@@ -9,6 +9,16 @@ Create a BirdsEyeCamera class
 More functionality to the FreeRoamCamera
 	- Ability to move where the camera is facing
 	- Ability to have the camera zoom in/out
-	
-Create multiple terrains
-	- Create two terrains and make sure collision detection works on both terrains for a player
+
+Terrain rendering
+    - Terrain should be rendered when a player can see it
+    - Player should be able to collide with outside walls of a terrain
+
+---
+
+Need to take into consideration when creating world:
+Entities - texture, shape, reflectivity
+Players - same as entities
+Lighting - specular, diffuse
+Terrain - texture, reflectivity, size
+Cameras - 1st, 3rd, freeroam

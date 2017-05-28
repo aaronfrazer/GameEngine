@@ -82,12 +82,11 @@ public class ThirdPersonCamera extends Camera
 	private float calculateHorizontalDistance()
 	{
 		float horizontalDistance = (float) (distanceFromPlayer * Math.cos(Math.toRadians(pitch)));
-		
-		// TODO: May want to remove this piece of code
+
+		// Camera stops zooming vertically when it hits player
 		if (horizontalDistance < 0)
 			horizontalDistance = 0;
-		//
-		
+
 		return horizontalDistance;
 	}
 	
@@ -98,13 +97,12 @@ public class ThirdPersonCamera extends Camera
 	private float calculateVerticalDistance()
 	{
 		float verticalDistance = (float) (distanceFromPlayer * Math.sin(Math.toRadians(pitch)));
-		
-		// TODO: May want to remove this piece of code
+
+		// Camera stops zooming vertically when it hits player
 		if (verticalDistance < 0)
 			verticalDistance = 0;
-		//
-		
-		return verticalDistance;	
+
+		return verticalDistance;
 	}
 	
 	/**

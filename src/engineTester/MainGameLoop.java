@@ -148,15 +148,20 @@ public class MainGameLoop
 			}
 		}
 
-		//********** LIGHT CREATION **********
+		//********** LIGHTS CREATION **********
 		Light light = new Light(new Vector3f(3000, 2000, 2000), new Vector3f(1, 1, 1));
+		List<Light> lights = new ArrayList<>();
+		lights.add(light);
+		lights.add(new Light(new Vector3f(-200, 10, -200), new Vector3f(10, 0, 0)));
+		lights.add(new Light(new Vector3f(200, 10, 200), new Vector3f(0, 0, 10)));
+
 		//************************************
 
 		//********** PLAYER CREATION **********
-		ModelData bunnyModelData = OBJFileLoader.loadOBJ("bluedevilModel");
-		RawModel bunnyRawModel = loader.loadToVAO(bunnyModelData.getVertices(), bunnyModelData.getTextureCoords(), bunnyModelData.getNormals(), bunnyModelData.getIndices());
-		TexturedModel bunnyTexturedModel = new TexturedModel(bunnyRawModel, new ModelTexture(loader.loadTexture("bluedevilTexture")));
-		Player player = new Player(bunnyTexturedModel, new Vector3f(200, 0, 280), 0, 0, 0, 0.5f);
+		ModelData personModelData = OBJFileLoader.loadOBJ("personModel");
+		RawModel personRawModel = loader.loadToVAO(personModelData.getVertices(), personModelData.getTextureCoords(), personModelData.getNormals(), personModelData.getIndices());
+		TexturedModel personTexturedModel = new TexturedModel(personRawModel, new ModelTexture(loader.loadTexture("personTexture")));
+		Player player = new Player(personTexturedModel, new Vector3f(200, 0, 280), 0, 0, 0, 0.5f);
 		//**************************************
 
 		//********** CAMERA CREATION **********
@@ -201,7 +206,7 @@ public class MainGameLoop
 
 			for (Entity entity : entities)
 			{
-//				entity.increaseRotation(0, 1, 0);
+				entity.increaseRotation(0, 1, 0);
 				renderer.processEntity(entity);
 			}
 
@@ -210,7 +215,7 @@ public class MainGameLoop
 			renderer.processEntity(dragonEntity);
 
 
-			renderer.render(light, cameraManager.getCurrentCamera());
+			renderer.render(lights, cameraManager.getCurrentCamera());
 
 			guiRenderer.render(guis);
 

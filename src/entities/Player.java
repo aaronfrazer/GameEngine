@@ -106,7 +106,25 @@ public class Player extends Entity
 			super.getPosition().y = terrainHeight;
 		}
 		
-		// TODO: Add collision detection for terrain so that player does not go outside of boundaries
+		if (super.getPosition().x < terrain.getX())
+		{
+			super.getPosition().x = terrain.getX();
+		}
+
+		if (super.getPosition().z < terrain.getZ())
+		{
+			super.getPosition().z = terrain.getZ();
+		}
+
+		if (super.getPosition().x > Terrain.SIZE)
+		{
+			super.getPosition().x = Terrain.SIZE - 0.001f;
+		}
+
+		if (super.getPosition().z > Terrain.SIZE)
+		{
+			super.getPosition().z = Terrain.SIZE - 0.001f;
+		}
 	}
 
 	/**
@@ -124,7 +142,7 @@ public class Player extends Entity
 	/**
 	 * Checks keyboard inputs to set speed and turn speed.
 	 */
-	public void checkInputs()
+	private void checkInputs()
 	{
 		if (InputHelper.isKeyDown(Keyboard.KEY_W))
 		{

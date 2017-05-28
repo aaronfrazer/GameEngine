@@ -4,7 +4,7 @@ import textures.ModelTexture;
 
 /**
  * A textured model that contains both a model and a model's texture.
- * 
+ *
  * @author Aaron Frazer
  */
 public class TexturedModel

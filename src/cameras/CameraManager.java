@@ -1,11 +1,10 @@
 package cameras;
 
-import java.util.ArrayList;
-
-import org.lwjgl.input.Keyboard;
-
 import entities.Camera;
+import org.lwjgl.input.Keyboard;
 import toolbox.InputHelper;
+
+import java.util.ArrayList;
 
 /**
  * Responsible for managing all cameras in the game.
@@ -17,7 +16,7 @@ public class CameraManager
 	/**
 	 * Array list of cameras
 	 */
-	private ArrayList<Camera> cameraList = new ArrayList<Camera>();
+	private ArrayList<Camera> cameraList = new ArrayList<>();
 		
 	/**
 	 * Current camera in use
@@ -90,14 +89,6 @@ public class CameraManager
 //			System.out.println("Switch to birds eye camera");
 //			cm.setCurrentCamera(3);
 //		}
-	}
-	
-	/**
-	 * Sets the camera to the next one in the list.
-	 */
-	public void nextCamera()
-	{
-		// TODO: Implement this method
 	}
 
 }

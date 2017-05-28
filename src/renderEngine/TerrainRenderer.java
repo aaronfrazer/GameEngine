@@ -1,19 +1,18 @@
 package renderEngine;
 
-import java.util.List;
-
+import models.RawModel;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
-
-import models.RawModel;
 import shaders.TerrainShader;
 import terrain.Terrain;
 import textures.TerrainTexturePack;
 import toolbox.Maths;
+
+import java.util.List;
 
 /**
  * Responsible for rendering terrain in the game.
@@ -32,7 +31,7 @@ public class TerrainRenderer
 	 * @param shader - shader program
 	 * @param projectionMatrix - projection matrix
 	 */
-	public TerrainRenderer(TerrainShader shader, Matrix4f projectionMatrix)
+	TerrainRenderer(TerrainShader shader, Matrix4f projectionMatrix)
 	{
 		this.shader = shader;
 		shader.start();
@@ -69,7 +68,6 @@ public class TerrainRenderer
 		bindTextures(terrain);
 		
 		// Load shine settings
-		// TODO: Add shine to terrains
 		shader.loadShineVariables(1, 0);
 		
 		// Use this to enable triangle-vision

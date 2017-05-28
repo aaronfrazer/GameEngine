@@ -42,20 +42,20 @@ public class FirstPersonCamera extends Camera
 	public void move()
 	{
 		super.move();
-		
-		calculateCameraPosition();
-		yaw = (float) (180 - player.getRotY());
+
+		calculateCameraPosition(player);
+		yaw = (180 - player.getRotY());
 		mouseMovements();
 	}
 	
 	/**
 	 * Sets the camera position to the X,Y,Z coordinates of the player.
 	 */
-	private void calculateCameraPosition()
+	private void calculateCameraPosition(Player player)
 	{
 		position.x = player.getPosition().x;
 		position.z = player.getPosition().z;
-		position.y = player.getPosition().y + 4; // TODO: change this to entity's height
+		position.y = player.getPosition().y + 7f;
 	}
 	
 	/**

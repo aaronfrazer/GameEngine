@@ -5,10 +5,10 @@ import org.lwjgl.util.vector.Vector3f;
 import models.TexturedModel;
 
 /**
- * An instance of a textured model. Contains a textured model 
+ * An instance of a textured model. Contains a textured model
  * with a position, rotation, and scale that the model is rendered
  * in the 3D world.
- * 
+ *
  * @author Aaron Frazer
  */
 public class Entity
@@ -17,17 +17,17 @@ public class Entity
 	 * Textured model of the entity
 	 */
 	private TexturedModel model;
-	
+
 	/**
 	 * Position of the entity
 	 */
 	private Vector3f position;
-	
+
 	/**
 	 * Rotation of the entity
 	 */
 	private float rotX, rotY, rotZ;
-	
+
 	/**
 	 * Scale of the entity
 	 */
@@ -46,12 +46,12 @@ public class Entity
 	/**
 	 * Creates an entity in a postion of the world.
 	 *
-	 * @param model - textured model
+	 * @param model    - textured model
 	 * @param position - vector
-	 * @param rotX - x axis rotation
-	 * @param rotY - y axis rotation
-	 * @param rotZ - z axis rotation
-	 * @param scale - scale
+	 * @param rotX     - x axis rotation
+	 * @param rotY     - y axis rotation
+	 * @param rotZ     - z axis rotation
+	 * @param scale    - scale
 	 */
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale)
 	{
@@ -67,13 +67,13 @@ public class Entity
 	 * Creates an entity in a position of the world with a texture atlas index to be used
 	 * as the texture.
 	 *
-	 * @param model - textured model
-	 * @param index - texture index
+	 * @param model    - textured model
+	 * @param index    - texture index
 	 * @param position - vector
-	 * @param rotX - x axis rotation
-	 * @param rotY - y axis rotation
-	 * @param rotZ - z axis rotation
-	 * @param scale - scale
+	 * @param rotX     - x axis rotation
+	 * @param rotY     - y axis rotation
+	 * @param rotZ     - z axis rotation
+	 * @param scale    - scale
 	 */
 	public Entity(TexturedModel model, int index, Vector3f position, float rotX, float rotY, float rotZ, float scale)
 	{
@@ -86,10 +86,11 @@ public class Entity
 		this.scale = scale;
 	}
 
-    /**
-     * Returns the x-offset of the texture atlas.
-     * @return x-offset
-     */
+	/**
+	 * Returns the x-offset of the texture atlas.
+	 *
+	 * @return x-offset
+	 */
 	public float getTextureXOffset()
 	{
 		int column = textureIndex % model.getTexture().getNumberOfRows();
@@ -97,19 +98,21 @@ public class Entity
 		return (float) column / (float) model.getTexture().getNumberOfRows();
 	}
 
-    /**
-     * Returns the y-offset of the texture atlas.
-     * @return y-offset
-     */
+	/**
+	 * Returns the y-offset of the texture atlas.
+	 *
+	 * @return y-offset
+	 */
 	public float getTextureYOffset()
-    {
-        int row = textureIndex / model.getTexture().getNumberOfRows();
+	{
+		int row = textureIndex / model.getTexture().getNumberOfRows();
 
-        return (float) row / (float) model.getTexture().getNumberOfRows();
-    }
-	
+		return (float) row / (float) model.getTexture().getNumberOfRows();
+	}
+
 	/**
 	 * Moves this entity in the world.
+	 *
 	 * @param dx - x value
 	 * @param dy - y value
 	 * @param dz - z value
@@ -123,6 +126,7 @@ public class Entity
 
 	/**
 	 * Rotates this entity in the world.
+	 *
 	 * @param dx - x rotation
 	 * @param dy - y rotation
 	 * @param dz - z rotation
@@ -131,11 +135,12 @@ public class Entity
 	{
 		this.rotX += dx;
 		this.rotY += dy;
-		this.rotZ += dz;		
+		this.rotZ += dz;
 	}
-	
+
 	/**
 	 * Returns this entity's textured model.
+	 *
 	 * @return model - textured model
 	 */
 	public TexturedModel getModel()
@@ -145,6 +150,7 @@ public class Entity
 
 	/**
 	 * Sets this entity's textured model
+	 *
 	 * @param model - textured model
 	 */
 	public void setModel(TexturedModel model)
@@ -154,6 +160,7 @@ public class Entity
 
 	/**
 	 * Returns this entity's position as a Vector3f object.
+	 *
 	 * @return position - position of entity
 	 */
 	public Vector3f getPosition()
@@ -163,6 +170,7 @@ public class Entity
 
 	/**
 	 * Sets the position of the entity
+	 *
 	 * @param position - position
 	 */
 	public void setPosition(Vector3f position)
@@ -172,6 +180,7 @@ public class Entity
 
 	/**
 	 * Returns the entity's x rotation value.
+	 *
 	 * @return rotX - x value
 	 */
 	public float getRotX()
@@ -180,16 +189,8 @@ public class Entity
 	}
 
 	/**
-	 * Sets the entity's x rotation value.
-	 * @param rotX - x value
-	 */
-	public void setRotX(float rotX)
-	{
-		this.rotX = rotX;
-	}
-
-	/**
 	 * Returns the entity's y rotation value.
+	 *
 	 * @return roty - y value
 	 */
 	public float getRotY()
@@ -198,16 +199,8 @@ public class Entity
 	}
 
 	/**
-	 * Sets the entity's y rotation value.
-	 * @param rotY - y value
-	 */
-	public void setRotY(float rotY)
-	{
-		this.rotY = rotY;
-	}
-
-	/**
 	 * Returns the entity's z rotation value.
+	 *
 	 * @return rotZ - z value
 	 */
 	public float getRotZ()
@@ -216,16 +209,8 @@ public class Entity
 	}
 
 	/**
-	 * Sets the entity's z rotation value.
-	 * @param rotZ - z value
-	 */
-	public void setRotZ(float rotZ)
-	{
-		this.rotZ = rotZ;
-	}
-
-	/**
 	 * Returns this entity's scale value.
+	 *
 	 * @return scale - scale
 	 */
 	public float getScale()
@@ -235,12 +220,22 @@ public class Entity
 
 	/**
 	 * Sets this entity's scale value.
+	 *
 	 * @param scale - scale
 	 */
 	public void setScale(float scale)
 	{
 		this.scale = scale;
 	}
-	
-	
+
+	/**
+	 * Returns the entities height.
+	 *
+	 * @return height - height of entity
+	 */
+	public float getEntityFurthestPoint()
+	{
+//		return model;
+		return 1f;
+	}
 }

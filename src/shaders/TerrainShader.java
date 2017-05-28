@@ -1,11 +1,12 @@
 package shaders;
 
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
-
 import entities.Camera;
 import entities.Light;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 import toolbox.Maths;
+
+import java.util.List;
 
 /**
  * A shader program used to create terrain models.
@@ -14,6 +15,12 @@ import toolbox.Maths;
  */
 public class TerrainShader extends ShaderProgram
 {
+	/**
+	 * Maximum number of lights allowed on an entity
+	 * NOTE: Increasing this value will make rendering slower
+	 */
+	private static final int MAX_LIGHTS = 4;
+
 	/**
 	 * Filepath of vertex shader file.
 	 */
@@ -40,14 +47,14 @@ public class TerrainShader extends ShaderProgram
 	private int location_viewMatrix;
 	
 	/**
-	 * Location of the light position variable
+	 * Location of all light position variables
 	 */
-	private int location_lightPosition;
+	private int location_lightPosition[];
 	
 	/**
-	 * Location of the light color variable
+	 * Location of all light color variables
 	 */
-	private int location_lightColour;
+	private int location_lightColour[];
 	
 	/**
 	 * Location of texture's shine damper variable
@@ -111,8 +118,6 @@ public class TerrainShader extends ShaderProgram
 		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
-		location_lightPosition = super.getUniformLocation("lightPosition");
-		location_lightColour = super.getUniformLocation("lightColour");
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		location_skyColour = super.getUniformLocation("skyColour");
@@ -121,6 +126,15 @@ public class TerrainShader extends ShaderProgram
 		location_gTexture = super.getUniformLocation("gTexture");
 		location_bTexture = super.getUniformLocation("bTexture");
 		location_blendMap = super.getUniformLocation("blendMap");
+
+		location_lightPosition = new int[MAX_LIGHTS];
+		location_lightColour = new int[MAX_LIGHTS];
+		for (int i = 0; i < MAX_LIGHTS; i++)
+		{
+			location_lightPosition[i] = super.getUniformLocation("lightPosition[" + i + "]");
+			location_lightColour[i] = super.getUniformLocation("lightColour[" + i + "]");
+
+		}
 	}
 	
 	/**
@@ -174,15 +188,27 @@ public class TerrainShader extends ShaderProgram
 	{
 		super.loadMatrix(location_projectionMatrix, projection);
 	}
-	
+
 	/**
-	 * Loads light properties to a uniform variables.
-	 * @param light - light
+	 * Loads light properties to all uniform variables for lights in the shader program.
+	 * If there are less than the number of maximum lights, the lights are filled with empty lights.
+	 *
+	 * @param lights - list of lights
 	 */
-	public void loadLight(Light light)
+	public void loadLights(List<Light> lights)
 	{
-		super.load3DVector(location_lightPosition, light.getPosition());
-		super.load3DVector(location_lightColour, light.getColour());
+		for (int i = 0; i < MAX_LIGHTS; i++)
+		{
+			if (i < lights.size())
+			{
+				super.load3DVector(location_lightPosition[i], lights.get(i).getPosition());
+				super.load3DVector(location_lightColour[i], lights.get(i).getColour());
+			} else // empty lights
+			{
+				super.load3DVector(location_lightPosition[i], new Vector3f(0, 0, 0));
+				super.load3DVector(location_lightColour[i], new Vector3f(0, 0, 0));
+			}
+		}
 	}
 	
 	/**
