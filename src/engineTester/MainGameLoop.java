@@ -110,6 +110,22 @@ public class MainGameLoop
 		fernTextureAtlas.setNumberOfRows(2);
 		TexturedModel fernTexturedModel = new TexturedModel(fernRawModel, fernTextureAtlas);
 		fernTexturedModel.getTexture().setHasTransparency(true);
+
+		// Lamps
+		ModelData lampModelData = OBJFileLoader.loadOBJ("lampModel");
+		RawModel lampRawModel = loader.loadToVAO(lampModelData.getVertices(), lampModelData.getTextureCoords(), lampModelData.getNormals(), lampModelData.getIndices());
+		TexturedModel lampTexturedModel = new TexturedModel(lampRawModel, new ModelTexture(loader.loadTexture("lampTexture")));
+		lampTexturedModel.getTexture().setUseFakeLighting(true);
+
+		// Baseball
+		ModelData baseballModelData = OBJFileLoader.loadOBJ("baseballModel");
+		RawModel baseballRawModel = loader.loadToVAO(baseballModelData.getVertices(), baseballModelData.getTextureCoords(), baseballModelData.getNormals(), baseballModelData.getIndices());
+		TexturedModel baseballTexturedModel = new TexturedModel(baseballRawModel, new ModelTexture(loader.loadTexture("brownTexture"))); // TODO: Add ability to create a load a texture from .mtl file
+		float baseballX = 180, baseballZ = 260;
+		float baseballY = terrain1.getHeightOfTerrain(baseballX, baseballZ);
+		Vector3f baseballCoords = new Vector3f(baseballX, baseballY + 12, baseballZ);
+		Entity baseballEntity = new Entity(baseballTexturedModel, baseballCoords, 0, 0, 0, 10);
+
 		//**************************************
 
 		// Randomly generate trees
@@ -145,15 +161,38 @@ public class MainGameLoop
 					Entity fernEntity = new Entity(fernTexturedModel, rand, new Vector3f(x, y, z), 0, 0, 0, 1f);
 					entities.add(fernEntity);
 				}
+
 			}
 		}
 
 		//********** LIGHTS CREATION **********
-		Light light = new Light(new Vector3f(3000, 2000, 2000), new Vector3f(1, 1, 1));
+		// TODO: create a LightEntity class so that I don't have to create a light AND entity every time I want to make a lamp in the world
 		List<Light> lights = new ArrayList<>();
-		lights.add(light);
-		lights.add(new Light(new Vector3f(-200, 10, -200), new Vector3f(10, 0, 0)));
-		lights.add(new Light(new Vector3f(200, 10, 200), new Vector3f(0, 0, 10)));
+		lights.add(new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.4f, 0.4f, 0.4f))); // sun (no attenuation)
+
+		float lampX = 200, lampZ = 290;
+		float lampY = terrain1.getHeightOfTerrain(lampX, lampZ);
+		Vector3f lampCoords = new Vector3f(lampX, lampY, lampZ);
+		Vector3f lightCoords = new Vector3f(lampX, lampY + 12, lampZ);
+
+		lights.add(new Light(lightCoords, new Vector3f(2, 0 , 0), new Vector3f(1, 0.01f, 0.002f)));
+		lightCoords = new Vector3f(lampX, lampY + 12, lampZ + 30);
+
+		lights.add(new Light(lightCoords, new Vector3f(0, 2 , 2), new Vector3f(1, 0.01f, 0.002f)));
+		lightCoords = new Vector3f(lampX, lampY + 12, lampZ + 60);
+
+		lights.add(new Light(lightCoords, new Vector3f(2, 2 , 0), new Vector3f(1, 0.01f, 0.002f)));
+
+		entities.add(new Entity(lampTexturedModel, lampCoords, 0, 0, 0, 1));
+		lampCoords = new Vector3f(lampX, lampY, lampZ + 30);
+		entities.add(new Entity(lampTexturedModel, lampCoords, 0, 0, 0, 1));
+		lampCoords = new Vector3f(lampX, lampY, lampZ + 60);
+		entities.add(new Entity(lampTexturedModel, lampCoords, 0, 0, 0, 1));
+
+//		Light light = new Light(new Vector3f(3000, 2000, 2000), new Vector3f(1, 1, 1));
+//		lights.add(light);
+//		lights.add(new Light(new Vector3f(-200, 10, -200), new Vector3f(10, 0, 0)));
+//		lights.add(new Light(new Vector3f(200, 10, 200), new Vector3f(0, 0, 10)));
 
 		//************************************
 
@@ -181,9 +220,9 @@ public class MainGameLoop
 		//********** GUI TEXTURES **********
 		List<GuiTexture> guis = new ArrayList<>();
 		GuiTexture gui1 = new GuiTexture(loader.loadTexture("socuwanTexture"), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
-		guis.add(gui1);
+//		guis.add(gui1);
 		GuiTexture gui2 = new GuiTexture(loader.loadTexture("thinmatrixTexture"), new Vector2f(0.3f, 0.75f), new Vector2f(0.4f, 0.4f));
-		guis.add(gui2);
+//		guis.add(gui2);
 
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		//**********************************
@@ -206,14 +245,14 @@ public class MainGameLoop
 
 			for (Entity entity : entities)
 			{
-				entity.increaseRotation(0, 1, 0);
+//				entity.increaseRotation(0, 1, 0);
 				renderer.processEntity(entity);
 			}
 
 			renderer.processEntity(player);
 			renderer.processEntity(stallEntity);
 			renderer.processEntity(dragonEntity);
-
+			renderer.processEntity(baseballEntity);
 
 			renderer.render(lights, cameraManager.getCurrentCamera());
 

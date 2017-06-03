@@ -55,6 +55,11 @@ public class TerrainShader extends ShaderProgram
 	 * Location of all light color variables
 	 */
 	private int location_lightColour[];
+
+	/**
+	 * Location of all light attenuation variables
+	 */
+	private int location_attenuation[];
 	
 	/**
 	 * Location of texture's shine damper variable
@@ -129,11 +134,12 @@ public class TerrainShader extends ShaderProgram
 
 		location_lightPosition = new int[MAX_LIGHTS];
 		location_lightColour = new int[MAX_LIGHTS];
+		location_attenuation = new int[MAX_LIGHTS];
 		for (int i = 0; i < MAX_LIGHTS; i++)
 		{
 			location_lightPosition[i] = super.getUniformLocation("lightPosition[" + i + "]");
 			location_lightColour[i] = super.getUniformLocation("lightColour[" + i + "]");
-
+			location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
 		}
 	}
 	
@@ -203,10 +209,12 @@ public class TerrainShader extends ShaderProgram
 			{
 				super.load3DVector(location_lightPosition[i], lights.get(i).getPosition());
 				super.load3DVector(location_lightColour[i], lights.get(i).getColour());
+				super.load3DVector(location_attenuation[i], lights.get(i).getAttenuation());
 			} else // empty lights
 			{
 				super.load3DVector(location_lightPosition[i], new Vector3f(0, 0, 0));
 				super.load3DVector(location_lightColour[i], new Vector3f(0, 0, 0));
+				super.load3DVector(location_attenuation[i], new Vector3f(1, 0, 0));
 			}
 		}
 	}
