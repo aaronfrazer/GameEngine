@@ -227,15 +227,4 @@ public class Entity
 	{
 		this.scale = scale;
 	}
-
-	/**
-	 * Returns the entities height.
-	 *
-	 * @return height - height of entity
-	 */
-	public float getEntityFurthestPoint()
-	{
-//		return model;
-		return 1f;
-	}
 }

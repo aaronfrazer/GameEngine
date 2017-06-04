@@ -146,7 +146,7 @@ public class MasterRenderer
 	}
 
 	/**
-	 * Processes an entity by putting it into a hashmap.
+	 * Processes an entity by putting it into an associated hashmap of it's model.
 	 *
 	 * @param entity - entity to be processed
 	 */

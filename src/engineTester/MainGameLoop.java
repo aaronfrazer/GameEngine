@@ -166,29 +166,45 @@ public class MainGameLoop
 		}
 
 		//********** LIGHTS CREATION **********
-		// TODO: create a LightEntity class so that I don't have to create a light AND entity every time I want to make a lamp in the world
 		List<Light> lights = new ArrayList<>();
 		lights.add(new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.4f, 0.4f, 0.4f))); // sun (no attenuation)
 
-		float lampX = 200, lampZ = 290;
-		float lampY = terrain1.getHeightOfTerrain(lampX, lampZ);
+		float lampX = 200, lampZ = 290, lampY = terrain1.getHeightOfTerrain(lampX, lampZ);
+
+		Vector3f lightCoords;
 		Vector3f lampCoords = new Vector3f(lampX, lampY, lampZ);
-		Vector3f lightCoords = new Vector3f(lampX, lampY + 12, lampZ);
+		Vector3f redLight = new Vector3f(2, 0, 0);
+		Vector3f yellowLight = new Vector3f(0, 2, 2);
+		Vector3f greenLight = new Vector3f(2, 2, 0);
+		Vector3f attenuation = new Vector3f(1, 0.01f, 0.002f);
 
-		lights.add(new Light(lightCoords, new Vector3f(2, 0 , 0), new Vector3f(1, 0.01f, 0.002f)));
-		lightCoords = new Vector3f(lampX, lampY + 12, lampZ + 30);
+		// Red Light
+		System.out.println("Red Lamp: " + lampCoords.getX() + " " + lampCoords.getY() + " " + lampCoords.getZ());
+		Entity lampEntity = new Entity(lampTexturedModel, lampCoords, 0, 0, 0, 1);
+		entities.add(lampEntity);
+		lightCoords = new Vector3f(lampCoords.getX(), lampCoords.getY() + 12f, lampCoords.getZ());
+		lights.add(new Light(lightCoords, redLight, attenuation));
+		System.out.println("Red Light: " + lightCoords.getX() + " " + lightCoords.getY() + " " + lightCoords.getZ());
 
-		lights.add(new Light(lightCoords, new Vector3f(0, 2 , 2), new Vector3f(1, 0.01f, 0.002f)));
-		lightCoords = new Vector3f(lampX, lampY + 12, lampZ + 60);
-
-		lights.add(new Light(lightCoords, new Vector3f(2, 2 , 0), new Vector3f(1, 0.01f, 0.002f)));
-
+		// Yellow Light
+		lampZ = lampZ + 30f;
+		lampY = terrain1.getHeightOfTerrain(lampX, lampZ);
+		System.out.println("Yellow Lamp: " + lampCoords.getX() + " " + lampCoords.getY() + " " + lampCoords.getZ());
+		lampCoords = new Vector3f(lampX, lampY, lampZ);
 		entities.add(new Entity(lampTexturedModel, lampCoords, 0, 0, 0, 1));
-		lampCoords = new Vector3f(lampX, lampY, lampZ + 30);
-		entities.add(new Entity(lampTexturedModel, lampCoords, 0, 0, 0, 1));
-		lampCoords = new Vector3f(lampX, lampY, lampZ + 60);
-		entities.add(new Entity(lampTexturedModel, lampCoords, 0, 0, 0, 1));
+		lightCoords = new Vector3f(lampCoords.getX(), lampCoords.getY() + 12f, lampCoords.getZ());
+		lights.add(new Light(lightCoords, yellowLight, attenuation));
 
+		// Green Light
+		lampZ = lampZ + 30f;
+		lampY = terrain1.getHeightOfTerrain(lampX, lampZ);
+		System.out.println("Green Lamp: " + lampCoords.getX() + " " + lampCoords.getY() + " " + lampCoords.getZ());
+		lampCoords = new Vector3f(lampX, lampY, lampZ);
+		entities.add(new Entity(lampTexturedModel, lampCoords, 0, 0, 0, 1));
+		lightCoords = new Vector3f(lampCoords.getX(), lampCoords.getY() + 12f, lampCoords.getZ());
+		lights.add(new Light(lightCoords, greenLight, attenuation));
+
+		// Free lights (no entities attached)
 //		Light light = new Light(new Vector3f(3000, 2000, 2000), new Vector3f(1, 1, 1));
 //		lights.add(light);
 //		lights.add(new Light(new Vector3f(-200, 10, -200), new Vector3f(10, 0, 0)));
