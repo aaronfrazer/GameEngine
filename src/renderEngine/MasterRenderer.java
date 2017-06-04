@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import shaders.StaticShader;
 import shaders.TerrainShader;
+import skybox.SkyboxRenderer;
 import terrain.Terrain;
 
 import java.util.ArrayList;
@@ -40,11 +41,11 @@ public class MasterRenderer
 	private static final float FAR_PLANE = 1000;
 
 	/**
-	 * RGB color values for the sky
+	 * Color of the fog
 	 */
-	private static final float RED = 0.5f,
-			GREEN = 0.5f,
-			BLUE = 0.5f;
+	private static final float RED = 0.5444f,
+			GREEN = 0.62f,
+			BLUE = 0.69f;
 
 	private Matrix4f projectionMatrix;
 
@@ -64,6 +65,11 @@ public class MasterRenderer
 	private TerrainRenderer terrainRenderer;
 
 	/**
+	 * Skybox renderer
+	 */
+	private SkyboxRenderer skyboxRenderer;
+
+	/**
 	 * Instance of a terrain shader program.
 	 */
 	private TerrainShader terrainShader = new TerrainShader();
@@ -79,14 +85,19 @@ public class MasterRenderer
 	 */
 	private List<Terrain> terrains = new ArrayList<>();
 
-	public MasterRenderer()
+	/**
+	 * Creates a master renderer by initializing an entity renderer
+	 * and a terrain renderer.
+	 * @param loader - loader for skybox
+	 */
+	public MasterRenderer(Loader loader)
 	{
 		enableCulling();
 
 		createProjectionMatrix();
 		renderer = new EntityRenderer(shader, projectionMatrix);
-
 		terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
+		skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
 	}
 
 	/**
@@ -130,8 +141,9 @@ public class MasterRenderer
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);
 		terrainShader.stop();
-		terrains.clear();
+		skyboxRenderer.render(camera);
 
+		terrains.clear();
 		entities.clear();
 	}
 

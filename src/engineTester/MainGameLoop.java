@@ -96,6 +96,8 @@ public class MainGameLoop
 		RawModel treeRawModel = loader.loadToVAO(treeModelData.getVertices(), treeModelData.getTextureCoords(), treeModelData.getNormals(), treeModelData.getIndices());
 		TexturedModel treeTexturedModel = new TexturedModel(treeRawModel, new ModelTexture(loader.loadTexture("treeTexture")));
 
+		// TODO: Add some pine trees
+
 		// Grass (many)
 		ModelData grassModelData = OBJFileLoader.loadOBJ("grassModel");
 		RawModel grassRawModel = loader.loadToVAO(grassModelData.getVertices(), grassModelData.getTextureCoords(), grassModelData.getNormals(), grassModelData.getIndices());
@@ -231,7 +233,7 @@ public class MainGameLoop
 		cameraManager.addCamera(fpcamera);
 		cameraManager.setCurrentCamera(tpcamera);
 
-		MasterRenderer renderer = new MasterRenderer();
+		MasterRenderer renderer = new MasterRenderer(loader);
 
 		//********** GUI TEXTURES **********
 		List<GuiTexture> guis = new ArrayList<>();

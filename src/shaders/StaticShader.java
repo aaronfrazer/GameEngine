@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * A shader program used to create static models.
- * <p>
+ *
  * The program takes in a vertex shader or fragment shader (GLSL file)
  * and is able to access variables in the Java program.
  *
@@ -245,4 +245,5 @@ public class StaticShader extends ShaderProgram
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		super.loadMatrix(location_viewMatrix, viewMatrix);
 	}
+
 }
