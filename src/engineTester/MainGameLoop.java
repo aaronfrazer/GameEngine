@@ -96,7 +96,10 @@ public class MainGameLoop
 		RawModel treeRawModel = loader.loadToVAO(treeModelData.getVertices(), treeModelData.getTextureCoords(), treeModelData.getNormals(), treeModelData.getIndices());
 		TexturedModel treeTexturedModel = new TexturedModel(treeRawModel, new ModelTexture(loader.loadTexture("treeTexture")));
 
-		// TODO: Add some pine trees
+		// Pine Trees (many)
+		ModelData pineModelData = OBJFileLoader.loadOBJ("pineModel");
+		RawModel pineRawModel = loader.loadToVAO(pineModelData.getVertices(), pineModelData.getTextureCoords(), pineModelData.getNormals(), pineModelData.getIndices());
+		TexturedModel pineTexturedModel = new TexturedModel(pineRawModel, new ModelTexture(loader.loadTexture("pineTexture")));
 
 		// Grass (many)
 		ModelData grassModelData = OBJFileLoader.loadOBJ("grassModel");
@@ -137,28 +140,34 @@ public class MainGameLoop
 		{
 			for (int i = 0; i < 400; i++)
 			{
+				float x = random.nextInt((int) Terrain.getSize() * 2) + terrain.getX();
+				float z = random.nextInt((int) Terrain.getSize() * 2) + terrain.getZ();
+				float y = terrain.getHeightOfTerrain(x, z);
+				Entity pineEntity = new Entity(pineTexturedModel, new Vector3f(x, y, z), 0, 0, 0, 1f);
+				entities.add(pineEntity);
+
 				if (i % 20 == 0)
 				{
-					float x = random.nextInt((int) Terrain.getSize() * 2) + terrain.getX();
-					float z = random.nextInt((int) Terrain.getSize() * 2) + terrain.getZ();
-					float y = terrain.getHeightOfTerrain(x, z);
+					x = random.nextInt((int) Terrain.getSize() * 2) + terrain.getX();
+					z = random.nextInt((int) Terrain.getSize() * 2) + terrain.getZ();
+					y = terrain.getHeightOfTerrain(x, z);
 					Entity treeEntity = new Entity(treeTexturedModel, new Vector3f(x, y, z), 0, 0, 0, 3f);
 					entities.add(treeEntity);
 //					System.out.println("Tree Enity Added: " + "(" + Math.floor(x) + ", " + Math.floor(y) + ", " + Math.floor(z) + ")");
 				}
 				if (i % 5 == 0)
 				{
-					float x = random.nextInt((int) Terrain.getSize() * 2) + terrain.getX();
-					float z = random.nextInt((int) Terrain.getSize() * 2) + terrain.getZ();
-					float y = terrain.getHeightOfTerrain(x, z);
+					x = random.nextInt((int) Terrain.getSize() * 2) + terrain.getX();
+					z = random.nextInt((int) Terrain.getSize() * 2) + terrain.getZ();
+					y = terrain.getHeightOfTerrain(x, z);
 					Entity grassEntity = new Entity(grassTexturedModel, new Vector3f(x, y, z), 0, 0, 0, 2f);
 					entities.add(grassEntity);
 				}
 				if (i % 2 == 0)
 				{
-					float x = random.nextInt((int) Terrain.getSize() * 2) + terrain.getX();
-					float z = random.nextInt((int) Terrain.getSize() * 2) + terrain.getZ();
-					float y = terrain.getHeightOfTerrain(x, z);
+					x = random.nextInt((int) Terrain.getSize() * 2) + terrain.getX();
+					z = random.nextInt((int) Terrain.getSize() * 2) + terrain.getZ();
+					y = terrain.getHeightOfTerrain(x, z);
 					int rand = random.nextInt(4);
 					Entity fernEntity = new Entity(fernTexturedModel, rand, new Vector3f(x, y, z), 0, 0, 0, 1f);
 					entities.add(fernEntity);
@@ -181,17 +190,14 @@ public class MainGameLoop
 		Vector3f attenuation = new Vector3f(1, 0.01f, 0.002f);
 
 		// Red Light
-		System.out.println("Red Lamp: " + lampCoords.getX() + " " + lampCoords.getY() + " " + lampCoords.getZ());
 		Entity lampEntity = new Entity(lampTexturedModel, lampCoords, 0, 0, 0, 1);
 		entities.add(lampEntity);
 		lightCoords = new Vector3f(lampCoords.getX(), lampCoords.getY() + 12f, lampCoords.getZ());
 		lights.add(new Light(lightCoords, redLight, attenuation));
-		System.out.println("Red Light: " + lightCoords.getX() + " " + lightCoords.getY() + " " + lightCoords.getZ());
 
 		// Yellow Light
 		lampZ = lampZ + 30f;
 		lampY = terrain1.getHeightOfTerrain(lampX, lampZ);
-		System.out.println("Yellow Lamp: " + lampCoords.getX() + " " + lampCoords.getY() + " " + lampCoords.getZ());
 		lampCoords = new Vector3f(lampX, lampY, lampZ);
 		entities.add(new Entity(lampTexturedModel, lampCoords, 0, 0, 0, 1));
 		lightCoords = new Vector3f(lampCoords.getX(), lampCoords.getY() + 12f, lampCoords.getZ());
@@ -200,7 +206,6 @@ public class MainGameLoop
 		// Green Light
 		lampZ = lampZ + 30f;
 		lampY = terrain1.getHeightOfTerrain(lampX, lampZ);
-		System.out.println("Green Lamp: " + lampCoords.getX() + " " + lampCoords.getY() + " " + lampCoords.getZ());
 		lampCoords = new Vector3f(lampX, lampY, lampZ);
 		entities.add(new Entity(lampTexturedModel, lampCoords, 0, 0, 0, 1));
 		lightCoords = new Vector3f(lampCoords.getX(), lampCoords.getY() + 12f, lampCoords.getZ());

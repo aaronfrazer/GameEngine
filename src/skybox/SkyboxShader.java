@@ -4,6 +4,8 @@ import org.lwjgl.util.vector.Matrix4f;
 
 import entities.Camera;
 
+import org.lwjgl.util.vector.Vector3f;
+import renderEngine.DisplayManager;
 import shaders.ShaderProgram;
 import toolbox.Maths;
 
@@ -25,14 +27,44 @@ public class SkyboxShader extends ShaderProgram
 	private static final String FRAGMENT_FILE = "src/skybox/skyboxFragmentShader.glsl";
 
 	/**
-	 * Location of projection matrix variable
+	 * Rotation speed of skybox (degrees per second)
+	 */
+	private static final float ROTATE_SPEED = 1f;
+
+	/**
+	 * Current rotation of skybox (in degrees)
+	 */
+	private float rotation = 0;
+
+	/**
+	 * Location of projectionMatrix variable
 	 */
 	private int location_projectionMatrix;
 
 	/**
-	 * Location of view matrix variable
+	 * Location of viewMatrix variable
 	 */
 	private int location_viewMatrix;
+
+	/**
+	 * Location of fogColour variable
+	 */
+	private int location_fogcolour;
+
+	/**
+	 * Location of cubeMap variable
+	 */
+	private int location_cubeMap;
+
+	/**
+	 * Location of cubeMap2 variable
+	 */
+	private int location_cubeMap2;
+
+	/**
+	 * Location of blendFactor variable
+	 */
+	private int location_blendFactor;
 
 	/**
 	 * Creates a skybox shader program.
@@ -54,7 +86,8 @@ public class SkyboxShader extends ShaderProgram
 
 	/**
 	 * Creates a view matrix for the skybox.  Makes sure that the skybox
-	 * stays in a fixed position when moving the camera.
+	 * stays in a fixed position when moving the camera.  Rotates the skybox
+	 * depending on rotation speed.
 	 *
 	 * @param camera
 	 */
@@ -64,7 +97,39 @@ public class SkyboxShader extends ShaderProgram
 		matrix.m30 = 0;
 		matrix.m31 = 0;
 		matrix.m32 = 0;
+		rotation += ROTATE_SPEED * DisplayManager.getFrameTimeSeconds();
+		Matrix4f.rotate((float)Math.toRadians(rotation), new Vector3f(0, 1, 0), matrix, matrix);
 		super.loadMatrix(location_viewMatrix, matrix);
+	}
+
+	/**
+	 * Loads the fog colour to a uniform variable in the vertex shader.
+	 * @param r - red color value
+	 * @param g - green color value
+	 * @param b - blue color value
+	 */
+	public void loadFogColour(float r, float g, float b)
+	{
+		super.load3DVector(location_fogcolour, new Vector3f(r, g, b));
+	}
+
+	/**
+	 * Loads cubemap variables to their respective uniform variables in
+	 * the vertex shader.
+	 */
+	public void connectTextureUnits()
+	{
+		super.loadInt(location_cubeMap, 0);
+		super.loadInt(location_cubeMap2, 1);
+	}
+
+	/**
+	 * Loads a blend factor to a uniform variable in the vertex shader.
+	 * @param blend - blend factor
+	 */
+	public void loadBlendFactor(float blend)
+	{
+		super.loadFloat(location_blendFactor, blend);
 	}
 
 	@Override
@@ -72,6 +137,10 @@ public class SkyboxShader extends ShaderProgram
 	{
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
+		location_fogcolour = super.getUniformLocation("fogColour");
+		location_cubeMap = super.getUniformLocation("cubeMap");
+		location_cubeMap2 = super.getUniformLocation("cubeMap2");
+		location_blendFactor = super.getUniformLocation("blendFactor");
 	}
 
 	@Override
