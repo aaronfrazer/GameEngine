@@ -22,3 +22,33 @@ Players - same as entities
 Lighting - specular, diffuse
 Terrain - texture, reflectivity, size
 Cameras - 1st, 3rd, freeroam
+
+---
+
+Skybox settings:
+Goal is to implement a setting to where I can set the day/night skyboxes with variables.
+Variables:
+skyboxDayTime - indicates length of day time, float value in ms
+skyboxNightTime - indicates length of night time, float value in ms
+skyboxTransition - indicates length of time to switch skyboxes
+
+---
+
+Clock:
+The clock will shall have a timer.
+The timer will go up to 24 seconds.  After 24 seconds is over, the timer resets.
+1 real life min = 1 game hr
+24 real life mins = 24 game hrs
+
+Right now:
+1 game hr = 3.6 secs
+
+Want it to be:
+1 game hr = 1 min
+
+Calculation:
+60 / 3.6 = 16.6667
+
+Test Case for Hours game (hours) vs real (seconds):
+1 hr = 24 secs
+2 = 48

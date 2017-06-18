@@ -26,11 +26,13 @@ public class Light
 	 */
 	private Vector3f attenuation = new Vector3f(1, 0, 0);
 
+	private float lightValueChange = 0.0019f;
+
 	/**
 	 * Creates a colored light in a position of the world.
 	 *
-	 * @param position - location of light
-	 * @param colour   - color of light
+	 * @param position location of light
+	 * @param colour   color of light
 	 */
 	public Light(Vector3f position, Vector3f colour)
 	{
@@ -41,9 +43,9 @@ public class Light
 	/**
 	 * Creates an attenuated, colored light in a position of the world.
 	 *
-	 * @param position    - location of light
-	 * @param colour      - color of light
-	 * @param attenuation - attenuation of light
+	 * @param position    location of light
+	 * @param colour      color of light
+	 * @param attenuation attenuation of light
 	 */
 	public Light(Vector3f position, Vector3f colour, Vector3f attenuation)
 	{
@@ -55,7 +57,7 @@ public class Light
 	/**
 	 * Returns the attenuation value of the light.
 	 *
-	 * @return attenuation - light attenuation
+	 * @return light attenuation
 	 */
 	public Vector3f getAttenuation()
 	{
@@ -65,7 +67,7 @@ public class Light
 	/**
 	 * Returns the position of the light.
 	 *
-	 * @return position - light position
+	 * @return light position
 	 */
 	public Vector3f getPosition()
 	{
@@ -75,7 +77,7 @@ public class Light
 	/**
 	 * Sets the position of the light.
 	 *
-	 * @param position - light position
+	 * @param position light position
 	 */
 	public void setPosition(Vector3f position)
 	{
@@ -85,7 +87,7 @@ public class Light
 	/**
 	 * Returns the color of the light.
 	 *
-	 * @return position - light position
+	 * @return light color
 	 */
 	public Vector3f getColour()
 	{
@@ -95,12 +97,33 @@ public class Light
 	/**
 	 * Sets the color of the light.
 	 *
-	 * @param colour - light color
+	 * @param colour light color
 	 */
 	public void setColour(Vector3f colour)
 	{
 		this.colour = colour;
 	}
 
+	/**
+	 * Increases the color of this light.
+	 *
+	 * @param colorIncrease vector of color values
+	 */
+	public void increaseColor(Vector3f colorIncrease)
+	{
+		colorIncrease = new Vector3f(getColour().x + lightValueChange, getColour().y + lightValueChange, getColour().z + lightValueChange);
+		setColour(new Vector3f(colorIncrease.x, colorIncrease.y, colorIncrease.z));
+	}
+
+	/**
+	 * Decreases the color of this light.
+	 *
+	 * @param colorDecrease vector of color values
+	 */
+	public void decreaseColor(Vector3f colorDecrease)
+	{
+		colorDecrease = new Vector3f(getColour().x - lightValueChange, getColour().y - lightValueChange, getColour().z - lightValueChange);
+		setColour(new Vector3f(colorDecrease.x, colorDecrease.y, colorDecrease.z));
+	}
 
 }

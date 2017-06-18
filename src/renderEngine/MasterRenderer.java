@@ -43,7 +43,7 @@ public class MasterRenderer
 	/**
 	 * Color of the fog
 	 */
-	private static final float RED = 0.5444f,
+	public static float RED = 0.5444f,
 			GREEN = 0.62f,
 			BLUE = 0.69f;
 
