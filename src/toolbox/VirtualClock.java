@@ -42,12 +42,12 @@ public class VirtualClock
 		VirtualClock.time %= 1440000 / speedFactor; // reset the clock every 1440 seconds (24 minutes)
 
 		// 60 real seconds =  1 game hour
-		// TODO: make sure minutes and hours work with speedFactor variable
 		hours = (getTimeInSecs() / 60) % 24;
+		hours *= speedFactor;
 		minutes = (hours * 60) % 60;
 		seconds = (minutes * 60) % 60;
 
-		hours *= speedFactor;
+
 
 	}
 
