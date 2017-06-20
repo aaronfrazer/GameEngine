@@ -47,8 +47,6 @@ public class VirtualClock
 		minutes = (hours * 60) % 60;
 		seconds = (minutes * 60) % 60;
 
-
-
 	}
 
 	/**

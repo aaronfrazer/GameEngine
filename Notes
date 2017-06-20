@@ -52,3 +52,9 @@ Calculation:
 Test Case for Hours game (hours) vs real (seconds):
 1 hr = 24 secs
 2 = 48
+
+---
+
+Skybox fog rendering system:
+Right now the fog is changing too fast for the Night -> Day sequence
+Need a way to take

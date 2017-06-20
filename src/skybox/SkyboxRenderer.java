@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import renderEngine.Loader;
+import toolbox.GameSettings;
 import toolbox.VirtualClock;
 import engineTester.MainGameLoop;
 import renderEngine.MasterRenderer;
@@ -149,46 +150,6 @@ public class SkyboxRenderer
 		int texture1;
 		int texture2;
 		float blendFactor; // fade from day to night.  0 = day, 1 = night
-//		if (VirtualClock.getHours() >= 0 && VirtualClock.getHours() < 8) // Morning
-//		{
-//			System.out.println("Night");
-//			texture1 = nightTexture;
-//			texture2 = nightTexture;
-//			blendFactor = (VirtualClock.getTime() - 0)/(5000 - 0);
-//
-////		    lights.get(0).setColour(new Vector3f(0.3f,0.3f,0.3f));
-//			MasterRenderer.RED = 0.01f;
-//			MasterRenderer.GREEN = 0.01f;
-//			MasterRenderer.BLUE = 0.01f;
-//		} else if(VirtualClock.getHours() >= 8 && VirtualClock.getHours() < 10) // Day
-//		{
-//			System.out.println("Night --> Day");
-//			texture1 = nightTexture;
-//			texture2 = texture;
-//			blendFactor = (VirtualClock.getTime() - 5000)/(8000 - 5000);
-//
-////			lights.get(0).increaseColor(new Vector3f(0.0001f,0.0001f,0.0001f));
-//			MasterRenderer.RED += 0.00157f;
-//			MasterRenderer.GREEN += 0.00157f;
-//			MasterRenderer.BLUE += 0.0018f;
-//		} else if(VirtualClock.getHours() >= 10 && VirtualClock.getHours() < 18) // Good
-//		{
-//			System.out.println("Day");
-//			texture1 = texture;
-//			texture2 = texture;
-//			blendFactor = (VirtualClock.getTime() - 8000)/(21000 - 8000);
-//
-////			lights.get(0).setColour(new Vector3f(1f,1f,1f));
-//			MasterRenderer.RED = 0.5444f;
-//			MasterRenderer.GREEN = 0.62f;
-//			MasterRenderer.BLUE = 0.69f;
-//		} else
-//		{
-//			System.out.println("Day --> Night");
-//			texture1 = texture;
-//			texture2 = nightTexture;
-//			blendFactor = (VirtualClock.getTime() - 21000)/(24000 - 21000);
-//		}
 
 		float nightStart = 0;
 		float nightEnd = 5;
@@ -196,7 +157,7 @@ public class SkyboxRenderer
 		float dayEnd = 21;
 
 		// TODO: Incorporate blendFactor so that the textures fade seamlessly
-		// TODO: Make fog appear to blend seamlessly
+        // TODO: Test fog by changing nightStart, nightEnd, dayStart, dayEnd variables
 		// TODO: Make lights blend seamlessly
 		if (VirtualClock.getHours() >= nightStart && VirtualClock.getHours() < nightEnd) { // fog color:
 			System.out.print("Night         | ");
@@ -204,9 +165,9 @@ public class SkyboxRenderer
 			texture2 = nightTexture;
 			blendFactor = 1;
 			MainGameLoop.lights.get(0).setColour(new Vector3f(0.3f,0.3f,0.3f));
-			MasterRenderer.RED = 0.01f;
-			MasterRenderer.GREEN = 0.01f;
-			MasterRenderer.BLUE = 0.01f;
+			MasterRenderer.RED = GameSettings.NIGHT_MAX_RED;
+			MasterRenderer.GREEN = GameSettings.NIGHT_MAX_GREEN;
+			MasterRenderer.BLUE = GameSettings.NIGHT_MAX_BLUE;
 			System.out.print(" R: " + MasterRenderer.RED + " G: " + MasterRenderer.GREEN + " B: " + MasterRenderer.BLUE + " | ");
 		} else if (VirtualClock.getHours() >= nightEnd && VirtualClock.getHours() < dayStart) {
 
@@ -215,34 +176,54 @@ public class SkyboxRenderer
 			texture2 = texture;
 			blendFactor = (float) ((VirtualClock.getHours()*1000) - (nightEnd*1000))/((dayStart*1000) - (nightEnd*1000));
 			MainGameLoop.lights.get(0).increaseColor(new Vector3f(0.0001f,0.0001f,0.0001f));
-			MasterRenderer.RED += 0.0022f;
-			MasterRenderer.GREEN += 0.0025f;
-			MasterRenderer.BLUE += 0.0029f;
+
+			// Add fog colors with each frame
+            double factor = (120 * (dayStart - nightEnd) * 2); // 720 frames in 4 hours
+            double intervalRed = (GameSettings.DAY_MAX_RED - GameSettings.NIGHT_MAX_RED) / factor;
+            double intervalGreen = (GameSettings.DAY_MAX_GREEN - GameSettings.NIGHT_MAX_GREEN) / factor;
+            double intervalBlue = (GameSettings.DAY_MAX_BLUE - GameSettings.NIGHT_MAX_BLUE) / factor;
+
+            MasterRenderer.RED += intervalRed;
+            MasterRenderer.GREEN += intervalGreen;
+            MasterRenderer.BLUE += intervalBlue;
+
 			System.out.print(" R: " + MasterRenderer.RED + " G: " + MasterRenderer.GREEN + " B: " + MasterRenderer.BLUE + " | ");
 
 		} else if (VirtualClock.getHours() >= dayStart && VirtualClock.getHours() < dayEnd) {
-			System.out.print("Day           | ");
+
+            System.out.print("Day           | ");
 			texture1 = texture;
 			texture2 = texture;
 			blendFactor = 0;
 			MainGameLoop.lights.get(0).setColour(new Vector3f(1f,1f,1f));
-			MasterRenderer.RED = 0.5444f;
-			MasterRenderer.GREEN = 0.62f;
-			MasterRenderer.BLUE = 0.69f;
+			MasterRenderer.RED = GameSettings.DAY_MAX_RED;
+			MasterRenderer.GREEN = GameSettings.DAY_MAX_GREEN;
+			MasterRenderer.BLUE = GameSettings.DAY_MAX_BLUE;
 			System.out.print(" R: " + MasterRenderer.RED + " G: " + MasterRenderer.GREEN + " B: " + MasterRenderer.BLUE + " | ");
+
 		} else if (VirtualClock.getHours() >= dayEnd && VirtualClock.getHours() < 24) {
-			System.out.print("Day --> Night | ");
+
+		    System.out.print("Day --> Night | ");
 			texture1 = texture;
 			texture2 = nightTexture;
 			blendFactor = (float) ((VirtualClock.getHours()*1000) - (dayEnd*1000))/((24*1000) - (dayEnd*1000));
 //			blendFactor = (VirtualClock.getTime() - 21000)/(24000 - 21000);
 			MainGameLoop.lights.get(0).decreaseColor(new Vector3f(0.0001f,0.0001f,0.0001f));
-			MasterRenderer.RED -= 0.002f;
-			MasterRenderer.GREEN -= 0.002f;
-			MasterRenderer.BLUE -= 0.002f;
+
+            // Add fog colors with each frame
+            double factor = (120 * (24 - dayEnd) * 2); // 720 frames in 4 hours
+            double intervalRed = (GameSettings.DAY_MAX_RED - GameSettings.NIGHT_MAX_RED) / factor;
+            double intervalGreen = (GameSettings.DAY_MAX_GREEN - GameSettings.NIGHT_MAX_GREEN) / factor;
+            double intervalBlue = (GameSettings.DAY_MAX_BLUE - GameSettings.NIGHT_MAX_BLUE) / factor;
+
+			MasterRenderer.RED -= intervalRed;
+			MasterRenderer.GREEN -= intervalGreen;
+			MasterRenderer.BLUE -= intervalBlue;
+
 			System.out.print(" R: " + MasterRenderer.RED + " G: " + MasterRenderer.GREEN + " B: " + MasterRenderer.BLUE + " | ");
+
 		} else {
-			System.err.println("Error in time: Time has gone over 24 hours: " + VirtualClock.getHours() + " hours");
+            System.err.println("Error in time: Time has gone over 24 hours: " + VirtualClock.getHours() + " hours");
 			texture1 = texture;
 			texture2 = texture;
 			blendFactor = 0;
