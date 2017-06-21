@@ -34,7 +34,7 @@ public class DisplayManager
 	/**
 	 * FPS the game is run at.
 	 */
-	private static final int FPS_CAP = 120;
+	public static final int FPS_CAP = 120;
 
 	/**
 	 * Time at the end of the last frame

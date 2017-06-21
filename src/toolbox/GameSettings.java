@@ -15,10 +15,21 @@ public class GameSettings
 	/**
 	 * Maximum fog color values for daylight hours (used in SkyboxRenderer).
 	 */
-	public static final float DAY_MAX_RED = 0.5444f, DAY_MAX_GREEN = 0.62f, DAY_MAX_BLUE = 0.69f;
+	public static final float DAY_FOG_MAX_RED = 0.5444f, DAY_FOG_MAX_GREEN = 0.62f, DAY_FOG_MAX_BLUE = 0.69f;
 
     /**
      * Maximum fog color values for night hours (used in SkyboxRenderer).
      */
-    public static final float NIGHT_MAX_RED = 0.01f, NIGHT_MAX_GREEN = 0.01f, NIGHT_MAX_BLUE = 0.01f;
+    public static final float NIGHT_FOG_MAX_RED = 0.01f, NIGHT_FOG_MAX_GREEN = 0.01f, NIGHT_FOG_MAX_BLUE = 0.01f;
+
+	/**
+	 * Fog enabled? (used in SkyboxRenderer)
+	 */
+	public static final boolean FOG_ENABLED = false;
+
+	/**
+	 * Brightness of the sun during nighttime/daytime hours. (used in SkyboxRenderer)
+	 */
+	public static final float NIGHT_LIGHT_CONST_HOURS = 0.3f, DAY_LIGHT_CONST_HOURS = 1.0f;
+
 }

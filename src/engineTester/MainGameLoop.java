@@ -289,30 +289,30 @@ public class MainGameLoop
 //			{
 //				System.out.println("Daytime");
 //				lights.get(0).setColour(new Vector3f(0.3f,0.3f,0.3f));
-//				MasterRenderer.DAY_MAX_RED = 0.01f;
-//				MasterRenderer.DAY_MAX_GREEN = 0.01f;
-//				MasterRenderer.DAY_MAX_BLUE = 0.01f;
+//				MasterRenderer.DAY_FOG_MAX_RED = 0.01f;
+//				MasterRenderer.DAY_FOG_MAX_GREEN = 0.01f;
+//				MasterRenderer.DAY_FOG_MAX_BLUE = 0.01f;
 //			}else if(SkyboxRenderer.time >= 5000 && SkyboxRenderer.time < 8000)
 //			{
 //				System.out.println("Transfer");
 //				lights.get(0).increaseColor(new Vector3f(0.0001f,0.0001f,0.0001f));
-//				MasterRenderer.DAY_MAX_RED += 0.00157f;
-//				MasterRenderer.DAY_MAX_GREEN += 0.00157f;
-//				MasterRenderer.DAY_MAX_BLUE += 0.0018f;
+//				MasterRenderer.DAY_FOG_MAX_RED += 0.00157f;
+//				MasterRenderer.DAY_FOG_MAX_GREEN += 0.00157f;
+//				MasterRenderer.DAY_FOG_MAX_BLUE += 0.0018f;
 //			}else if(SkyboxRenderer.time >= 8000 && SkyboxRenderer.time < 21000)
 //			{
 //				System.out.println("Nighttime");
 //				lights.get(0).setColour(new Vector3f(1f,1f,1f));
-//				MasterRenderer.DAY_MAX_RED = 0.5444f;
-//				MasterRenderer.DAY_MAX_GREEN = 0.62f;
-//				MasterRenderer.DAY_MAX_BLUE = 0.69f;
+//				MasterRenderer.DAY_FOG_MAX_RED = 0.5444f;
+//				MasterRenderer.DAY_FOG_MAX_GREEN = 0.62f;
+//				MasterRenderer.DAY_FOG_MAX_BLUE = 0.69f;
 //			}else
 //			{
 //				System.out.println("Transfer");
 //				lights.get(0).decreaseColor(new Vector3f(0.0001f,0.0001f,0.0001f));
-//				MasterRenderer.DAY_MAX_RED -= 0.002f;
-//				MasterRenderer.DAY_MAX_GREEN -= 0.002f;
-//				MasterRenderer.DAY_MAX_BLUE -= 0.002f;
+//				MasterRenderer.DAY_FOG_MAX_RED -= 0.002f;
+//				MasterRenderer.DAY_FOG_MAX_GREEN -= 0.002f;
+//				MasterRenderer.DAY_FOG_MAX_BLUE -= 0.002f;
 //			}
 
 //			System.out.println(VirtualClock.getTimeString());

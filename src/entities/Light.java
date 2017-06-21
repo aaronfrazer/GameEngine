@@ -26,8 +26,6 @@ public class Light
 	 */
 	private Vector3f attenuation = new Vector3f(1, 0, 0);
 
-	private float lightValueChange = 0.0019f;
-
 	/**
 	 * Creates a colored light in a position of the world.
 	 *
@@ -111,7 +109,7 @@ public class Light
 	 */
 	public void increaseColor(Vector3f colorIncrease)
 	{
-		colorIncrease = new Vector3f(getColour().x + lightValueChange, getColour().y + lightValueChange, getColour().z + lightValueChange);
+		colorIncrease = new Vector3f(getColour().x + colorIncrease.x, getColour().y + colorIncrease.y, getColour().z + colorIncrease.z);
 		setColour(new Vector3f(colorIncrease.x, colorIncrease.y, colorIncrease.z));
 	}
 
@@ -122,7 +120,7 @@ public class Light
 	 */
 	public void decreaseColor(Vector3f colorDecrease)
 	{
-		colorDecrease = new Vector3f(getColour().x - lightValueChange, getColour().y - lightValueChange, getColour().z - lightValueChange);
+		colorDecrease = new Vector3f(getColour().x - colorDecrease.x, getColour().y - colorDecrease.y, getColour().z - colorDecrease.z);
 		setColour(new Vector3f(colorDecrease.x, colorDecrease.y, colorDecrease.z));
 	}
 
