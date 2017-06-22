@@ -24,6 +24,7 @@ import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
 import toolbox.InputHelper;
+import toolbox.MousePicker;
 import toolbox.VirtualClock;
 
 import java.util.ArrayList;
@@ -244,6 +245,7 @@ public class MainGameLoop
 		MasterRenderer renderer = new MasterRenderer(loader);
 
 		//********** GUI TEXTURES **********
+		// TODO: Show the game clock on the display
 		List<GuiTexture> guis = new ArrayList<>();
 		GuiTexture gui1 = new GuiTexture(loader.loadTexture("socuwanTexture"), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
 //		guis.add(gui1);
@@ -253,6 +255,11 @@ public class MainGameLoop
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		//**********************************
 
+		//********** MOUSE PICKER **********
+		// TODO: Make mouse picker work for all cameras
+		MousePicker picker = new MousePicker(tpcamera, renderer.getProjectionMatrix(), terrainList.get(0));
+		//***********************************
+
 		while (!Display.isCloseRequested()) { // loops until exit button pushed
 
 			VirtualClock.update();
@@ -260,6 +267,15 @@ public class MainGameLoop
 
 			cameraManager.update(cameraManager); // update current camera selected
 			cameraManager.getCurrentCamera().move(); // move current camera
+
+			picker.update();
+			Vector3f terrainPoint = picker.getCurrentTerrainPoint();
+			if (terrainPoint != null)
+			{
+				lampEntity.setPosition(terrainPoint);
+				lights.get(0).setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 15, terrainPoint.z));
+			}
+			System.out.println(picker.getCurrentRay());
 
 			for (Terrain terrain : terrainList)
 			{
@@ -284,38 +300,6 @@ public class MainGameLoop
 			renderer.render(lights, cameraManager.getCurrentCamera());
 
 			guiRenderer.render(guis);
-
-//			if(SkyboxRenderer.time >= 0 && SkyboxRenderer.time < 5000)
-//			{
-//				System.out.println("Daytime");
-//				lights.get(0).setColour(new Vector3f(0.3f,0.3f,0.3f));
-//				MasterRenderer.DAY_FOG_MAX_RED = 0.01f;
-//				MasterRenderer.DAY_FOG_MAX_GREEN = 0.01f;
-//				MasterRenderer.DAY_FOG_MAX_BLUE = 0.01f;
-//			}else if(SkyboxRenderer.time >= 5000 && SkyboxRenderer.time < 8000)
-//			{
-//				System.out.println("Transfer");
-//				lights.get(0).increaseColor(new Vector3f(0.0001f,0.0001f,0.0001f));
-//				MasterRenderer.DAY_FOG_MAX_RED += 0.00157f;
-//				MasterRenderer.DAY_FOG_MAX_GREEN += 0.00157f;
-//				MasterRenderer.DAY_FOG_MAX_BLUE += 0.0018f;
-//			}else if(SkyboxRenderer.time >= 8000 && SkyboxRenderer.time < 21000)
-//			{
-//				System.out.println("Nighttime");
-//				lights.get(0).setColour(new Vector3f(1f,1f,1f));
-//				MasterRenderer.DAY_FOG_MAX_RED = 0.5444f;
-//				MasterRenderer.DAY_FOG_MAX_GREEN = 0.62f;
-//				MasterRenderer.DAY_FOG_MAX_BLUE = 0.69f;
-//			}else
-//			{
-//				System.out.println("Transfer");
-//				lights.get(0).decreaseColor(new Vector3f(0.0001f,0.0001f,0.0001f));
-//				MasterRenderer.DAY_FOG_MAX_RED -= 0.002f;
-//				MasterRenderer.DAY_FOG_MAX_GREEN -= 0.002f;
-//				MasterRenderer.DAY_FOG_MAX_BLUE -= 0.002f;
-//			}
-
-//			System.out.println(VirtualClock.getTimeString());
 
 			// game logic
 

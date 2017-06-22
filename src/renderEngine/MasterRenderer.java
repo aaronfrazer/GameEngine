@@ -217,4 +217,13 @@ public class MasterRenderer
 		projectionMatrix.m33 = 0;
 	}
 
+	/**
+	 * Returns the projection matrix.
+	 * @return projectionMatrix
+	 */
+	public Matrix4f getProjectionMatrix()
+	{
+		return projectionMatrix;
+	}
+
 }

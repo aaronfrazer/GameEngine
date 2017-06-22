@@ -159,7 +159,7 @@ public class SkyboxRenderer
 
 		if (VirtualClock.getHours() >= nightStart && VirtualClock.getHours() < nightEnd) {
 
-			System.out.print("Night         | ");
+//			System.out.print("Night         | ");
 
 			// Texture
 			texture1 = nightTexture;
@@ -176,7 +176,7 @@ public class SkyboxRenderer
 
 		} else if (VirtualClock.getHours() >= nightEnd && VirtualClock.getHours() < dayStart) {
 
-			System.out.print("Night --> Day | ");
+//			System.out.print("Night --> Day | ");
 
 			// Texture
 			texture1 = nightTexture;
@@ -206,7 +206,7 @@ public class SkyboxRenderer
 
 		} else if (VirtualClock.getHours() >= dayStart && VirtualClock.getHours() < dayEnd) {
 
-            System.out.print("Day           | ");
+//            System.out.print("Day           | ");
 
             // Texture
             texture1 = texture;
@@ -223,7 +223,7 @@ public class SkyboxRenderer
 
 		} else if (VirtualClock.getHours() >= dayEnd && VirtualClock.getHours() < 24) {
 
-		    System.out.print("Day --> Night | ");
+//		    System.out.print("Day --> Night | ");
 
 			//Texture
 			texture1 = texture;
@@ -261,7 +261,7 @@ public class SkyboxRenderer
 
 //		System.out.print("blend = " + ((int) ((blendFactor * 1000.0) + ((blendFactor < 0.0) ? -0.5 : 0.5))) / 1000.0 + " | " + VirtualClock.getTimeString() + "\n");
 
-		System.out.print("lights = " + MainGameLoop.lights.get(0).getColour() + " | " + VirtualClock.getTimeString() + "\n");
+//		System.out.print("lights = " + MainGameLoop.lights.get(0).getColour() + " | " + VirtualClock.getTimeString() + "\n");
 
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture1);
