@@ -12,7 +12,11 @@ More functionality to the FreeRoamCamera
 
 Terrain rendering
     - Terrain should be rendered when a player can see it
-    - Player should be able to collide with outside walls of a terrain
+
+Mouse picking
+    - When switching cameras, the mousepicker needs to reset for where the mouse is
+    - Add an entity editor where you can pick up and place entities around the world by clicking the mouse
+    - Save worlds so that they can be used for later
 
 ---
 

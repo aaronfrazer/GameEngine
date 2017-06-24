@@ -13,6 +13,7 @@ import models.RawModel;
 import models.TexturedModel;
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -272,8 +273,11 @@ public class MainGameLoop
 			Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 			if (terrainPoint != null)
 			{
-				lampEntity.setPosition(terrainPoint);
-				lights.get(0).setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 15, terrainPoint.z));
+			    if (Mouse.isButtonDown(0))
+                {
+                    lampEntity.setPosition(terrainPoint);
+                    lights.get(0).setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 15, terrainPoint.z));
+                }
 			}
 			System.out.println(picker.getCurrentRay());
 

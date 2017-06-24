@@ -13,12 +13,12 @@ import terrain.Terrain;
 public class MousePicker
 {
     /**
-     *
+     * Amount of recursion used to position entities on the terrain
      */
     private static final int RECURSION_COUNT = 200;
 
     /**
-     * Maximum distance of mouse ray?
+     * Maximum distance of mouse ray
      */
     private static final float RAY_RANGE = 600;
 
