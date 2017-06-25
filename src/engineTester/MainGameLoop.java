@@ -13,7 +13,6 @@ import models.RawModel;
 import models.TexturedModel;
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -27,6 +26,7 @@ import textures.TerrainTexturePack;
 import toolbox.InputHelper;
 import toolbox.MousePicker;
 import toolbox.VirtualClock;
+import water.WaterFrameBuffers;
 import water.WaterRenderer;
 import water.WaterShader;
 import water.WaterTile;
@@ -260,11 +260,11 @@ public class MainGameLoop
 
 		//********** GUI TEXTURES **********
 		// TODO: Show the game clock on the display
-		List<GuiTexture> guis = new ArrayList<>();
+		List<GuiTexture> guiTextures = new ArrayList<>();
 		GuiTexture gui1 = new GuiTexture(loader.loadTexture("socuwanTexture"), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
-//		guis.add(gui1);
+//		guiTextures.add(gui1);
 		GuiTexture gui2 = new GuiTexture(loader.loadTexture("thinmatrixTexture"), new Vector2f(0.3f, 0.75f), new Vector2f(0.4f, 0.4f));
-//		guis.add(gui2);
+//		guiTextures.add(gui2);
 
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		//**********************************
@@ -279,25 +279,31 @@ public class MainGameLoop
 		waters = new ArrayList<WaterTile>();
 		waters.add(new WaterTile(565, 538, -2));
 
+		WaterFrameBuffers fbos = new WaterFrameBuffers();
+		GuiTexture gui = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
+		guiTextures.add(gui);
+
 		while (!Display.isCloseRequested()) { // loops until exit button pushed
 
 			VirtualClock.update();
 			InputHelper.update();
 
-			// 3D rendering
-			System.out.println(player.getPosition());
+			// Render scene to frame buffer
+			fbos.bindReflectionFrameBuffer();
 			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker);
+			fbos.unbindCurrentFrameBuffer();
 
+			// Render scene to normal display
+			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker); // 3D rendering
 			waterRenderer.render(waters, cameraManager.getCurrentCamera());
-
-			// 2D rendering, done separately
-			guiRenderer.render(guis);
+			guiRenderer.render(guiTextures); // 2D rendering
 
 			// Game logic
 
 			DisplayManager.updateDisplay();
 		}
 
+		fbos.cleanUp();
 		waterShader.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
