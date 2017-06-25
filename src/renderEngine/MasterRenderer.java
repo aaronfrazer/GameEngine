@@ -1,16 +1,21 @@
 package renderEngine;
 
+import cameras.CameraManager;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.Player;
 import models.TexturedModel;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 import shaders.StaticShader;
 import shaders.TerrainShader;
 import skybox.SkyboxRenderer;
 import terrain.Terrain;
+import toolbox.MousePicker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -226,4 +231,48 @@ public class MasterRenderer
 		return projectionMatrix;
 	}
 
+	/**
+	 * Renders the entire scene of the game.
+	 * @param entities - list of entities
+	 * @param terrains - list of terrains
+	 * @param lights - list of lights
+	 * @param cameraManager - camera manager (with cameras)
+	 * @param picker - mouse picker
+	 */
+	public void renderScene(Player player, List<Entity> entities, ArrayList<Terrain> terrains, List<Light> lights, CameraManager cameraManager, MousePicker picker)
+	{
+		cameraManager.update(cameraManager); // update current camera selected
+		cameraManager.getCurrentCamera().move(); // move current camera
+
+		picker.update();
+		Vector3f terrainPoint = picker.getCurrentTerrainPoint();
+		if (terrainPoint != null)
+		{
+			if (Mouse.isButtonDown(0))
+			{
+				entities.get(0).setPosition(terrainPoint); // lampEntity
+				lights.get(0).setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 15, terrainPoint.z));
+			}
+		}
+		System.out.println(picker.getCurrentRay());
+
+		render(lights, cameraManager.getCurrentCamera());
+
+		for (Terrain terrain : terrains)
+		{
+			if (terrain.isEntityInsideTerrain(player))
+			{
+				processTerrain(terrain);
+				player.move(terrain);
+			}
+		}
+
+		for (Entity entity : entities)
+		{
+//				entity.increaseRotation(0, 1, 0);
+			processEntity(entity);
+		}
+
+
+	}
 }

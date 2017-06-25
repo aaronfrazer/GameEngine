@@ -41,6 +41,8 @@ public class MainGameLoop
 {
 
 	public static List<Light> lights;
+	public static List<Entity> entities;
+	public static ArrayList<Terrain> terrains;
 
 	/**
 	 * Runs the game.  Used to test multiple terrains.
@@ -52,6 +54,12 @@ public class MainGameLoop
 		DisplayManager.createDisplay();
 
 		Loader loader = new Loader();
+
+		// *********** VARIABLES ***************
+		entities = new ArrayList<>();
+		terrains = new ArrayList<>();
+		lights = new ArrayList<>();
+		// *************************************
 
 		//********** TERRAIN TEXTURES **********
 		TerrainTexture grassTexture = new TerrainTexture(loader.loadTexture("grassTexture"));
@@ -70,9 +78,8 @@ public class MainGameLoop
 		Terrain terrain2 = new Terrain(0, -1, loader, texturePack2, blendMap, "heightmap");
 
 		// Create an arraylist for terrains
-		ArrayList<Terrain> terrainList = new ArrayList<>();
-		terrainList.add(terrain1);
-		terrainList.add(terrain2);
+		terrains.add(terrain1);
+		terrains.add(terrain2);
 
 		//********** ENTITY CREATION **********
 		// Dragon
@@ -86,6 +93,7 @@ public class MainGameLoop
 		float dragonY = terrain1.getHeightOfTerrain(dragonX, dragonZ);
 		Vector3f dragonCoords = new Vector3f(dragonX, dragonY, dragonZ);
 		Entity dragonEntity = new Entity(dragonTexturedModel, dragonCoords, 0, 0, 0, 1);
+		entities.add(dragonEntity);
 
 		// Stall
 		ModelData stallModelData = OBJFileLoader.loadOBJ("stallModel");
@@ -95,6 +103,7 @@ public class MainGameLoop
 		float stallY = terrain1.getHeightOfTerrain(stallX, stallZ);
 		Vector3f stallCoords = new Vector3f(stallX, stallY, stallZ);
 		Entity stallEntity = new Entity(stallTexturedModel, stallCoords, 0, 0, 0, 1);
+		entities.add(stallEntity);
 
 		// Tree (many)
 		ModelData treeModelData = OBJFileLoader.loadOBJ("treeModel");
@@ -135,13 +144,13 @@ public class MainGameLoop
 		float baseballY = terrain1.getHeightOfTerrain(baseballX, baseballZ);
 		Vector3f baseballCoords = new Vector3f(baseballX, baseballY + 12, baseballZ);
 		Entity baseballEntity = new Entity(baseballTexturedModel, baseballCoords, 0, 0, 0, 10);
+		entities.add(baseballEntity);
 
 		//**************************************
 
 		// Randomly generate trees
-		List<Entity> entities = new ArrayList<>();
 		Random random = new Random(676452);
-		for (Terrain terrain : terrainList)
+		for (Terrain terrain : terrains)
 		{
 			for (int i = 0; i < 400; i++)
 			{
@@ -182,7 +191,6 @@ public class MainGameLoop
 		}
 
 		//********** LIGHTS CREATION **********
-		lights = new ArrayList<>();
 		lights.add(new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.4f, 0.4f, 0.4f))); // sun (no attenuation)
 
 		float lampX = 200, lampZ = 290, lampY = terrain1.getHeightOfTerrain(lampX, lampZ);
@@ -196,7 +204,7 @@ public class MainGameLoop
 
 		// Red Light
 		Entity lampEntity = new Entity(lampTexturedModel, lampCoords, 0, 0, 0, 1);
-		entities.add(lampEntity);
+		entities.add(0, lampEntity);
 		lightCoords = new Vector3f(lampCoords.getX(), lampCoords.getY() + 12f, lampCoords.getZ());
 		lights.add(new Light(lightCoords, redLight, attenuation));
 
@@ -229,6 +237,7 @@ public class MainGameLoop
 		RawModel personRawModel = loader.loadToVAO(personModelData.getVertices(), personModelData.getTextureCoords(), personModelData.getNormals(), personModelData.getIndices());
 		TexturedModel personTexturedModel = new TexturedModel(personRawModel, new ModelTexture(loader.loadTexture("personTexture")));
 		Player player = new Player(personTexturedModel, new Vector3f(200, 0, 280), 0, 0, 0, 0.5f);
+		entities.add(player);
 		//**************************************
 
 		//********** CAMERA CREATION **********
@@ -258,7 +267,7 @@ public class MainGameLoop
 
 		//********** MOUSE PICKER **********
 		// TODO: Make mouse picker work for all cameras
-		MousePicker picker = new MousePicker(tpcamera, renderer.getProjectionMatrix(), terrainList.get(0));
+		MousePicker picker = new MousePicker(tpcamera, renderer.getProjectionMatrix(), terrains.get(0));
 		//***********************************
 
 		while (!Display.isCloseRequested()) { // loops until exit button pushed
@@ -266,46 +275,13 @@ public class MainGameLoop
 			VirtualClock.update();
 			InputHelper.update();
 
-			cameraManager.update(cameraManager); // update current camera selected
-			cameraManager.getCurrentCamera().move(); // move current camera
+			// 3D rendering
+			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker);
 
-			picker.update();
-			Vector3f terrainPoint = picker.getCurrentTerrainPoint();
-			if (terrainPoint != null)
-			{
-			    if (Mouse.isButtonDown(0))
-                {
-                    lampEntity.setPosition(terrainPoint);
-                    lights.get(0).setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 15, terrainPoint.z));
-                }
-			}
-			System.out.println(picker.getCurrentRay());
-
-			for (Terrain terrain : terrainList)
-			{
-				if (terrain.isEntityInsideTerrain(player))
-				{
-					renderer.processTerrain(terrain);
-					player.move(terrain);
-				}
-			}
-
-			for (Entity entity : entities)
-			{
-//				entity.increaseRotation(0, 1, 0);
-				renderer.processEntity(entity);
-			}
-
-			renderer.processEntity(player);
-			renderer.processEntity(stallEntity);
-			renderer.processEntity(dragonEntity);
-			renderer.processEntity(baseballEntity);
-
-			renderer.render(lights, cameraManager.getCurrentCamera());
-
+			// 2D rendering, done separately
 			guiRenderer.render(guis);
 
-			// game logic
+			// Game logic
 
 			DisplayManager.updateDisplay();
 		}
