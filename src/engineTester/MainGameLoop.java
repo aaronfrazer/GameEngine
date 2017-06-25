@@ -27,6 +27,9 @@ import textures.TerrainTexturePack;
 import toolbox.InputHelper;
 import toolbox.MousePicker;
 import toolbox.VirtualClock;
+import water.WaterRenderer;
+import water.WaterShader;
+import water.WaterTile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,7 @@ public class MainGameLoop
 	public static List<Light> lights;
 	public static List<Entity> entities;
 	public static ArrayList<Terrain> terrains;
+	public static List<WaterTile> waters;
 
 	/**
 	 * Runs the game.  Used to test multiple terrains.
@@ -236,7 +240,7 @@ public class MainGameLoop
 		ModelData personModelData = OBJFileLoader.loadOBJ("personModel");
 		RawModel personRawModel = loader.loadToVAO(personModelData.getVertices(), personModelData.getTextureCoords(), personModelData.getNormals(), personModelData.getIndices());
 		TexturedModel personTexturedModel = new TexturedModel(personRawModel, new ModelTexture(loader.loadTexture("personTexture")));
-		Player player = new Player(personTexturedModel, new Vector3f(200, 0, 280), 0, 0, 0, 0.5f);
+		Player player = new Player(personTexturedModel, new Vector3f(570, 0, 500), 0, 0, 0, 0.5f);
 		entities.add(player);
 		//**************************************
 
@@ -270,13 +274,21 @@ public class MainGameLoop
 		MousePicker picker = new MousePicker(tpcamera, renderer.getProjectionMatrix(), terrains.get(0));
 		//***********************************
 
+		WaterShader waterShader = new WaterShader();
+		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
+		waters = new ArrayList<WaterTile>();
+		waters.add(new WaterTile(565, 538, -2));
+
 		while (!Display.isCloseRequested()) { // loops until exit button pushed
 
 			VirtualClock.update();
 			InputHelper.update();
 
 			// 3D rendering
+			System.out.println(player.getPosition());
 			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker);
+
+			waterRenderer.render(waters, cameraManager.getCurrentCamera());
 
 			// 2D rendering, done separately
 			guiRenderer.render(guis);
@@ -286,6 +298,7 @@ public class MainGameLoop
 			DisplayManager.updateDisplay();
 		}
 
+		waterShader.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();

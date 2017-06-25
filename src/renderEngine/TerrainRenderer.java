@@ -15,20 +15,21 @@ import toolbox.Maths;
 import java.util.List;
 
 /**
- * Responsible for rendering terrain in the game.
- * 
+ * A class responsible for rendering terrain in the game.
+ *
  * @author Aaron Frazer
  */
 public class TerrainRenderer
 {
 	/**
-	 * Shader program
+	 * Terrain shader program
 	 */
 	private TerrainShader shader;
-	
+
 	/**
-	 * Constructs a terrain renderer
-	 * @param shader - shader program
+	 * Constructs a terrain renderer.
+	 *
+	 * @param shader           - shader program
 	 * @param projectionMatrix - projection matrix
 	 */
 	TerrainRenderer(TerrainShader shader, Matrix4f projectionMatrix)
@@ -39,7 +40,12 @@ public class TerrainRenderer
 		shader.connectTextureUnits();
 		shader.stop();
 	}
-	
+
+	/**
+	 * Renders a list of terrains.
+	 *
+	 * @param terrains - list of terrains
+	 */
 	public void render(List<Terrain> terrains)
 	{
 		for (Terrain terrain : terrains)
@@ -51,9 +57,10 @@ public class TerrainRenderer
 			unbindTexturedModel();
 		}
 	}
-	
+
 	/**
 	 * Prepares a terrain by binding model and texture to VAO attributes.
+	 *
 	 * @param terrain - terrain model to be prepared
 	 */
 	private void prepareTerrain(Terrain terrain)
@@ -64,20 +71,21 @@ public class TerrainRenderer
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
-		
+
 		bindTextures(terrain);
-		
+
 		// Load shine settings
 		shader.loadShineVariables(1, 0);
-		
+
 		// Use this to enable triangle-vision
 //		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 //		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 	}
-	
+
 	/**
 	 * Binds 4 terrain textures and blend map to 5 separate texture units.
-	 * @param terrain - terrain 
+	 *
+	 * @param terrain - terrain
 	 */
 	private void bindTextures(Terrain terrain)
 	{
@@ -93,7 +101,7 @@ public class TerrainRenderer
 		GL13.glActiveTexture(GL13.GL_TEXTURE4);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, terrain.getBlendMap().getTextureID());
 	}
-	
+
 	/**
 	 * Unbinds attributes of a terrain.
 	 */
@@ -104,9 +112,10 @@ public class TerrainRenderer
 		GL20.glDisableVertexAttribArray(2);
 		GL30.glBindVertexArray(0);
 	}
-	
+
 	/**
 	 * Loads a model matrix for a terrain.
+	 *
 	 * @param terrain - instance of terrain
 	 */
 	private void loadModelMatrix(Terrain terrain)

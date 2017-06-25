@@ -254,7 +254,7 @@ public class MasterRenderer
 				lights.get(0).setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 15, terrainPoint.z));
 			}
 		}
-		System.out.println(picker.getCurrentRay());
+//		System.out.println(picker.getCurrentRay());
 
 		render(lights, cameraManager.getCurrentCamera());
 

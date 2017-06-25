@@ -102,7 +102,7 @@ public class TerrainShader extends ShaderProgram
 	private int location_blendMap;
 	
 	/**
-	 * Creates a static shader program.
+	 * Creates a terrain shader program.
 	 */
 	public TerrainShader()
 	{
@@ -187,7 +187,7 @@ public class TerrainShader extends ShaderProgram
 	}
 	
 	/**
-	 * Loads a projection matrix to a unifrom variable (in vertex shader code).
+	 * Loads a projection matrix to a uniform variable (in vertex shader code).
 	 * @param projection - projection matrix
 	 */
 	public void loadProjectionMatrix(Matrix4f projection)
@@ -220,7 +220,7 @@ public class TerrainShader extends ShaderProgram
 	}
 	
 	/**
-	 * Loads a view matrix to a unifrom variable (in vertex shader code).
+	 * Loads a view matrix to a uniform variable (in vertex shader code).
 	 * @param camera - camera
 	 */
 	public void loadViewMatrix(Camera camera)
