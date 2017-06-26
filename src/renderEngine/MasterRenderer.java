@@ -11,6 +11,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 import shaders.StaticShader;
 import shaders.TerrainShader;
 import skybox.SkyboxRenderer;
@@ -128,12 +129,14 @@ public class MasterRenderer
 	 *
 	 * @param lights - list of lights
 	 * @param camera - camera
+	 * @param clipPlane - 4D clipping plane
 	 */
-	public void render(List<Light> lights, Camera camera)
+	public void render(List<Light> lights, Camera camera, Vector4f clipPlane)
 	{
 		prepare();
 
 		shader.start();
+		shader.loadClipPlane(clipPlane);
 		shader.loadSkyColour(RED, GREEN, BLUE);
 		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
@@ -141,6 +144,7 @@ public class MasterRenderer
 		shader.stop();
 
 		terrainShader.start();
+		terrainShader.loadClipPlane(clipPlane);
 		terrainShader.loadSkyColour(RED, GREEN, BLUE);
 		terrainShader.loadLights(lights);
 		terrainShader.loadViewMatrix(camera);
@@ -238,8 +242,9 @@ public class MasterRenderer
 	 * @param lights - list of lights
 	 * @param cameraManager - camera manager (with cameras)
 	 * @param picker - mouse picker
+	 * @param clipPlane - clipping plane
 	 */
-	public void renderScene(Player player, List<Entity> entities, ArrayList<Terrain> terrains, List<Light> lights, CameraManager cameraManager, MousePicker picker)
+	public void renderScene(Player player, List<Entity> entities, ArrayList<Terrain> terrains, List<Light> lights, CameraManager cameraManager, MousePicker picker, Vector4f clipPlane)
 	{
 		cameraManager.update(cameraManager); // update current camera selected
 		cameraManager.getCurrentCamera().move(); // move current camera
@@ -256,7 +261,7 @@ public class MasterRenderer
 		}
 //		System.out.println(picker.getCurrentRay());
 
-		render(lights, cameraManager.getCurrentCamera());
+		render(lights, cameraManager.getCurrentCamera(), clipPlane);
 
 		for (Terrain terrain : terrains)
 		{

@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -131,9 +132,19 @@ public abstract class ShaderProgram
 	{
 		GL20.glUniform1i(location, value);
 	}
-	
+
 	/**
-	 * Loads a Vector3f into a uniform location.
+	 * Loads a 2D vector into a uniform location.
+	 * @param location - position the 2D vector is loaded to
+	 * @param vector - 2D vector
+	 */
+	protected void load2DVector(int location, Vector2f vector)
+	{
+		GL20.glUniform2f(location, vector.x, vector.y);
+	}
+
+	/**
+	 * Loads a 3D vector into a uniform location.
 	 * @param location - position the 3D vector is loaded to
 	 * @param vector - 3D vector
 	 */
@@ -143,15 +154,15 @@ public abstract class ShaderProgram
 	}
 
 	/**
-	 * Loads a Vector2f into a uniform location.
-	 * @param location - position the 2D vector is loaded to
-	 * @param vector - 2D vector
+	 * Loads a 4D vector into a uniform location.
+	 * @param location - position the 3D vector is loaded to
+	 * @param vector - 3D vector
 	 */
-	protected void load2DVector(int location, Vector2f vector)
+	protected void load4DVector(int location, Vector4f vector)
 	{
-		GL20.glUniform2f(location, vector.x, vector.y);
+		GL20.glUniform4f(location, vector.x, vector.y, vector.z, vector.w);
 	}
-	
+
 	/**
 	 * Loads a Vector3f into a uniform location.
 	 * @param location - position the boolean is loaded to

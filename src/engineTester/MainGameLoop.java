@@ -4,6 +4,7 @@ import cameras.CameraManager;
 import cameras.FirstPersonCamera;
 import cameras.FreeRoamCamera;
 import cameras.ThirdPersonCamera;
+import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
@@ -14,8 +15,11 @@ import models.TexturedModel;
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -274,28 +278,48 @@ public class MainGameLoop
 		MousePicker picker = new MousePicker(tpcamera, renderer.getProjectionMatrix(), terrains.get(0));
 		//***********************************
 
+		//********** WATER RENDERING **********
 		WaterShader waterShader = new WaterShader();
 		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
 		waters = new ArrayList<WaterTile>();
 		waters.add(new WaterTile(565, 538, -2));
 
-		WaterFrameBuffers fbos = new WaterFrameBuffers();
-		GuiTexture gui = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
-		guiTextures.add(gui);
+		WaterFrameBuffers waterBuffers = new WaterFrameBuffers();
+		GuiTexture refraction = new GuiTexture(waterBuffers.getRefractionTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+		GuiTexture reflection = new GuiTexture(waterBuffers.getReflectionTexture(), new Vector2f(-0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+		guiTextures.add(refraction);
+		guiTextures.add(reflection);
+		//*************************************
 
 		while (!Display.isCloseRequested()) { // loops until exit button pushed
 
 			VirtualClock.update();
 			InputHelper.update();
 
-			// Render scene to frame buffer
-			fbos.bindReflectionFrameBuffer();
-			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker);
-			fbos.unbindCurrentFrameBuffer();
+			// TODO: Remove picker parameter from renderScene() method
 
-			// Render scene to normal display
-			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker); // 3D rendering
-			waterRenderer.render(waters, cameraManager.getCurrentCamera());
+			Camera camera = cameraManager.getCurrentCamera();
+
+			// Render scene to reflection frame buffer
+			waterBuffers.bindReflectionFrameBuffer();
+			float distance = 2 * (camera.getPosition().y - waters.get(0).getHeight());
+			camera.getPosition().y -= distance;
+			camera.invertPitch();
+			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker, new Vector4f(0, 1, 0, -waters.get(0).getHeight()));
+			camera.getPosition().y += distance;
+			camera.invertPitch();
+
+			// Render scene to refraction frame buffer
+			waterBuffers.bindRefractionFrameBuffer();
+			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker, new Vector4f(0, -1, 0, waters.get(0).getHeight()));
+			waterBuffers.unbindCurrentFrameBuffer();
+
+			// Render scene to screen
+			GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
+			waterBuffers.unbindCurrentFrameBuffer();
+			// If culling is cutting off entities the w value must be increased to a very large number
+			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker, new Vector4f(0, -1, 0, 0));
+			waterRenderer.render(waters, camera);
 			guiRenderer.render(guiTextures); // 2D rendering
 
 			// Game logic
@@ -303,7 +327,7 @@ public class MainGameLoop
 			DisplayManager.updateDisplay();
 		}
 
-		fbos.cleanUp();
+		waterBuffers.cleanUp();
 		waterShader.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();

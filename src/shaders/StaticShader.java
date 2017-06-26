@@ -6,6 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Light;
+import org.lwjgl.util.vector.Vector4f;
 import toolbox.Maths;
 
 import java.util.List;
@@ -97,6 +98,11 @@ public class StaticShader extends ShaderProgram
 	private int location_offset;
 
 	/**
+	 * Location of clip plane variable
+	 */
+	private int location_plane;
+
+	/**
 	 * Creates a static shader program.
 	 */
 	public StaticShader()
@@ -124,6 +130,7 @@ public class StaticShader extends ShaderProgram
 		location_skyColour = super.getUniformLocation("skyColour");
 		location_numberOfRows = super.getUniformLocation("numberOfRows");
 		location_offset = super.getUniformLocation("offset");
+		location_plane = super.getUniformLocation("plane");
 
 		location_lightPosition = new int[MAX_LIGHTS];
 		location_lightColour = new int[MAX_LIGHTS];
@@ -134,6 +141,15 @@ public class StaticShader extends ShaderProgram
 			location_lightColour[i] = super.getUniformLocation("lightColour[" + i + "]");
 			location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
 		}
+	}
+
+	/**
+	 * Loads clip plane to a uniform variable (in vertex shader)
+	 * @param plane - clipping plane
+	 */
+	public void loadClipPlane(Vector4f plane)
+	{
+		super.load4DVector(location_plane, plane);
 	}
 
 	/**
