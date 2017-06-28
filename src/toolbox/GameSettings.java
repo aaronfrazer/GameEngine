@@ -25,11 +25,16 @@ public class GameSettings
 	/**
 	 * Fog enabled? (used in SkyboxRenderer)
 	 */
-	public static final boolean FOG_ENABLED = false;
+	public static final boolean FOG_ENABLED = true;
 
 	/**
 	 * Brightness of the sun during nighttime/daytime hours. (used in SkyboxRenderer)
 	 */
 	public static final float NIGHT_LIGHT_CONST_HOURS = 0.3f, DAY_LIGHT_CONST_HOURS = 1.0f;
+
+	/**
+	 * Enable/disable night and day mode
+	 */
+	public static final boolean DAY_ENABLED = true;
 
 }

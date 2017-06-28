@@ -315,10 +315,9 @@ public class MainGameLoop
 			waterBuffers.unbindCurrentFrameBuffer();
 
 			// Render scene to screen
-			GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 			waterBuffers.unbindCurrentFrameBuffer();
-			// If culling is cutting off entities the w value must be increased to a very large number
-			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker, new Vector4f(0, -1, 0, 0));
+
+			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker, new Vector4f(0, 0, 0, 0)); // Don't clip anything
 			waterRenderer.render(waters, camera);
 			guiRenderer.render(guiTextures); // 2D rendering
 

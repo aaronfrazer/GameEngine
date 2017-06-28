@@ -129,7 +129,7 @@ public class SkyboxRenderer
 	 * @param g - green color value
 	 * @param b - blue color value
 	 */
-	public void render (Camera camera, float r, float g, float b)
+	public void render(Camera camera, float r, float g, float b)
 	{
 		shader.start();
 		shader.loadViewMatrix(camera);
@@ -157,8 +157,9 @@ public class SkyboxRenderer
 		float dayStart = 4;
 		float dayEnd = 21;
 
-		if (VirtualClock.getHours() >= nightStart && VirtualClock.getHours() < nightEnd) {
-
+		// TODO: Fix fog variables for day/night times
+		if (VirtualClock.getHours() >= nightStart && VirtualClock.getHours() < nightEnd)
+		{
 //			System.out.print("Night         | ");
 
 			// Texture
@@ -174,8 +175,8 @@ public class SkyboxRenderer
 			MasterRenderer.GREEN = GameSettings.NIGHT_FOG_MAX_GREEN;
 			MasterRenderer.BLUE = GameSettings.NIGHT_FOG_MAX_BLUE;
 
-		} else if (VirtualClock.getHours() >= nightEnd && VirtualClock.getHours() < dayStart) {
-
+		} else if (VirtualClock.getHours() >= nightEnd && VirtualClock.getHours() < dayStart)
+		{
 //			System.out.print("Night --> Day | ");
 
 			// Texture
@@ -184,19 +185,11 @@ public class SkyboxRenderer
 			blendFactor = (float) ((VirtualClock.getHours()*1000) - (nightEnd*1000))/((dayStart*1000) - (nightEnd*1000));
 
 			// Light
-			// Want this to go from 0.3 to 1.0 within 720 frames
-			// What is the interval?
-			// Interval =
 			float factor = (DisplayManager.FPS_CAP * (dayStart - nightEnd) * 2); // x FPS in y hours
-
 			float interval = (GameSettings.DAY_LIGHT_CONST_HOURS - GameSettings.NIGHT_LIGHT_CONST_HOURS) / factor;
 			MainGameLoop.lights.get(0).increaseColor(new Vector3f(interval, interval, interval));
 
 			// Fog
-			// 1. numFrames
-			// 2. valueStart
-			// 3. valueEnd
-			// interval = (valueEnd - valueStart) / numFrames
             double intervalRed = (GameSettings.DAY_FOG_MAX_RED - GameSettings.NIGHT_FOG_MAX_RED) / factor;
             double intervalGreen = (GameSettings.DAY_FOG_MAX_GREEN - GameSettings.NIGHT_FOG_MAX_GREEN) / factor;
             double intervalBlue = (GameSettings.DAY_FOG_MAX_BLUE - GameSettings.NIGHT_FOG_MAX_BLUE) / factor;
@@ -204,8 +197,8 @@ public class SkyboxRenderer
             MasterRenderer.GREEN += intervalGreen;
             MasterRenderer.BLUE += intervalBlue;
 
-		} else if (VirtualClock.getHours() >= dayStart && VirtualClock.getHours() < dayEnd) {
-
+		} else if (VirtualClock.getHours() >= dayStart && VirtualClock.getHours() < dayEnd)
+		{
 //            System.out.print("Day           | ");
 
             // Texture
@@ -221,8 +214,8 @@ public class SkyboxRenderer
 			MasterRenderer.GREEN = GameSettings.DAY_FOG_MAX_GREEN;
 			MasterRenderer.BLUE = GameSettings.DAY_FOG_MAX_BLUE;
 
-		} else if (VirtualClock.getHours() >= dayEnd && VirtualClock.getHours() < 24) {
-
+		} else if (VirtualClock.getHours() >= dayEnd && VirtualClock.getHours() < 24)
+		{
 //		    System.out.print("Day --> Night | ");
 
 			//Texture
@@ -243,7 +236,8 @@ public class SkyboxRenderer
 			MasterRenderer.GREEN -= intervalGreen;
 			MasterRenderer.BLUE -= intervalBlue;
 
-		} else {
+		} else
+		{
             System.err.println("Error in time: Time has gone over 24 hours: " + VirtualClock.getHours() + " hours");
 			texture1 = texture;
 			texture2 = texture;
