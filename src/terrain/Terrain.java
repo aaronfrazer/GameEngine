@@ -26,7 +26,7 @@ public class Terrain
 	/**
 	 * Size of terrain
 	 */
-	public static final float SIZE = 800;
+	public static float SIZE = 800;
 
 	/**
 	 * Maximum height of terrain
@@ -68,7 +68,7 @@ public class Terrain
 	 * @param gridX - x coordinate
 	 * @param gridZ - z coordinate
 	 * @param loader - loader
-	 * @param texture - texture of terrain
+	 * @param blendMap - blend map of terrain
 	 * @param heightMap - height map filename
 	 */
 	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap, String heightMap)
@@ -221,6 +221,28 @@ public class Terrain
 		
 		return height;
 	}
+
+	/**
+	 * Returns the height of the terrain at a particular (x, y) coordinate
+	 * @param x - x coordinate of pixel
+	 * @param z - z coordinate of pixel
+	 * @return height of terrain
+	 */
+//	private float getHeight(int x, int z)
+//	{
+//		if (x < 0 || z < 0)
+//		{
+//			return 0;
+//		}
+//
+//		float height = image.getRGB(x, z);
+//
+//		height += MAX_PIXEL_COLOUR / 2f;
+//		height /= MAX_PIXEL_COLOUR / 2f;
+//		height *= MAX_HEIGHT;
+//
+//		return height;
+//	}
 	
 	/**
 	 * Returns the x coordinate of this terrain.
@@ -279,7 +301,7 @@ public class Terrain
 
 	/**
 	 * Checks if an entity is inside the x and z coordinates of this terrain.
-	 * @param player - entity to be checked
+	 * @param entity - entity to be checked
 	 * @return true if entity is inside
 	 */
 	public boolean isEntityInsideTerrain(Entity entity)
@@ -300,5 +322,10 @@ public class Terrain
 		
 		return false;
 	}
-	
+
+	public Vector3f getCenter()
+	{
+		return new Vector3f(SIZE/ 2, SIZE / 2, 36);
+	}
+
 }

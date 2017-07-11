@@ -92,7 +92,7 @@ public class SkyboxRenderer
 	/**
 	 * Texture ID used for day cubemap
 	 */
-	private int texture;
+	private int dayTexture;
 
 	/**
 	 * Texture ID used for night cubemap
@@ -107,13 +107,13 @@ public class SkyboxRenderer
 	/**
 	 * Creates a skybox renderer.
 	 *
-	 * @param loader - texture loader
+	 * @param loader - dayTexture loader
 	 * @param projectionMatrix - projection matrix (to be loaded to shader)
 	 */
 	public SkyboxRenderer(Loader loader, Matrix4f projectionMatrix)
 	{
 		cube = loader.loadToVAO(VERTICES, 3);
-		texture = loader.loadCubeMap(TEXTURE_FILES);
+		dayTexture = loader.loadCubeMap(TEXTURE_FILES);
 		nightTexture = loader.loadCubeMap(NIGHT_TEXTURE_FILES);
 		shader = new SkyboxShader();
 		shader.start();
@@ -157,90 +157,98 @@ public class SkyboxRenderer
 		float dayStart = 4;
 		float dayEnd = 21;
 
-		// TODO: Fix fog variables for day/night times
-		if (VirtualClock.getHours() >= nightStart && VirtualClock.getHours() < nightEnd)
+		if (!GameSettings.DAY_ONLY_MODE)
 		{
+			// TODO: Fix fog variables for day/night times
+			if (VirtualClock.getHours() >= nightStart && VirtualClock.getHours() < nightEnd)
+			{
 //			System.out.print("Night         | ");
 
-			// Texture
-			texture1 = nightTexture;
-			texture2 = nightTexture;
-			blendFactor = 1;
+				// Texture
+				texture1 = nightTexture;
+				texture2 = nightTexture;
+				blendFactor = 1;
 
-			// Light
-			MainGameLoop.lights.get(0).setColour(new Vector3f(GameSettings.NIGHT_LIGHT_CONST_HOURS, GameSettings.NIGHT_LIGHT_CONST_HOURS, GameSettings.NIGHT_LIGHT_CONST_HOURS));
+				// Light
+				MainGameLoop.lights.get(0).setColour(new Vector3f(GameSettings.NIGHT_LIGHT_CONST_HOURS, GameSettings.NIGHT_LIGHT_CONST_HOURS, GameSettings.NIGHT_LIGHT_CONST_HOURS));
 
-			// Fog
-			MasterRenderer.RED = GameSettings.NIGHT_FOG_MAX_RED;
-			MasterRenderer.GREEN = GameSettings.NIGHT_FOG_MAX_GREEN;
-			MasterRenderer.BLUE = GameSettings.NIGHT_FOG_MAX_BLUE;
+				// Fog
+				MasterRenderer.RED = GameSettings.NIGHT_FOG_MAX_RED;
+				MasterRenderer.GREEN = GameSettings.NIGHT_FOG_MAX_GREEN;
+				MasterRenderer.BLUE = GameSettings.NIGHT_FOG_MAX_BLUE;
 
-		} else if (VirtualClock.getHours() >= nightEnd && VirtualClock.getHours() < dayStart)
-		{
+			} else if (VirtualClock.getHours() >= nightEnd && VirtualClock.getHours() < dayStart)
+			{
 //			System.out.print("Night --> Day | ");
 
-			// Texture
-			texture1 = nightTexture;
-			texture2 = texture;
-			blendFactor = (float) ((VirtualClock.getHours()*1000) - (nightEnd*1000))/((dayStart*1000) - (nightEnd*1000));
+				// Texture
+				texture1 = nightTexture;
+				texture2 = dayTexture;
+				blendFactor = (float) ((VirtualClock.getHours()*1000) - (nightEnd*1000))/((dayStart*1000) - (nightEnd*1000));
 
-			// Light
-			float factor = (DisplayManager.FPS_CAP * (dayStart - nightEnd) * 2); // x FPS in y hours
-			float interval = (GameSettings.DAY_LIGHT_CONST_HOURS - GameSettings.NIGHT_LIGHT_CONST_HOURS) / factor;
-			MainGameLoop.lights.get(0).increaseColor(new Vector3f(interval, interval, interval));
+				// Light
+				float factor = (DisplayManager.FPS_CAP * (dayStart - nightEnd) * 2); // x FPS in y hours
+				float interval = (GameSettings.DAY_LIGHT_CONST_HOURS - GameSettings.NIGHT_LIGHT_CONST_HOURS) / factor;
+				MainGameLoop.lights.get(0).increaseColor(new Vector3f(interval, interval, interval));
 
-			// Fog
-            double intervalRed = (GameSettings.DAY_FOG_MAX_RED - GameSettings.NIGHT_FOG_MAX_RED) / factor;
-            double intervalGreen = (GameSettings.DAY_FOG_MAX_GREEN - GameSettings.NIGHT_FOG_MAX_GREEN) / factor;
-            double intervalBlue = (GameSettings.DAY_FOG_MAX_BLUE - GameSettings.NIGHT_FOG_MAX_BLUE) / factor;
-            MasterRenderer.RED += intervalRed;
-            MasterRenderer.GREEN += intervalGreen;
-            MasterRenderer.BLUE += intervalBlue;
+				// Fog
+				double intervalRed = (GameSettings.DAY_FOG_MAX_RED - GameSettings.NIGHT_FOG_MAX_RED) / factor;
+				double intervalGreen = (GameSettings.DAY_FOG_MAX_GREEN - GameSettings.NIGHT_FOG_MAX_GREEN) / factor;
+				double intervalBlue = (GameSettings.DAY_FOG_MAX_BLUE - GameSettings.NIGHT_FOG_MAX_BLUE) / factor;
+				MasterRenderer.RED += intervalRed;
+				MasterRenderer.GREEN += intervalGreen;
+				MasterRenderer.BLUE += intervalBlue;
 
-		} else if (VirtualClock.getHours() >= dayStart && VirtualClock.getHours() < dayEnd)
-		{
+			} else if (VirtualClock.getHours() >= dayStart && VirtualClock.getHours() < dayEnd)
+			{
 //            System.out.print("Day           | ");
 
-            // Texture
-            texture1 = texture;
-			texture2 = texture;
-			blendFactor = 0;
+				// Texture
+				texture1 = dayTexture;
+				texture2 = dayTexture;
+				blendFactor = 0;
 
-			// Light
-			MainGameLoop.lights.get(0).setColour(new Vector3f(GameSettings.DAY_LIGHT_CONST_HOURS,GameSettings.DAY_LIGHT_CONST_HOURS,GameSettings.DAY_LIGHT_CONST_HOURS));
+				// Light
+				MainGameLoop.lights.get(0).setColour(new Vector3f(GameSettings.DAY_LIGHT_CONST_HOURS,GameSettings.DAY_LIGHT_CONST_HOURS,GameSettings.DAY_LIGHT_CONST_HOURS));
 
-			// Fog
-			MasterRenderer.RED = GameSettings.DAY_FOG_MAX_RED;
-			MasterRenderer.GREEN = GameSettings.DAY_FOG_MAX_GREEN;
-			MasterRenderer.BLUE = GameSettings.DAY_FOG_MAX_BLUE;
+				// Fog
+				MasterRenderer.RED = GameSettings.DAY_FOG_MAX_RED;
+				MasterRenderer.GREEN = GameSettings.DAY_FOG_MAX_GREEN;
+				MasterRenderer.BLUE = GameSettings.DAY_FOG_MAX_BLUE;
 
-		} else if (VirtualClock.getHours() >= dayEnd && VirtualClock.getHours() < 24)
-		{
+			} else if (VirtualClock.getHours() >= dayEnd && VirtualClock.getHours() < 24)
+			{
 //		    System.out.print("Day --> Night | ");
 
-			//Texture
-			texture1 = texture;
-			texture2 = nightTexture;
-			blendFactor = (float) ((VirtualClock.getHours()*1000) - (dayEnd*1000))/((24*1000) - (dayEnd*1000));
+				//Texture
+				texture1 = dayTexture;
+				texture2 = nightTexture;
+				blendFactor = (float) ((VirtualClock.getHours()*1000) - (dayEnd*1000))/((24*1000) - (dayEnd*1000));
 
-			// Light
-			float factor = (DisplayManager.FPS_CAP * (24 - dayEnd) * 2); // x FPS in y hours
-			float interval = (GameSettings.DAY_LIGHT_CONST_HOURS - GameSettings.NIGHT_LIGHT_CONST_HOURS) / factor;
-			MainGameLoop.lights.get(0).decreaseColor(new Vector3f(interval,interval,interval));
+				// Light
+				float factor = (DisplayManager.FPS_CAP * (24 - dayEnd) * 2); // x FPS in y hours
+				float interval = (GameSettings.DAY_LIGHT_CONST_HOURS - GameSettings.NIGHT_LIGHT_CONST_HOURS) / factor;
+				MainGameLoop.lights.get(0).decreaseColor(new Vector3f(interval,interval,interval));
 
-            // Fog
-            double intervalRed = (GameSettings.DAY_FOG_MAX_RED - GameSettings.NIGHT_FOG_MAX_RED) / factor;
-            double intervalGreen = (GameSettings.DAY_FOG_MAX_GREEN - GameSettings.NIGHT_FOG_MAX_GREEN) / factor;
-            double intervalBlue = (GameSettings.DAY_FOG_MAX_BLUE - GameSettings.NIGHT_FOG_MAX_BLUE) / factor;
-			MasterRenderer.RED -= intervalRed;
-			MasterRenderer.GREEN -= intervalGreen;
-			MasterRenderer.BLUE -= intervalBlue;
+				// Fog
+				double intervalRed = (GameSettings.DAY_FOG_MAX_RED - GameSettings.NIGHT_FOG_MAX_RED) / factor;
+				double intervalGreen = (GameSettings.DAY_FOG_MAX_GREEN - GameSettings.NIGHT_FOG_MAX_GREEN) / factor;
+				double intervalBlue = (GameSettings.DAY_FOG_MAX_BLUE - GameSettings.NIGHT_FOG_MAX_BLUE) / factor;
+				MasterRenderer.RED -= intervalRed;
+				MasterRenderer.GREEN -= intervalGreen;
+				MasterRenderer.BLUE -= intervalBlue;
 
+			} else
+			{
+				System.err.println("Error in time: Time has gone over 24 hours: " + VirtualClock.getHours() + " hours");
+				texture1 = dayTexture;
+				texture2 = dayTexture;
+				blendFactor = 0;
+			}
 		} else
 		{
-            System.err.println("Error in time: Time has gone over 24 hours: " + VirtualClock.getHours() + " hours");
-			texture1 = texture;
-			texture2 = texture;
+			texture1 = dayTexture;
+			texture2 = dayTexture;
 			blendFactor = 0;
 		}
 
@@ -248,9 +256,9 @@ public class SkyboxRenderer
 
 		if (GameSettings.FOG_ENABLED == false)
 		{
-			MasterRenderer.RED = 0.0f;
-			MasterRenderer.GREEN = 0.0f;
-			MasterRenderer.BLUE = 0.0f;
+			MasterRenderer.RED = 1.0f;
+			MasterRenderer.GREEN = 1.0f;
+			MasterRenderer.BLUE = 1.0f;
 		}
 
 //		System.out.print("blend = " + ((int) ((blendFactor * 1000.0) + ((blendFactor < 0.0) ? -0.5 : 0.5))) / 1000.0 + " | " + VirtualClock.getTimeString() + "\n");

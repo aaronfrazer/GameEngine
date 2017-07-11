@@ -37,6 +37,17 @@ public class WaterShader extends ShaderProgram
 	private int location_projectionMatrix;
 
 	/**
+	 * Location of reflection texture variable
+	 */
+	private int location_reflectionTexture;
+
+	/**
+	 * Location of refraction texture variable
+	 */
+	private int location_refractionTexture;
+
+
+	/**
 	 * Creates a water shader program.
 	 */
 	public WaterShader()
@@ -56,6 +67,17 @@ public class WaterShader extends ShaderProgram
 		location_projectionMatrix = getUniformLocation("projectionMatrix");
 		location_viewMatrix = getUniformLocation("viewMatrix");
 		location_modelMatrix = getUniformLocation("modelMatrix");
+		location_reflectionTexture = getUniformLocation("reflectionTexture");
+		location_refractionTexture = getUniformLocation("refractionTexture");
+	}
+
+	/**
+	 * Binds reflection and refraction variables to sampler2D (in vertex shader code - waterFragmentShader.glsl).
+	 */
+	public void connectTextureUnits()
+	{
+		super.loadInt(location_reflectionTexture, 0);
+		super.loadInt(location_refractionTexture, 1);
 	}
 
 	/**

@@ -244,31 +244,37 @@ public class MasterRenderer
 	 * @param picker - mouse picker
 	 * @param clipPlane - clipping plane
 	 */
-	public void renderScene(Player player, List<Entity> entities, ArrayList<Terrain> terrains, List<Light> lights, CameraManager cameraManager, MousePicker picker, Vector4f clipPlane)
-	{
+	public void renderScene(Player player, List<Entity> entities, ArrayList<Terrain> terrains, List<Light> lights, CameraManager cameraManager, MousePicker picker, Vector4f clipPlane) {
 		cameraManager.update(cameraManager); // update current camera selected
 		cameraManager.getCurrentCamera().move(); // move current camera
 
-		picker.update();
-		Vector3f terrainPoint = picker.getCurrentTerrainPoint();
-		if (terrainPoint != null)
+		if (picker != null)
 		{
-			if (Mouse.isButtonDown(0))
-			{
-				entities.get(0).setPosition(terrainPoint); // lampEntity
-				lights.get(0).setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 15, terrainPoint.z));
+			picker.update();
+			Vector3f terrainPoint = picker.getCurrentTerrainPoint();
+			if (terrainPoint != null) {
+				if (Mouse.isButtonDown(0)) {
+					entities.get(0).setPosition(terrainPoint); // lampEntity
+					lights.get(0).setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 15, terrainPoint.z));
+				}
 			}
+//			System.out.println(picker.getCurrentRay());
 		}
-//		System.out.println(picker.getCurrentRay());
 
 		render(lights, cameraManager.getCurrentCamera(), clipPlane);
 
 		for (Terrain terrain : terrains)
 		{
-			if (terrain.isEntityInsideTerrain(player))
+			if (player != null)
+			{
+				if (terrain.isEntityInsideTerrain(player))
+				{
+					processTerrain(terrain);
+					player.move(terrain);
+				}
+			} else
 			{
 				processTerrain(terrain);
-				player.move(terrain);
 			}
 		}
 
@@ -277,7 +283,5 @@ public class MasterRenderer
 //				entity.increaseRotation(0, 1, 0);
 			processEntity(entity);
 		}
-
-
 	}
 }

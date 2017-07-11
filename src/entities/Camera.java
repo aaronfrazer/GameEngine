@@ -17,7 +17,7 @@ public abstract class Camera
 	/**
 	 * Pitch is up and down (rotation around x-axis)
 	 */
-	protected float pitch = 10;
+	protected float pitch;
 	
 	/**
 	 * Yaw is left and right (rotation around y-axis)
@@ -34,10 +34,7 @@ public abstract class Camera
 	 * 
 	 * To be called in the main game loop.
 	 */
-	public void move()
-	{
-		
-	}
+	public void move() { }
 
 	/**
 	 * Returns the camera's position.

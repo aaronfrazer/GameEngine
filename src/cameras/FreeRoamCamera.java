@@ -21,9 +21,7 @@ public class FreeRoamCamera extends Camera
 	
 	/**
 	 * Constructs free-roaming camera.
-	 * @param x - x coordinate
-	 * @param y - y coordinate
-	 * @param z - z coordinate
+	 * @param position - camera position
 	 */
 	public FreeRoamCamera(Vector3f position)
 	{
@@ -39,49 +37,38 @@ public class FreeRoamCamera extends Camera
 	{
 		super.move();
 		
-		if (Keyboard.isKeyDown(Keyboard.KEY_I))
+		if (Keyboard.isKeyDown(Keyboard.KEY_W))
 		{
 			position.z -= speed;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_K))
+		if (Keyboard.isKeyDown(Keyboard.KEY_S))
 		{
 			position.z += speed;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_L))
+		if (Keyboard.isKeyDown(Keyboard.KEY_D))
 		{
 			position.x += speed;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_J))
+		if (Keyboard.isKeyDown(Keyboard.KEY_A))
 		{
 			position.x -= speed;
 		}
 		
-		if (Keyboard.isKeyDown(Keyboard.KEY_U))
+		if (Keyboard.isKeyDown(Keyboard.KEY_Q))
 		{
 			position.y += speed;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_O))
+		if (Keyboard.isKeyDown(Keyboard.KEY_E))
 		{
 			position.y -= speed;
 		}
-		
-		// Look up/down
-		if (InputHelper.isButtonDown(1))
-		{
-			float pitchChange = Mouse.getDY() * 0.1f;
-			pitch -= pitchChange;
-			
-			// prevent pitch from looking away from player when hD/vD = 0.
-			if (pitch < 0)
-				pitch = 0;
-			else if (pitch > 90)
-				pitch = 90;
-		}
-		
-		// Look left/right
+
+		// Look up/down controlled by right mouse button
 		if (InputHelper.isButtonDown(0))
 		{
+			float pitchChange = Mouse.getDY() * 0.1f;
 			float angleChange = Mouse.getDX() * 0.3f;
+			pitch -= pitchChange;
 			yaw -= angleChange;
 		}
 	}

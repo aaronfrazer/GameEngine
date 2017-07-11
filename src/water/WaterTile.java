@@ -8,7 +8,7 @@ public class WaterTile
 	/**
 	 * Size of water tile
 	 */
-	public static final float TILE_SIZE = 60;
+	public static final float TILE_SIZE = 42;
 
 	/**
 	 * Height of tile
