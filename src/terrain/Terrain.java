@@ -41,7 +41,7 @@ public class Terrain
 	/**
 	 * World coordinates
 	 */
-	private float x, y;
+	private float x, z;
 	
 	/**
 	 * Height of each vertex on terrain
@@ -76,7 +76,7 @@ public class Terrain
 		this.texturePack = texturePack;
 		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
-		this.y = gridZ * SIZE;
+		this.z = gridZ * SIZE;
 		this.model = generateTerrain(loader, heightMap);
 	}
 	
@@ -146,7 +146,7 @@ public class Terrain
 	/**
 	 * Returns a normal of a pixel.
 	 * @param x - x coordinate of vertex
-	 * @param y - y coordinate of vertex
+	 * @param y - z coordinate of vertex
 	 * @param image - buffered image of heightmap
 	 * @return normal - normal as a Vector3f
 	 */
@@ -164,15 +164,15 @@ public class Terrain
 	}
 	
 	/**
-	 * Returns the height of terrain for a given (x,y) coordinate.
+	 * Returns the height of terrain for a given (x,z) coordinate.
 	 * @param worldX - x coordinate of terrain
-	 * @param worldY - y coordinate of terrain
+	 * @param worldY - z coordinate of terrain
 	 * @return answer - height of terrain
 	 */
 	public float getHeightOfTerrain(float worldX, float worldY)
 	{
 		float terrainX = worldX - this.x;
-		float terrainY = worldY - this.y;
+		float terrainY = worldY - this.z;
 		float gridSquareSize = SIZE / ((float)heights.length - 1);
 		int gridX = (int) Math.floor(terrainX / gridSquareSize);
 		int gridY = (int) Math.floor(terrainY / gridSquareSize);
@@ -202,7 +202,7 @@ public class Terrain
 	/**
 	 * Returns the height represented by a pixel on the height map.
 	 * @param x - x coordinate of pixel
-	 * @param y - y coordinate of pixel
+	 * @param y - z coordinate of pixel
 	 * @param image - buffered image
 	 * @return
 	 */
@@ -223,7 +223,7 @@ public class Terrain
 	}
 
 	/**
-	 * Returns the height of the terrain at a particular (x, y) coordinate
+	 * Returns the height of the terrain at a particular (x, z) coordinate
 	 * @param x - x coordinate of pixel
 	 * @param z - z coordinate of pixel
 	 * @return height of terrain
@@ -278,7 +278,7 @@ public class Terrain
 	 */
 	public float getZ()
 	{
-		return y;
+		return z;
 	}
 
 	/**
@@ -323,9 +323,14 @@ public class Terrain
 		return false;
 	}
 
+	/**
+	 * Returns the position at the center of this terrain.
+	 *
+	 * @return center position
+	 */
 	public Vector3f getCenter()
 	{
-		return new Vector3f(SIZE/ 2, SIZE / 2, 36);
+		return new Vector3f(SIZE/2, 0, SIZE/2);
 	}
 
 }

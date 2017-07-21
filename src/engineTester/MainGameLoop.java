@@ -279,16 +279,16 @@ public class MainGameLoop
 		//***********************************
 
 		//********** WATER RENDERING **********
+		WaterFrameBuffers waterBuffers = new WaterFrameBuffers();
 		WaterShader waterShader = new WaterShader();
-		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
+		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), waterBuffers);
 		waters = new ArrayList<WaterTile>();
 		waters.add(new WaterTile(565, 538, -2));
 
-		WaterFrameBuffers waterBuffers = new WaterFrameBuffers();
 		GuiTexture refraction = new GuiTexture(waterBuffers.getRefractionTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
 		GuiTexture reflection = new GuiTexture(waterBuffers.getReflectionTexture(), new Vector2f(-0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
-		guiTextures.add(refraction);
-		guiTextures.add(reflection);
+//		guiTextures.add(refraction);
+//		guiTextures.add(reflection);
 		//*************************************
 
 		while (!Display.isCloseRequested()) { // loops until exit button pushed
@@ -305,19 +305,22 @@ public class MainGameLoop
 			float distance = 2 * (camera.getPosition().y - waters.get(0).getHeight());
 			camera.getPosition().y -= distance;
 			camera.invertPitch();
-			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker, new Vector4f(0, 1, 0, -waters.get(0).getHeight()));
+//			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker, new Vector4f(0, 1, 0, -waters.get(0).getHeight()));
+			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker);
 			camera.getPosition().y += distance;
 			camera.invertPitch();
 
 			// Render scene to refraction frame buffer
 			waterBuffers.bindRefractionFrameBuffer();
-			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker, new Vector4f(0, -1, 0, waters.get(0).getHeight()));
+//			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker, new Vector4f(0, -1, 0, waters.get(0).getHeight()));
+			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker);
 			waterBuffers.unbindCurrentFrameBuffer();
 
 			// Render scene to screen
 			waterBuffers.unbindCurrentFrameBuffer();
 
-			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker, new Vector4f(0, 0, 0, 0)); // Don't clip anything
+//			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker, new Vector4f(0, 0, 0, 0)); // Don't clip anything
+			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker); // Don't clip anything
 			waterRenderer.render(waters, camera);
 			guiRenderer.render(guiTextures); // 2D rendering
 

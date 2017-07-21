@@ -9,6 +9,8 @@ import toolbox.InputHelper;
  * A camera that can be used to lock onto a location.  Once it is locked onto
  * a location, it is able to pan around the location and zoom in and out.
  *
+ * TODO: Mouse picking entities does not work
+ *
  * @author Aaron Frazer
  */
 public class LockOnCamera extends Camera

@@ -129,14 +129,13 @@ public class MasterRenderer
 	 *
 	 * @param lights - list of lights
 	 * @param camera - camera
-	 * @param clipPlane - 4D clipping plane
 	 */
-	public void render(List<Light> lights, Camera camera, Vector4f clipPlane)
+	public void render(List<Light> lights, Camera camera)
 	{
 		prepare();
 
 		shader.start();
-		shader.loadClipPlane(clipPlane);
+//		shader.loadClipPlane(clipPlane);
 		shader.loadSkyColour(RED, GREEN, BLUE);
 		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
@@ -144,7 +143,7 @@ public class MasterRenderer
 		shader.stop();
 
 		terrainShader.start();
-		terrainShader.loadClipPlane(clipPlane);
+//		terrainShader.loadClipPlane(clipPlane);
 		terrainShader.loadSkyColour(RED, GREEN, BLUE);
 		terrainShader.loadLights(lights);
 		terrainShader.loadViewMatrix(camera);
@@ -236,32 +235,36 @@ public class MasterRenderer
 	}
 
 	/**
-	 * Renders the entire scene of the game.
+	 * Renders the entire scene of the game from scratch.
+	 *
 	 * @param entities - list of entities
 	 * @param terrains - list of terrains
 	 * @param lights - list of lights
 	 * @param cameraManager - camera manager (with cameras)
 	 * @param picker - mouse picker
-	 * @param clipPlane - clipping plane
 	 */
-	public void renderScene(Player player, List<Entity> entities, ArrayList<Terrain> terrains, List<Light> lights, CameraManager cameraManager, MousePicker picker, Vector4f clipPlane) {
+	public void renderScene(Player player, List<Entity> entities, ArrayList<Terrain> terrains, List<Light> lights, CameraManager cameraManager, MousePicker picker)
+	{
 		cameraManager.update(cameraManager); // update current camera selected
 		cameraManager.getCurrentCamera().move(); // move current camera
 
 		if (picker != null)
 		{
+			picker.setCamera(cameraManager.getCurrentCamera());
 			picker.update();
 			Vector3f terrainPoint = picker.getCurrentTerrainPoint();
-			if (terrainPoint != null) {
-				if (Mouse.isButtonDown(0)) {
-					entities.get(0).setPosition(terrainPoint); // lampEntity
-					lights.get(0).setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 15, terrainPoint.z));
+			if (terrainPoint != null)
+			{
+				if (Mouse.isButtonDown(0))
+				{
+					entities.get(0).setPosition(new Vector3f(terrainPoint.getX(), terrainPoint.getY() + 30f, terrainPoint.getZ())); // sunEntity
+					lights.get(0).setPosition(new Vector3f(terrainPoint.getX(), terrainPoint.getY() + 30f, terrainPoint.getZ())); // sunLight
 				}
 			}
 //			System.out.println(picker.getCurrentRay());
 		}
 
-		render(lights, cameraManager.getCurrentCamera(), clipPlane);
+		render(lights, cameraManager.getCurrentCamera());
 
 		for (Terrain terrain : terrains)
 		{

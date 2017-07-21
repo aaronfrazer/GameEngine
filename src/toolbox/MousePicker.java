@@ -253,4 +253,13 @@ public class MousePicker
 
         return terrain;
     }
+
+    /**
+     * Sets the current camera for this mouse picker.
+     * @param camera - current camera
+     */
+    public void setCamera(Camera camera)
+    {
+        this.camera = camera;
+    }
 }

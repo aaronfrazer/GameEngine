@@ -56,3 +56,8 @@ Calculation:
 Test Case for Hours game (hours) vs real (seconds):
 1 hr = 24 secs
 2 = 48
+
+---
+To Do list for Water Rendering:
+1. Add lighting to terrains
+2. Restart Water Rendering youtube tutorials from beginning
