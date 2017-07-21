@@ -281,7 +281,7 @@ public class MainGameLoop
 		//********** WATER RENDERING **********
 		WaterFrameBuffers waterBuffers = new WaterFrameBuffers();
 		WaterShader waterShader = new WaterShader();
-		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), waterBuffers);
+//		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), waterBuffers);
 		waters = new ArrayList<WaterTile>();
 		waters.add(new WaterTile(565, 538, -2));
 
@@ -321,7 +321,7 @@ public class MainGameLoop
 
 //			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker, new Vector4f(0, 0, 0, 0)); // Don't clip anything
 			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker); // Don't clip anything
-			waterRenderer.render(waters, camera);
+//			waterRenderer.render(waters, camera);
 			guiRenderer.render(guiTextures); // 2D rendering
 
 			// Game logic

@@ -36,15 +36,15 @@ public class WaterShader extends ShaderProgram
 	 */
 	private int location_projectionMatrix;
 
-	/**
-	 * Location of reflection texture variable
-	 */
-	private int location_reflectionTexture;
-
-	/**
-	 * Location of refraction texture variable
-	 */
-	private int location_refractionTexture;
+//	/**
+//	 * Location of reflection texture variable
+//	 */
+//	private int location_reflectionTexture;
+//
+//	/**
+//	 * Location of refraction texture variable
+//	 */
+//	private int location_refractionTexture;
 
 
 	/**
@@ -67,8 +67,8 @@ public class WaterShader extends ShaderProgram
 		location_projectionMatrix = getUniformLocation("projectionMatrix");
 		location_viewMatrix = getUniformLocation("viewMatrix");
 		location_modelMatrix = getUniformLocation("modelMatrix");
-		location_reflectionTexture = getUniformLocation("reflectionTexture");
-		location_refractionTexture = getUniformLocation("refractionTexture");
+//		location_reflectionTexture = getUniformLocation("reflectionTexture");
+//		location_refractionTexture = getUniformLocation("refractionTexture");
 	}
 
 	/**
@@ -76,8 +76,8 @@ public class WaterShader extends ShaderProgram
 	 */
 	public void connectTextureUnits()
 	{
-		super.loadInt(location_reflectionTexture, 0);
-		super.loadInt(location_refractionTexture, 1);
+//		super.loadInt(location_reflectionTexture, 0);
+//		super.loadInt(location_refractionTexture, 1);
 	}
 
 	/**

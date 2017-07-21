@@ -183,6 +183,9 @@ public class MainWaterTester
 
         //********** WATER RENDERING NEW **********
         MainGameLoop.waters = new ArrayList<>();
+        WaterShader waterShader = new WaterShader();
+        WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
+        MainGameLoop.waters.add(new WaterTile(50, 52, 36));
         //*****************************************
 
         //********** WATER RENDERING OLD **********
@@ -198,9 +201,6 @@ public class MainWaterTester
 //		guiTextures.add(reflection);
         //*************************************
 
-
-        float newColor = 0.1f;
-
         while (!Display.isCloseRequested()) { // loops until exit button pushed
 
             VirtualClock.update();
@@ -210,6 +210,8 @@ public class MainWaterTester
 //            WaterTile water = MainGameLoop.waters.get(0);
 
             renderer.renderScene(null, entities, terrains, lights, cameraManager, picker);
+
+            waterRenderer.render(MainGameLoop.waters, camera);
 
 //            System.out.println(lights.get(0).getPosition().getY());
 
@@ -243,7 +245,7 @@ public class MainWaterTester
         }
 
 //        waterBuffers.cleanUp();
-//        waterShader.cleanUp();
+        waterShader.cleanUp();
         guiRenderer.cleanUp();
         renderer.cleanUp();
         loader.cleanUp();

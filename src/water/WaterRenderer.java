@@ -39,14 +39,11 @@ public class WaterRenderer
 	 * @param loader           - loader
 	 * @param shader           - water shader program
 	 * @param projectionMatrix - projection matrix
-	 * @param fbos - water frame buffer object
 	 */
-	public WaterRenderer(Loader loader, WaterShader shader, Matrix4f projectionMatrix, WaterFrameBuffers fbos)
+	public WaterRenderer(Loader loader, WaterShader shader, Matrix4f projectionMatrix)
 	{
 		this.shader = shader;
-		this.fbos = fbos;
 		shader.start();
-		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 		setUpVAO(loader);
@@ -85,10 +82,10 @@ public class WaterRenderer
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getReflectionTexture());
-		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getRefractionTexture());
+//		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+//		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getReflectionTexture());
+//		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+//		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getRefractionTexture());
 	}
 
 	/**
