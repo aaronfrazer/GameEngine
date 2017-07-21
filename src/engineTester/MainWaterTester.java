@@ -13,8 +13,8 @@ import models.TexturedModel;
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -75,7 +75,7 @@ public class MainWaterTester
         TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("pathTexture"));
 
         TerrainTexturePack texturePack1 = new TerrainTexturePack(grassTexture, rTexture, gTexture, bTexture);
-        TerrainTexturePack texturePackUnder1 = new TerrainTexturePack(rTexture, rTexture, gTexture, bTexture);
+        TerrainTexturePack texturePackUnder1 = new TerrainTexturePack(grassTexture, rTexture, gTexture, bTexture);
         TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMapBlack"));
         //**************************************
 
@@ -99,7 +99,7 @@ public class MainWaterTester
         ModelData baseballModelData = OBJFileLoader.loadOBJ("baseballModel");
         RawModel baseballRawModel = loader.loadToVAO(baseballModelData.getVertices(), baseballModelData.getTextureCoords(), baseballModelData.getNormals(), baseballModelData.getIndices());
         TexturedModel baseballTexturedModel = new TexturedModel(baseballRawModel, new ModelTexture(loader.loadTexture("brownTexture"))); // TODO: Add ability to create a load a texture from .mtl file
-        float baseballX = 50, baseballZ = 100, baseballY = 50;
+        float baseballX = 50, baseballY = 100, baseballZ = 50;
 //        float baseballY = waterTerrain.getHeightOfTerrain(baseballX, baseballZ);
         Vector3f baseballCoords = new Vector3f(baseballX, baseballY, baseballZ);
         System.out.println(waterTerrain.getCenter());
@@ -181,25 +181,19 @@ public class MainWaterTester
         MousePicker picker = new MousePicker(frcamera, renderer.getProjectionMatrix(), terrains.get(0));
         //**********************************
 
-        //********** WATER RENDERING NEW **********
+        //********** WATER RENDERING **********
         MainGameLoop.waters = new ArrayList<>();
         WaterShader waterShader = new WaterShader();
         WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
         MainGameLoop.waters.add(new WaterTile(50, 52, 36));
+
+        WaterFrameBuffers fbos = new WaterFrameBuffers();
+        GuiTexture refractionGui = new GuiTexture(fbos.getRefractionTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+		GuiTexture reflectionGui = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+		guiTextures.add(refractionGui);
+		guiTextures.add(reflectionGui);
         //*****************************************
 
-        //********** WATER RENDERING OLD **********
-//        WaterFrameBuffers waterBuffers = new WaterFrameBuffers();
-//        WaterShader waterShader = new WaterShader();
-//        WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), waterBuffers);
-//        MainGameLoop.waters = new ArrayList<>();
-//        MainGameLoop.waters.add(new WaterTile(50, 52, 36));
-
-//		GuiTexture refraction = new GuiTexture(waterBuffers.getRefractionTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
-//		GuiTexture reflection = new GuiTexture(waterBuffers.getReflectionTexture(), new Vector2f(-0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
-//		guiTextures.add(refraction);
-//		guiTextures.add(reflection);
-        //*************************************
 
         while (!Display.isCloseRequested()) { // loops until exit button pushed
 
@@ -209,12 +203,19 @@ public class MainWaterTester
             Camera camera = cameraManager.getCurrentCamera();
 //            WaterTile water = MainGameLoop.waters.get(0);
 
+            // Render scene to reflection frame buffer
+            fbos.bindReflectionFrameBuffer();
             renderer.renderScene(null, entities, terrains, lights, cameraManager, picker);
+            fbos.unbindCurrentFrameBuffer();
 
+            renderer.renderScene(null, entities, terrains, lights, cameraManager, picker);
             waterRenderer.render(MainGameLoop.waters, camera);
+            guiRenderer.render(guiTextures);
 
-//            System.out.println(lights.get(0).getPosition().getY());
 
+//            System.out.println("Sun is at " + lights.get(0).getPosition());
+
+            //********** WATER RENDERING OLD **********
 //            // Render scene to reflection frame buffer
 //            waterBuffers.bindReflectionFrameBuffer();
 //            // TODO: Not sure if this camera inversion should be here?
@@ -235,6 +236,9 @@ public class MainWaterTester
 //            renderer.renderScene(null, MainGameLoop.entities, MainGameLoop.terrains, MainGameLoop.lights, cameraManager, picker, new Vector4f(0, 0, 0, 0)); // Don't clip anything
 //            waterRenderer.render(MainGameLoop.waters, camera);
 //            guiRenderer.render(guiTextures); // 2D rendering
+            //*************************************
+
+
 
             // Game logic
 
@@ -244,7 +248,7 @@ public class MainWaterTester
             DisplayManager.updateDisplay();
         }
 
-//        waterBuffers.cleanUp();
+        fbos.cleanUp();
         waterShader.cleanUp();
         guiRenderer.cleanUp();
         renderer.cleanUp();

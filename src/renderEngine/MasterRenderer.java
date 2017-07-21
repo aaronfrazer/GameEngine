@@ -257,8 +257,8 @@ public class MasterRenderer
 			{
 				if (Mouse.isButtonDown(0))
 				{
-					entities.get(0).setPosition(new Vector3f(terrainPoint.getX(), terrainPoint.getY() + 30f, terrainPoint.getZ())); // sunEntity
-					lights.get(0).setPosition(new Vector3f(terrainPoint.getX(), terrainPoint.getY() + 30f, terrainPoint.getZ())); // sunLight
+//					entities.get(0).setPosition(new Vector3f(terrainPoint.getX(), terrainPoint.getY() + 30f, terrainPoint.getZ())); // sunEntity
+//					lights.get(0).setPosition(new Vector3f(terrainPoint.getX(), terrainPoint.getY() + 30f, terrainPoint.getZ())); // sunLight
 				}
 			}
 //			System.out.println(picker.getCurrentRay());

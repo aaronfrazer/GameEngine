@@ -4,7 +4,7 @@ import org.lwjgl.opengl.*;
 import java.nio.ByteBuffer;
 
 /**
- * Frame Buffer Objects for water frame buffer.
+ * A Frame Buffer Object for water frame buffer used for water reflection/refraction.
  * @author Aaron Frazer
  */
 public class WaterFrameBuffers
@@ -140,7 +140,7 @@ public class WaterFrameBuffers
 	 */
 	private void bindFrameBuffer(int frameBuffer, int width, int height)
 	{
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0); // make sure the texture isn't bound
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0); // make sure texture isn't bound
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
 		GL11.glViewport(0, 0, width, height);
 	}
@@ -151,16 +151,15 @@ public class WaterFrameBuffers
 	 */
 	private int createFrameBuffer()
 	{
-		int frameBuffer = GL30.glGenFramebuffers(); // generate name for frame buffer
-		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer); // create the framebuffer
+		int frameBuffer = GL30.glGenFramebuffers(); // generate ID for frame buffer
+		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer); // create framebuffer
 		GL11.glDrawBuffer(GL30.GL_COLOR_ATTACHMENT0); // render to color attachment 0
 
 		return frameBuffer;
 	}
 
 	/**
-	 * Adds a color buffer texture attachment to the currently bound
-	 * Frame Buffer Object.
+	 * Adds a color buffer texture attachment to the currently bound Frame Buffer Object.
 	 * @param width width of texture
 	 * @param height height of texture
 	 * @return texture
