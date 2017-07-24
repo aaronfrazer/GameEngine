@@ -80,4 +80,13 @@ public abstract class Camera
 	{
 		this.pitch = -pitch;
     }
+
+	/**
+	 * Inverts the roll of the camera.
+	 * This is used for water reflection
+	 */
+	public void invertRoll()
+	{
+		this.roll = -roll;
+	}
 }

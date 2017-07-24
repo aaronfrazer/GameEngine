@@ -13,8 +13,11 @@ import models.TexturedModel;
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -102,9 +105,13 @@ public class MainWaterTester
         float baseballX = 50, baseballY = 100, baseballZ = 50;
 //        float baseballY = waterTerrain.getHeightOfTerrain(baseballX, baseballZ);
         Vector3f baseballCoords = new Vector3f(baseballX, baseballY, baseballZ);
-        System.out.println(waterTerrain.getCenter());
         Entity baseballEntity = new Entity(baseballTexturedModel, baseballCoords, 0, 0, 0, 50);
         entities.add(baseballEntity);
+
+        ModelData planeModelData = OBJFileLoader.loadOBJ("billboardModel");
+        RawModel planeRawModel = loader.loadToVAO(planeModelData.getVertices(), planeModelData.getTextureCoords(), planeModelData.getNormals(), planeModelData.getIndices());
+        TexturedModel planeTexturedModel = new TexturedModel(planeRawModel, new ModelTexture(loader.loadTexture("brownTexture")));
+        Entity planeEntity = new Entity(planeTexturedModel, new Vector3f(50, 0, 50), 0, 0, 90, 20);
         //**************************************
 
         //********** LIGHT CREATION **********
@@ -150,14 +157,21 @@ public class MainWaterTester
         Random random = new Random(676452);
         for (Terrain terrain : MainGameLoop.terrains)
         {
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 10; i++)
             {
-                float x = random.nextInt((int) Terrain.getSize() * 2) + terrain.getX();
-                float z = random.nextInt((int) Terrain.getSize() * 2) + terrain.getZ();
+                float x = random.nextInt((int) Terrain.getSize());
+                float z = random.nextInt((int) Terrain.getSize());
                 float y = terrain.getHeightOfTerrain(x, z);
-                Entity pineEntity = new Entity(pineTexturedModel, new Vector3f(x, y, z), 0, 0, 0, 1f);
-                entities.add(pineEntity);
+                System.out.println(y);
+                if (y > 32) // only render trees above water
+                {
+                    Entity pineEntity = new Entity(pineTexturedModel, new Vector3f(x, y, z), 0, 0, 0, 1f);
+                    entities.add(pineEntity);
+                }
             }
+            // Upside down tree underneath the terrian
+            Entity reversePineEntity = new Entity(pineTexturedModel, new Vector3f(50, -20, 50), 0, 0, 0, 5f);
+            entities.add(reversePineEntity);
         }
 
         //********** CAMERA CREATION **********
@@ -194,6 +208,10 @@ public class MainWaterTester
 		guiTextures.add(reflectionGui);
         //*****************************************
 
+        // TODO: Add a method to Terrain that will get the highest/lowest part on the terrain
+
+        entities.add(planeEntity);
+
 
         while (!Display.isCloseRequested()) { // loops until exit button pushed
 
@@ -201,44 +219,33 @@ public class MainWaterTester
             InputHelper.update();
 
             Camera camera = cameraManager.getCurrentCamera();
-//            WaterTile water = MainGameLoop.waters.get(0);
+            WaterTile water = MainGameLoop.waters.get(0);
 
-            // Render scene to reflection frame buffer
+            GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
+
+            // Render reflection frame buffer
             fbos.bindReflectionFrameBuffer();
-            renderer.renderScene(null, entities, terrains, lights, cameraManager, picker);
-            fbos.unbindCurrentFrameBuffer();
+            float distance = 2 * (camera.getPosition().y - water.getHeight());
+            camera.getPosition().y -= distance;
+            camera.invertPitch();
+            camera.invertRoll();
+            renderer.renderScene(null, entities, terrains, lights, cameraManager, picker,
+                    new Vector4f(0, 1, 0, -water.getHeight()));
+            camera.getPosition().y += distance;
+            camera.invertPitch();
+            camera.invertRoll();
 
-            renderer.renderScene(null, entities, terrains, lights, cameraManager, picker);
+            // Render refraction frame buffer
+            fbos.bindRefractionFrameBuffer();
+            renderer.renderScene(null, entities, terrains, lights, cameraManager, picker,
+                    new Vector4f(0, -1, 0, water.getHeight()));
+
+            // Render to screen
+            fbos.unbindCurrentFrameBuffer();
+            renderer.renderScene(null, entities, terrains, lights, cameraManager, picker,
+                    new Vector4f(0, 0, 0, 0));
             waterRenderer.render(MainGameLoop.waters, camera);
             guiRenderer.render(guiTextures);
-
-
-//            System.out.println("Sun is at " + lights.get(0).getPosition());
-
-            //********** WATER RENDERING OLD **********
-//            // Render scene to reflection frame buffer
-//            waterBuffers.bindReflectionFrameBuffer();
-//            // TODO: Not sure if this camera inversion should be here?
-//            float distance = 2 * (camera.getPosition().y - water.getHeight());
-//            camera.getPosition().y -= distance;
-//            camera.invertPitch();
-//            renderer.renderScene(null, MainGameLoop.entities, MainGameLoop.terrains, MainGameLoop.lights, cameraManager, picker, new Vector4f(0, 1, 0, -water.getHeight()));
-//            camera.getPosition().y += distance;
-//            camera.invertPitch();
-//
-//            // Render scene to refraction frame buffer
-//            waterBuffers.bindRefractionFrameBuffer();
-//            renderer.renderScene(null, MainGameLoop.entities, MainGameLoop.terrains, MainGameLoop.lights, cameraManager, picker, new Vector4f(0, -1, 0, water.getHeight()));
-//            waterBuffers.unbindCurrentFrameBuffer();
-//
-//            // Render scene to screen
-//            waterBuffers.unbindCurrentFrameBuffer();
-//            renderer.renderScene(null, MainGameLoop.entities, MainGameLoop.terrains, MainGameLoop.lights, cameraManager, picker, new Vector4f(0, 0, 0, 0)); // Don't clip anything
-//            waterRenderer.render(MainGameLoop.waters, camera);
-//            guiRenderer.render(guiTextures); // 2D rendering
-            //*************************************
-
-
 
             // Game logic
 

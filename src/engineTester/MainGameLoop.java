@@ -306,21 +306,18 @@ public class MainGameLoop
 			camera.getPosition().y -= distance;
 			camera.invertPitch();
 //			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker, new Vector4f(0, 1, 0, -waters.get(0).getHeight()));
-			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker);
 			camera.getPosition().y += distance;
 			camera.invertPitch();
 
 			// Render scene to refraction frame buffer
 			waterBuffers.bindRefractionFrameBuffer();
 //			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker, new Vector4f(0, -1, 0, waters.get(0).getHeight()));
-			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker);
 			waterBuffers.unbindCurrentFrameBuffer();
 
 			// Render scene to screen
 			waterBuffers.unbindCurrentFrameBuffer();
 
 //			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker, new Vector4f(0, 0, 0, 0)); // Don't clip anything
-			renderer.renderScene(player, entities, terrains, lights, cameraManager, picker); // Don't clip anything
 //			waterRenderer.render(waters, camera);
 			guiRenderer.render(guiTextures); // 2D rendering
 

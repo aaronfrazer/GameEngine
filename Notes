@@ -58,6 +58,15 @@ Test Case for Hours game (hours) vs real (seconds):
 2 = 48
 
 ---
-To Do list for Water Rendering:
-1. Add lighting to terrains
-2. Restart Water Rendering youtube tutorials from beginning
+
+Clipping Planes:
+
+Equation of a Plane
+Ax + By + Cz + D = 0
+(A, B, C) = plane's normal
+D = signed distance from origin
+
+We will always do horizontal planes for water reflection/refraction
+(A, B, C) = (0, 1, 0) pointing upwards (culls everything under height D)
+or
+(A, B, C) = (0, -1, 0) pointing downwards (culls everything above height D)

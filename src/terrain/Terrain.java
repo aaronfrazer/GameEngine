@@ -333,4 +333,6 @@ public class Terrain
 		return new Vector3f(SIZE/2, 0, SIZE/2);
 	}
 
+
+
 }
