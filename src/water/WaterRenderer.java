@@ -40,10 +40,12 @@ public class WaterRenderer
 	 * @param shader           - water shader program
 	 * @param projectionMatrix - projection matrix
 	 */
-	public WaterRenderer(Loader loader, WaterShader shader, Matrix4f projectionMatrix)
+	public WaterRenderer(Loader loader, WaterShader shader, Matrix4f projectionMatrix, WaterFrameBuffers fbos)
 	{
 		this.shader = shader;
+		this.fbos = fbos;
 		shader.start();
+		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 		setUpVAO(loader);
@@ -69,10 +71,10 @@ public class WaterRenderer
 
 	/**
 	 * Prepares water by loading the camera into the view matrix, binding
-	 * quad texture to VAO attributes, and binds reflection/refraction
+	 * quad texture to VAO attributes, and binding reflection/refraction
 	 * textures to their respective texture units.
 	 *
-	 * @param camera - cameramodel to be prepared
+	 * @param camera camera to be prepared
 	 */
 	private void prepareRender(Camera camera)
 	{
@@ -82,10 +84,10 @@ public class WaterRenderer
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 
-//		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-//		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getReflectionTexture());
-//		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-//		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getRefractionTexture());
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getReflectionTexture());
+		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getRefractionTexture());
 	}
 
 	/**
