@@ -2,6 +2,7 @@
 
 in vec4 clipSpace;
 in vec2 textureCoords;
+in vec3 toCameraVector;
 
 out vec4 out_Color;
 
@@ -27,14 +28,17 @@ void main(void) {
     refractTexCoords = clamp(refractTexCoords, 0.001, 0.999);
 
     reflectTexCoords += totalDistortion;
-    // TODO: clamp() method is coming back with an error
-//    reflectTexCoords = clamp(reflectTexCoords.x, 0.001, 0.999);
-//    reflectTexCoords = clamp(reflectTexCoords.y, -0.999, -0.001);
+    reflectTexCoords.x = clamp(reflectTexCoords.x, 0.001, 0.999);
+    reflectTexCoords.y = clamp(reflectTexCoords.y, -0.999, -0.001);
 
     vec4 reflectColour = texture(reflectionTexture, reflectTexCoords);
     vec4 refractColour = texture(refractionTexture, refractTexCoords);
 
-    out_Color = mix(reflectColour, refractColour, 0.5);
+    vec3 viewVector = normalize(toCameraVector);
+    float refractiveFactor = dot(viewVector, vec3(0.0, 1.0, 0.0));
+    refractiveFactor = pow(refractiveFactor, 0.5); // reflective value
+
+    out_Color = mix(reflectColour, refractColour, refractiveFactor);
     out_Color = mix(out_Color, vec4(0.0, 0.3, 0.5, 1.0), 0.2); // add blue color
 
 }

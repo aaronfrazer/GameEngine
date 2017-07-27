@@ -57,6 +57,11 @@ public class WaterShader extends ShaderProgram
 	private int location_moveFactor;
 
 	/**
+	 * Location of camera position variable
+	 */
+	private int location_cameraPosition;
+
+	/**
 	 * Creates a water shader program.
 	 */
 	public WaterShader()
@@ -80,6 +85,7 @@ public class WaterShader extends ShaderProgram
 		location_refractionTexture 	= getUniformLocation("refractionTexture");
 		location_dudvMap 			= getUniformLocation("dudvMap");
 		location_moveFactor 		= getUniformLocation("moveFactor");
+		location_cameraPosition 	= getUniformLocation("cameraPosition");
 	}
 
 	/**
@@ -111,13 +117,15 @@ public class WaterShader extends ShaderProgram
 	}
 
 	/**
-	 * Loads a view matrix to a uniform variable (in vertex shader code).
+	 * Loads the view matrix and camera position to uniform variables (in vertex shader code).
+	 * Loads camera position to uniform variable.
 	 * @param camera - camera
 	 */
 	public void loadViewMatrix(Camera camera)
 	{
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		loadMatrix(location_viewMatrix, viewMatrix);
+		super.load3DVector(location_cameraPosition, camera.getPosition());
 	}
 
 	/**
