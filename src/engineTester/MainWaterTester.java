@@ -106,13 +106,13 @@ public class MainWaterTester
 //        float baseballY = waterTerrain.getHeightOfTerrain(baseballX, baseballZ);
         Vector3f baseballCoords = new Vector3f(baseballX, baseballY, baseballZ);
         Entity baseballEntity = new Entity(baseballTexturedModel, baseballCoords, 0, 0, 0, 50);
-//        entities.add(baseballEntity);
+        entities.add(baseballEntity);
 
-        ModelData planeModelData = OBJFileLoader.loadOBJ("billboardModel");
-        RawModel planeRawModel = loader.loadToVAO(planeModelData.getVertices(), planeModelData.getTextureCoords(), planeModelData.getNormals(), planeModelData.getIndices());
-        TexturedModel planeTexturedModel = new TexturedModel(planeRawModel, new ModelTexture(loader.loadTexture("brownTexture")));
-        Entity planeEntity = new Entity(planeTexturedModel, new Vector3f(50, 0, 50), 0, 0, 90, 20);
-        entities.add(planeEntity);
+//        ModelData planeModelData = OBJFileLoader.loadOBJ("billboardModel");
+//        RawModel planeRawModel = loader.loadToVAO(planeModelData.getVertices(), planeModelData.getTextureCoords(), planeModelData.getNormals(), planeModelData.getIndices());
+//        TexturedModel planeTexturedModel = new TexturedModel(planeRawModel, new ModelTexture(loader.loadTexture("brownTexture")));
+//        Entity planeEntity = new Entity(planeTexturedModel, new Vector3f(50, 0, 50), 0, 0, 90, 20);
+//        entities.add(planeEntity);
         //**************************************
 
         //********** LIGHT CREATION **********
@@ -166,7 +166,7 @@ public class MainWaterTester
                 System.out.println(y);
                 if (y > 32) // only render trees above water
                 {
-                    Entity pineEntity = new Entity(pineTexturedModel, new Vector3f(x, y, z), 0, 0, 0, 1f);
+                    Entity pineEntity = new Entity(pineTexturedModel, new Vector3f(x, y, z), 0, 0, 0, 2);
                     entities.add(pineEntity);
                 }
             }
@@ -174,11 +174,11 @@ public class MainWaterTester
 
         //********** CAMERA CREATION **********
         FreeRoamCamera frcamera = new FreeRoamCamera(new Vector3f(50, 75, 170));
-        LockOnCamera locamera = new LockOnCamera(new Vector3f(500, 75, 500), new Vector3f(50, 50, 36));
+        LockOnCamera locamera = new LockOnCamera(new Vector3f(50, 75, 170), new Vector3f(50, 50, 36));
         CameraManager cameraManager = new CameraManager();
         cameraManager.addCamera(frcamera);
         cameraManager.addCamera(locamera);
-        cameraManager.setCurrentCamera(frcamera);
+        cameraManager.setCurrentCamera(locamera);
         //*************************************
 
         MasterRenderer renderer = new MasterRenderer(loader);
@@ -200,10 +200,10 @@ public class MainWaterTester
         WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), fbos);
         MainGameLoop.waters.add(new WaterTile(50, 52, 36));
 
-//      GuiTexture refractionGui = new GuiTexture(fbos.getRefractionTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+        GuiTexture refractionGui = new GuiTexture(fbos.getRefractionTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
 		GuiTexture reflectionGui = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
 //		guiTextures.add(refractionGui);
-		guiTextures.add(reflectionGui);
+//		guiTextures.add(reflectionGui);
         //*****************************************
 
         // TODO: Add a method to Terrain that will get the highest/lowest part on the terrain

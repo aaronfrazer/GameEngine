@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import toolbox.Maths;
 
@@ -19,7 +20,17 @@ import java.util.List;
 public class WaterRenderer
 {
 	/**
-	 * 3D model of the water (just a quad)
+	 * Name of DuDv map file
+	 */
+	private static final String DUDV_MAP = "waterDUDV";
+
+	/**
+	 * Speed of water movement
+	 */
+	private static final float WAVE_SPEED = 0.03f;
+
+	/**
+	 * 3D model of the water (just the quad)
 	 */
 	private RawModel quad;
 
@@ -34,16 +45,27 @@ public class WaterRenderer
 	private WaterFrameBuffers fbos;
 
 	/**
+	 * Move factor of water
+	 */
+	private float moveFactor = 0;
+
+	/**
+	 * ID of DuDv texture
+	 */
+	private int dudvTexture;
+
+	/**
 	 * Constructs a water renderer.
 	 *
-	 * @param loader           - loader
-	 * @param shader           - water shader program
-	 * @param projectionMatrix - projection matrix
+	 * @param loader           loader
+	 * @param shader           water shader program
+	 * @param projectionMatrix projection matrix
 	 */
 	public WaterRenderer(Loader loader, WaterShader shader, Matrix4f projectionMatrix, WaterFrameBuffers fbos)
 	{
 		this.shader = shader;
 		this.fbos = fbos;
+		dudvTexture = loader.loadTexture(DUDV_MAP);
 		shader.start();
 		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -54,8 +76,8 @@ public class WaterRenderer
 	/**
 	 * Renders water.
 	 *
-	 * @param water  - list of water tiles
-	 * @param camera - camera
+	 * @param water  list of water tiles
+	 * @param camera camera
 	 */
 	public void render(List<WaterTile> water, Camera camera)
 	{
@@ -70,9 +92,9 @@ public class WaterRenderer
 	}
 
 	/**
-	 * Prepares water by loading the camera into the view matrix, binding
-	 * quad texture to VAO attributes, and binding reflection/refraction
-	 * textures to their respective texture units.
+	 * Prepares water by loading the camera into the view matrix, setting the
+	 * move factor of water, binding quad texture to VAO attributes, and binding
+	 * reflection, refraction,and DuDv textures to their respective texture units.
 	 *
 	 * @param camera camera to be prepared
 	 */
@@ -81,6 +103,10 @@ public class WaterRenderer
 		shader.start();
 		shader.loadViewMatrix(camera);
 
+		moveFactor += WAVE_SPEED * DisplayManager.getFrameTimeSeconds();
+		moveFactor %= 1;
+		shader.loadMoveFactor(moveFactor);
+
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 
@@ -88,6 +114,8 @@ public class WaterRenderer
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getReflectionTexture());
 		GL13.glActiveTexture(GL13.GL_TEXTURE1);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getRefractionTexture());
+		GL13.glActiveTexture(GL13.GL_TEXTURE2);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, dudvTexture);
 	}
 
 	/**

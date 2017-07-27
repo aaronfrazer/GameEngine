@@ -46,6 +46,15 @@ public class WaterShader extends ShaderProgram
 	 */
 	private int location_refractionTexture;
 
+	/**
+	 * Location of DuDv map variable
+	 */
+	private int location_dudvMap;
+
+	/**
+	 * Location of move factor variable
+	 */
+	private int location_moveFactor;
 
 	/**
 	 * Creates a water shader program.
@@ -64,20 +73,32 @@ public class WaterShader extends ShaderProgram
 	@Override
 	protected void getAllUniformLocations()
 	{
-		location_projectionMatrix = getUniformLocation("projectionMatrix");
-		location_viewMatrix = getUniformLocation("viewMatrix");
-		location_modelMatrix = getUniformLocation("modelMatrix");
-		location_reflectionTexture = getUniformLocation("reflectionTexture");
-		location_refractionTexture = getUniformLocation("refractionTexture");
+		location_projectionMatrix 	= getUniformLocation("projectionMatrix");
+		location_viewMatrix 		= getUniformLocation("viewMatrix");
+		location_modelMatrix 	  	= getUniformLocation("modelMatrix");
+		location_reflectionTexture 	= getUniformLocation("reflectionTexture");
+		location_refractionTexture 	= getUniformLocation("refractionTexture");
+		location_dudvMap 			= getUniformLocation("dudvMap");
+		location_moveFactor 		= getUniformLocation("moveFactor");
 	}
 
 	/**
-	 * Binds reflection and refraction variables to sampler2D (in vertex shader code - waterFragmentShader.glsl).
+	 * Binds reflection, refraction, and DuDv map variables to sampler2D (in vertex shader code - waterFragmentShader.glsl).
 	 */
 	public void connectTextureUnits()
 	{
 		super.loadInt(location_reflectionTexture, 0);
 		super.loadInt(location_refractionTexture, 1);
+		super.loadInt(location_dudvMap, 2);
+	}
+
+	/**
+	 * Loads a float to the moveFactor variable by changing the DuDv map offset over time to simulate water movement.
+	 * @param factor
+	 */
+	public void loadMoveFactor(float factor)
+	{
+		super.loadFloat(location_moveFactor, factor);
 	}
 
 	/**

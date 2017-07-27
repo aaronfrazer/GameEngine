@@ -31,7 +31,7 @@ import java.util.Map;
 public class MasterRenderer
 {
 	/**
-	 * Field of view is the exent the observable world that is seen at
+	 * Field of view is the extent the observable world that is seen at
 	 * any given moment.
 	 */
 	private static final float FOV = 70;
