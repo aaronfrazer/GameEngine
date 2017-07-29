@@ -116,7 +116,8 @@ public class MainWaterTester
         //**************************************
 
         //********** LIGHT CREATION **********
-        Light sunLight = new Light(new Vector3f(baseballCoords), new Vector3f(1f, 1f, 1f));
+        Light sunLight = new Light(new Vector3f(50, 10000, 50), new Vector3f(1, 1, 1));
+
         lights.add(sunLight); // sun (no attenuation)
 
         float lampX = 10, lampZ = 0, lampY = waterTerrain.getHeightOfTerrain(lampX, lampZ);
@@ -237,7 +238,7 @@ public class MainWaterTester
             fbos.unbindCurrentFrameBuffer();
             renderer.renderScene(null, entities, terrains, lights, cameraManager, picker,
                     new Vector4f(0, 0, 0, 0));
-            waterRenderer.render(MainGameLoop.waters, camera);
+            waterRenderer.render(MainGameLoop.waters, camera, sunLight);
             guiRenderer.render(guiTextures);
 
             // Game logic

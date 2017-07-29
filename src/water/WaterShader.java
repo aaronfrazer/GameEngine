@@ -1,6 +1,7 @@
 package water;
 
 import entities.Camera;
+import entities.Light;
 import org.lwjgl.util.vector.Matrix4f;
 import shaders.ShaderProgram;
 import toolbox.Maths;
@@ -62,6 +63,21 @@ public class WaterShader extends ShaderProgram
 	private int location_cameraPosition;
 
 	/**
+	 * Location of normal map variable
+	 */
+	private int location_normalMap;
+
+	/**
+	 * Location of light color variable
+	 */
+	private int location_lightColour;
+
+	/**
+	 * Location of light position variable
+	 */
+	private int location_lightPosition;
+
+	/**
 	 * Creates a water shader program.
 	 */
 	public WaterShader()
@@ -86,6 +102,10 @@ public class WaterShader extends ShaderProgram
 		location_dudvMap 			= getUniformLocation("dudvMap");
 		location_moveFactor 		= getUniformLocation("moveFactor");
 		location_cameraPosition 	= getUniformLocation("cameraPosition");
+		location_normalMap 			= getUniformLocation("normalMap");
+		location_lightColour 		= getUniformLocation("lightColour");
+		location_lightPosition 		= getUniformLocation("lightPosition");
+
 	}
 
 	/**
@@ -96,6 +116,17 @@ public class WaterShader extends ShaderProgram
 		super.loadInt(location_reflectionTexture, 0);
 		super.loadInt(location_refractionTexture, 1);
 		super.loadInt(location_dudvMap, 2);
+		super.loadInt(location_normalMap, 3);
+	}
+
+	/**
+	 * Loads light color and position.
+	 * @param sun light
+	 */
+	public void loadLight(Light sun)
+	{
+		super.load3DVector(location_lightColour, sun.getColour());
+		super.load3DVector(location_lightPosition, sun.getPosition());
 	}
 
 	/**

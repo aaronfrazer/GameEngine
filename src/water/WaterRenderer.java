@@ -1,6 +1,7 @@
 package water;
 
 import entities.Camera;
+import entities.Light;
 import models.RawModel;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -23,6 +24,11 @@ public class WaterRenderer
 	 * Name of DuDv map file
 	 */
 	private static final String DUDV_MAP = "waterDUDV";
+
+	/**
+	 * Name of normal map file
+	 */
+	private static final String NORMAL_MAP = "normalMap";
 
 	/**
 	 * Speed of water movement
@@ -55,6 +61,11 @@ public class WaterRenderer
 	private int dudvTexture;
 
 	/**
+	 * ID of normal map texture
+	 */
+	private int normalMap;
+
+	/**
 	 * Constructs a water renderer.
 	 *
 	 * @param loader           loader
@@ -66,6 +77,7 @@ public class WaterRenderer
 		this.shader = shader;
 		this.fbos = fbos;
 		dudvTexture = loader.loadTexture(DUDV_MAP);
+		normalMap = loader.loadTexture(NORMAL_MAP);
 		shader.start();
 		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -79,9 +91,9 @@ public class WaterRenderer
 	 * @param water  list of water tiles
 	 * @param camera camera
 	 */
-	public void render(List<WaterTile> water, Camera camera)
+	public void render(List<WaterTile> water, Camera camera, Light sun)
 	{
-		prepareRender(camera);
+		prepareRender(camera, sun);
 		for (WaterTile tile : water)
 		{
 			Matrix4f modelMatrix = Maths.createTransformationMatrix(new Vector3f(tile.getX(), tile.getHeight(), tile.getZ()), 0, 0, 0, WaterTile.TILE_SIZE);
@@ -98,7 +110,7 @@ public class WaterRenderer
 	 *
 	 * @param camera camera to be prepared
 	 */
-	private void prepareRender(Camera camera)
+	private void prepareRender(Camera camera, Light sun)
 	{
 		shader.start();
 		shader.loadViewMatrix(camera);
@@ -106,6 +118,8 @@ public class WaterRenderer
 		moveFactor += WAVE_SPEED * DisplayManager.getFrameTimeSeconds();
 		moveFactor %= 1;
 		shader.loadMoveFactor(moveFactor);
+
+		shader.loadLight(sun);
 
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
@@ -116,6 +130,8 @@ public class WaterRenderer
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getRefractionTexture());
 		GL13.glActiveTexture(GL13.GL_TEXTURE2);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, dudvTexture);
+		GL13.glActiveTexture(GL13.GL_TEXTURE3);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, normalMap);
 	}
 
 	/**
