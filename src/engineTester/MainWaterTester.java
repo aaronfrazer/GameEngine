@@ -167,7 +167,7 @@ public class MainWaterTester
                 System.out.println(y);
                 if (y > 32) // only render trees above water
                 {
-                    Entity pineEntity = new Entity(pineTexturedModel, new Vector3f(x, y, z), 0, 0, 0, 2);
+                    Entity pineEntity = new Entity(pineTexturedModel, new Vector3f(x, y, z), 0, 0, 0, 1);
                     entities.add(pineEntity);
                 }
             }
@@ -225,7 +225,7 @@ public class MainWaterTester
             camera.getPosition().y -= distance;
             camera.invertPitch();
             camera.invertRoll();
-            renderer.renderScene(null, entities, terrains, lights, cameraManager, picker, new Vector4f(0, 1, 0, -water.getHeight()));
+            renderer.renderScene(null, entities, terrains, lights, cameraManager, picker, new Vector4f(0, 1, 0, -water.getHeight() + 1f));
             camera.getPosition().y += distance;
             camera.invertPitch();
             camera.invertRoll();

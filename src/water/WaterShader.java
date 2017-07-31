@@ -78,6 +78,11 @@ public class WaterShader extends ShaderProgram
 	private int location_lightPosition;
 
 	/**
+	 * Location of depthMap variable
+	 */
+	private int location_depthMap;
+
+	/**
 	 * Creates a water shader program.
 	 */
 	public WaterShader()
@@ -105,6 +110,7 @@ public class WaterShader extends ShaderProgram
 		location_normalMap 			= getUniformLocation("normalMap");
 		location_lightColour 		= getUniformLocation("lightColour");
 		location_lightPosition 		= getUniformLocation("lightPosition");
+		location_depthMap			= getUniformLocation("depthMap");
 
 	}
 
@@ -117,6 +123,8 @@ public class WaterShader extends ShaderProgram
 		super.loadInt(location_refractionTexture, 1);
 		super.loadInt(location_dudvMap, 2);
 		super.loadInt(location_normalMap, 3);
+		super.loadInt(location_depthMap, 4);
+
 	}
 
 	/**
