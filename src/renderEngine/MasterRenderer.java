@@ -37,21 +37,19 @@ public class MasterRenderer
 	private static final float FOV = 70;
 
 	/**
-	 * Near plane is the closest location that will be rendered.
+	 * Near plane - closest location that will be rendered.
 	 */
 	private static final float NEAR_PLANE = 0.1f;
 
 	/**
-	 * Far plane is the farthest location that will be rendered.
+	 * Far plane - farthest location that will be rendered
 	 */
-	private static final float FAR_PLANE = 1000;
+	private static final float FAR_PLANE = 1000.0f;
 
 	/**
-	 * Color of the fog
+	 * Color of fog
 	 */
-	public static float RED = 0.5444f,
-			GREEN = 0.62f,
-			BLUE = 0.69f;
+	public static float RED = 0.5444f, GREEN = 0.62f, BLUE = 0.69f;
 
 	private Matrix4f projectionMatrix;
 
@@ -288,5 +286,23 @@ public class MasterRenderer
 //				entity.increaseRotation(0, 1, 0);
 			processEntity(entity);
 		}
+	}
+
+	/**
+	 * Returns the near plane value.
+	 * @return near plane
+	 */
+	public static float getNearPlane()
+	{
+		return NEAR_PLANE;
+	}
+
+	/**
+	 * Returns the far plane value.
+	 * @return far plane
+	 */
+	public static float getFarPlane()
+	{
+		return FAR_PLANE;
 	}
 }

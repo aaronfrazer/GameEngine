@@ -225,14 +225,14 @@ public class MainWaterTester
             camera.getPosition().y -= distance;
             camera.invertPitch();
             camera.invertRoll();
-            renderer.renderScene(null, entities, terrains, lights, cameraManager, picker, new Vector4f(0, 1, 0, -water.getHeight()));
+            renderer.renderScene(null, entities, terrains, lights, cameraManager, picker, new Vector4f(0, 1, 0, -water.getHeight() + 1f));
             camera.getPosition().y += distance;
             camera.invertPitch();
             camera.invertRoll();
 
             // Render refraction frame buffer
             fbos.bindRefractionFrameBuffer();
-            renderer.renderScene(null, entities, terrains, lights, cameraManager, picker, new Vector4f(0, -1, 0, water.getHeight()));
+            renderer.renderScene(null, entities, terrains, lights, cameraManager, picker, new Vector4f(0, -1, 0, water.getHeight() + 1f));
 
             // Render to screen
             fbos.unbindCurrentFrameBuffer();

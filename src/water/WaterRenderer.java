@@ -11,6 +11,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
+import renderEngine.MasterRenderer;
 import toolbox.Maths;
 
 import java.util.List;
@@ -119,6 +120,9 @@ public class WaterRenderer
 		moveFactor %= 1;
 		shader.loadMoveFactor(moveFactor);
 
+		shader.loadNearPlane(MasterRenderer.getNearPlane());
+		shader.loadFarPlane(MasterRenderer.getFarPlane());
+
 		shader.loadLight(sun);
 
 		GL30.glBindVertexArray(quad.getVaoID());
@@ -132,6 +136,12 @@ public class WaterRenderer
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, dudvTexture);
 		GL13.glActiveTexture(GL13.GL_TEXTURE3);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, normalMap);
+		GL13.glActiveTexture(GL13.GL_TEXTURE4);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getRefractionDepthTexture()); // depthMap
+
+		// Enable alpha blending
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	/**
@@ -139,6 +149,9 @@ public class WaterRenderer
 	 */
 	private void unbind()
 	{
+		// Disable alpha blending
+		GL11.glDisable(GL11.GL_BLEND);
+
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
 		shader.stop();
