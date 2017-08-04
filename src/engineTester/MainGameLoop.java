@@ -78,7 +78,7 @@ public class MainGameLoop
 
 		TerrainTexturePack texturePack1 = new TerrainTexturePack(grassTexture, rTexture, gTexture, bTexture);
 		TerrainTexturePack texturePack2 = new TerrainTexturePack(sandTexture, rTexture, gTexture, bTexture);
-		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
+		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMapMain"));
 		//**************************************
 
 		// Create two terrains

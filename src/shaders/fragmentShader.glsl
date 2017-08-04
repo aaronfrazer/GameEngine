@@ -15,6 +15,8 @@ uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColour;
 
+const float levels = 3.0; // levels of cel shading
+
 void main(void) {
 
 	vec3 unitNormal = normalize(surfaceNormal);
@@ -30,6 +32,8 @@ void main(void) {
         vec3 unitLightVector = normalize(toLightVector[i]);
         float nDot1 = dot(unitNormal, unitLightVector);
         float brightness = max(nDot1, 0.0);
+        float level = floor(brightness * levels);
+        brightness = level / levels;
         vec3 lightDirection = -unitLightVector;
         vec3 reflectedLightDirection = reflect(lightDirection,  unitNormal);
         float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
