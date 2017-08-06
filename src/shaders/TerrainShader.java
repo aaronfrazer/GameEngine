@@ -30,7 +30,7 @@ public class TerrainShader extends ShaderProgram
 	/**
 	 * Filepath of fragment shader file.
 	 */
-	private static final String FRAGMENT_FILE = "src/shaders/terrainFragmentShader.glsl";
+	public static String FRAGMENT_FILE = "src/shaders/terrainFragmentShader.glsl";
 
 	/**
 	 * Location of transformation matrix variable

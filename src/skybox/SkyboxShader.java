@@ -24,7 +24,7 @@ public class SkyboxShader extends ShaderProgram
 	/**
 	 * Filepath of fragment shader file
 	 */
-	private static final String FRAGMENT_FILE = "src/skybox/skyboxFragmentShader.glsl";
+	public static String FRAGMENT_FILE = "src/skybox/skyboxFragmentShader.glsl";
 
 	/**
 	 * Rotation speed of skybox (degrees per second)

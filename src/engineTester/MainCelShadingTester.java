@@ -8,10 +8,12 @@ import entities.Entity;
 import entities.Light;
 import guis.GuiRenderer;
 import guis.GuiTexture;
+import jdk.internal.util.xml.impl.Input;
 import models.RawModel;
 import models.TexturedModel;
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
@@ -21,6 +23,9 @@ import org.lwjgl.util.vector.Vector4f;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
+import shaders.StaticShader;
+import shaders.TerrainShader;
+import skybox.SkyboxShader;
 import terrain.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
@@ -72,7 +77,7 @@ public class MainCelShadingTester
         //*********************************
 
         //********** TERRAIN TEXTURES **********
-        TerrainTexture grassTexture = new TerrainTexture(loader.loadTexture("grassTexture"));
+        TerrainTexture grassTexture = new TerrainTexture(loader.loadTexture("celGrassTexture"));
         TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirtTexture"));
         TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("grassFlowersTexture"));
         TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("pathTexture"));
@@ -96,6 +101,10 @@ public class MainCelShadingTester
         RawModel pineRawModel = loader.loadToVAO(pineModelData.getVertices(), pineModelData.getTextureCoords(), pineModelData.getNormals(), pineModelData.getIndices());
         TexturedModel pineTexturedModel = new TexturedModel(pineRawModel, new ModelTexture(loader.loadTexture("bobbleTreeTexture")));
 
+        ModelData rockModelData = OBJFileLoader.loadOBJ("toonRocksModel");
+        RawModel rockRawModel = loader.loadToVAO(rockModelData.getVertices(), rockModelData.getTextureCoords(), rockModelData.getNormals(), rockModelData.getIndices());
+        TexturedModel rockTexturedModel = new TexturedModel(rockRawModel, new ModelTexture(loader.loadTexture("toonRocksTexture")));
+
         Random random = new Random(676452);
         for (Terrain terrain : MainGameLoop.terrains)
         {
@@ -104,12 +113,14 @@ public class MainCelShadingTester
                 float x = random.nextInt((int) Terrain.getSize());
                 float z = random.nextInt((int) Terrain.getSize());
                 float y = terrain.getHeightOfTerrain(x, z);
-                System.out.println(y);
-                if (y > 32) // only render trees above water
-                {
-                    Entity pineEntity = new Entity(pineTexturedModel, new Vector3f(x, y, z), 0, 0, 0, 5);
-                    entities.add(pineEntity);
-                }
+                Entity pineEntity = new Entity(pineTexturedModel, new Vector3f(x, y, z), 0, 0, 0, 1);
+                entities.add(pineEntity);
+
+                x = random.nextInt((int) Terrain.getSize());
+                z = random.nextInt((int) Terrain.getSize());
+                y = terrain.getHeightOfTerrain(x, z);
+                Entity rockEntity = new Entity(rockTexturedModel, new Vector3f(x, y, z), 0, 0, 0, 3);
+                entities.add(rockEntity);
             }
         }
         //**************************************
@@ -155,6 +166,33 @@ public class MainCelShadingTester
 
             Camera camera = cameraManager.getCurrentCamera();
             WaterTile water = MainGameLoop.waters.get(0);
+
+            if (InputHelper.isKeyPressed(Keyboard.KEY_C))
+            {
+                if (GameSettings.CEL_SHADING == true)
+                {
+                    GameSettings.CEL_SHADING = false;
+                    GameSettings.RED = 0.5444f;
+                    GameSettings.GREEN = 0.62f;
+                    GameSettings.BLUE = 0.69f;
+                    StaticShader.FRAGMENT_FILE = "src/shaders/fragmentShader.glsl";
+                    TerrainShader.FRAGMENT_FILE = "src/shaders/terrainFragmentShader.glsl";
+                    SkyboxShader.FRAGMENT_FILE = "src/skybox/skyboxFragmentShader.glsl";
+                    renderer = new MasterRenderer(loader);
+                    System.out.println("Cel shading is OFF");
+                } else
+                {
+                    GameSettings.CEL_SHADING = true;
+                    GameSettings.RED = 1.0f;
+                    GameSettings.GREEN = 0.3f;
+                    GameSettings.BLUE = 0.7f;
+                    StaticShader.FRAGMENT_FILE = "src/shaders/celFragmentShader.glsl";
+                    TerrainShader.FRAGMENT_FILE = "src/shaders/celTerrainFragmentShader.glsl";
+                    SkyboxShader.FRAGMENT_FILE = "src/skybox/celSkyboxFragmentShader.glsl";
+                    renderer = new MasterRenderer(loader);
+                    System.out.println("Cel shading is ON");
+                }
+            }
 
             GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
 

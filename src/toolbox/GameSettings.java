@@ -25,7 +25,7 @@ public class GameSettings
 	/**
 	 * Fog enabled? (used in SkyboxRenderer)
 	 */
-	public static boolean FOG_ENABLED = true;
+	public static boolean FOG_ENABLED = false;
 
 	/**
 	 * Brightness of the sun during nighttime/daytime hours. (used in SkyboxRenderer)
@@ -37,4 +37,13 @@ public class GameSettings
 	 */
 	public static boolean DAY_ONLY_MODE = true;
 
+	/**
+	 * Enable/disable cel shading
+	 */
+	public static boolean CEL_SHADING = false;
+
+	/**
+	 * Fog color
+	 */
+	public static float RED = 0.5444f, GREEN = 0.62f, BLUE = 0.69f;
 }

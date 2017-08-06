@@ -16,6 +16,7 @@ import shaders.StaticShader;
 import shaders.TerrainShader;
 import skybox.SkyboxRenderer;
 import terrain.Terrain;
+import toolbox.GameSettings;
 import toolbox.MousePicker;
 
 import java.util.ArrayList;
@@ -32,12 +33,12 @@ public class MasterRenderer
 {
 	/**
 	 * Field of view is the extent the observable world that is seen at
-	 * any given moment.
+	 * any given moment
 	 */
 	private static final float FOV = 70;
 
 	/**
-	 * Near plane - closest location that will be rendered.
+	 * Near plane - closest location that will be rendered
 	 */
 	private static final float NEAR_PLANE = 0.1f;
 
@@ -47,10 +48,8 @@ public class MasterRenderer
 	private static final float FAR_PLANE = 1000.0f;
 
 	/**
-	 * Color of fog
+	 * Projection matrix
 	 */
-	public static float RED = 0.5444f, GREEN = 0.62f, BLUE = 0.69f;
-
 	private Matrix4f projectionMatrix;
 
 	/**
@@ -135,7 +134,7 @@ public class MasterRenderer
 
 		shader.start();
 		shader.loadClipPlane(clipPlane);
-		shader.loadSkyColour(RED, GREEN, BLUE);
+		shader.loadSkyColour(GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE);
 		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
 		renderer.render(entities);
@@ -143,12 +142,12 @@ public class MasterRenderer
 
 		terrainShader.start();
 		terrainShader.loadClipPlane(clipPlane);
-		terrainShader.loadSkyColour(RED, GREEN, BLUE);
+		terrainShader.loadSkyColour(GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE);
 		terrainShader.loadLights(lights);
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);
 		terrainShader.stop();
-		skyboxRenderer.render(camera, RED, GREEN, BLUE);
+		skyboxRenderer.render(camera, GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE);
 
 		terrains.clear();
 		entities.clear();
@@ -201,7 +200,7 @@ public class MasterRenderer
 	{
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glClearColor(RED, GREEN, BLUE, 1); // blue color
+		GL11.glClearColor(GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE, 1); // blue color
 	}
 
 	/**

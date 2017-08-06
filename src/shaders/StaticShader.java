@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Vector3f;
 import entities.Camera;
 import entities.Light;
 import org.lwjgl.util.vector.Vector4f;
+import toolbox.GameSettings;
 import toolbox.Maths;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public class StaticShader extends ShaderProgram
 	/**
 	 * Filepath of fragment shader file
 	 */
-	private static final String FRAGMENT_FILE = "src/shaders/fragmentShader.glsl";
+	public static String FRAGMENT_FILE = "src/shaders/fragmentShader.glsl";
 
 	/**
 	 * Location of transformation matrix variable

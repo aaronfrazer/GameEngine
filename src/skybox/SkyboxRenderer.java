@@ -173,9 +173,9 @@ public class SkyboxRenderer
 				MainGameLoop.lights.get(0).setColour(new Vector3f(GameSettings.NIGHT_LIGHT_CONST_HOURS, GameSettings.NIGHT_LIGHT_CONST_HOURS, GameSettings.NIGHT_LIGHT_CONST_HOURS));
 
 				// Fog
-				MasterRenderer.RED = GameSettings.NIGHT_FOG_MAX_RED;
-				MasterRenderer.GREEN = GameSettings.NIGHT_FOG_MAX_GREEN;
-				MasterRenderer.BLUE = GameSettings.NIGHT_FOG_MAX_BLUE;
+				GameSettings.RED = GameSettings.NIGHT_FOG_MAX_RED;
+				GameSettings.GREEN = GameSettings.NIGHT_FOG_MAX_GREEN;
+				GameSettings.BLUE = GameSettings.NIGHT_FOG_MAX_BLUE;
 
 			} else if (VirtualClock.getHours() >= nightEnd && VirtualClock.getHours() < dayStart)
 			{
@@ -195,9 +195,9 @@ public class SkyboxRenderer
 				double intervalRed = (GameSettings.DAY_FOG_MAX_RED - GameSettings.NIGHT_FOG_MAX_RED) / factor;
 				double intervalGreen = (GameSettings.DAY_FOG_MAX_GREEN - GameSettings.NIGHT_FOG_MAX_GREEN) / factor;
 				double intervalBlue = (GameSettings.DAY_FOG_MAX_BLUE - GameSettings.NIGHT_FOG_MAX_BLUE) / factor;
-				MasterRenderer.RED += intervalRed;
-				MasterRenderer.GREEN += intervalGreen;
-				MasterRenderer.BLUE += intervalBlue;
+				GameSettings.RED += intervalRed;
+				GameSettings.GREEN += intervalGreen;
+				GameSettings.BLUE += intervalBlue;
 
 			} else if (VirtualClock.getHours() >= dayStart && VirtualClock.getHours() < dayEnd)
 			{
@@ -212,9 +212,9 @@ public class SkyboxRenderer
 				MainGameLoop.lights.get(0).setColour(new Vector3f(GameSettings.DAY_LIGHT_CONST_HOURS,GameSettings.DAY_LIGHT_CONST_HOURS,GameSettings.DAY_LIGHT_CONST_HOURS));
 
 				// Fog
-				MasterRenderer.RED = GameSettings.DAY_FOG_MAX_RED;
-				MasterRenderer.GREEN = GameSettings.DAY_FOG_MAX_GREEN;
-				MasterRenderer.BLUE = GameSettings.DAY_FOG_MAX_BLUE;
+				GameSettings.RED = GameSettings.DAY_FOG_MAX_RED;
+				GameSettings.GREEN = GameSettings.DAY_FOG_MAX_GREEN;
+				GameSettings.BLUE = GameSettings.DAY_FOG_MAX_BLUE;
 
 			} else if (VirtualClock.getHours() >= dayEnd && VirtualClock.getHours() < 24)
 			{
@@ -234,9 +234,9 @@ public class SkyboxRenderer
 				double intervalRed = (GameSettings.DAY_FOG_MAX_RED - GameSettings.NIGHT_FOG_MAX_RED) / factor;
 				double intervalGreen = (GameSettings.DAY_FOG_MAX_GREEN - GameSettings.NIGHT_FOG_MAX_GREEN) / factor;
 				double intervalBlue = (GameSettings.DAY_FOG_MAX_BLUE - GameSettings.NIGHT_FOG_MAX_BLUE) / factor;
-				MasterRenderer.RED -= intervalRed;
-				MasterRenderer.GREEN -= intervalGreen;
-				MasterRenderer.BLUE -= intervalBlue;
+				GameSettings.RED -= intervalRed;
+				GameSettings.GREEN -= intervalGreen;
+				GameSettings.BLUE -= intervalBlue;
 
 			} else
 			{
@@ -256,9 +256,9 @@ public class SkyboxRenderer
 
 		if (GameSettings.FOG_ENABLED == false)
 		{
-			MasterRenderer.RED = 1.0f;
-			MasterRenderer.GREEN = 1.0f;
-			MasterRenderer.BLUE = 1.0f;
+			GameSettings.RED = 1.0f;
+			GameSettings.GREEN = 1.0f;
+			GameSettings.BLUE = 1.0f;
 		}
 
 //		System.out.print("blend = " + ((int) ((blendFactor * 1000.0) + ((blendFactor < 0.0) ? -0.5 : 0.5))) / 1000.0 + " | " + VirtualClock.getTimeString() + "\n");
