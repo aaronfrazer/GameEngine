@@ -46,4 +46,9 @@ public class GameSettings
 	 * Fog color
 	 */
 	public static float RED = 0.5444f, GREEN = 0.62f, BLUE = 0.69f;
+
+	/**
+	 * Enable/disable wireframe
+	 */
+	public static boolean WIREFRAME_ENABLED = false;
 }

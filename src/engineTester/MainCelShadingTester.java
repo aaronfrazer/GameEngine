@@ -79,7 +79,7 @@ public class MainCelShadingTester
         //********** TERRAIN TEXTURES **********
         TerrainTexture grassTexture = new TerrainTexture(loader.loadTexture("celGrassTexture"));
         TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirtTexture"));
-        TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("grassFlowersTexture"));
+        TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("celGrassTexture"));
         TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("pathTexture"));
 
         TerrainTexturePack texturePack1 = new TerrainTexturePack(grassTexture, rTexture, gTexture, bTexture);
@@ -172,9 +172,6 @@ public class MainCelShadingTester
                 if (GameSettings.CEL_SHADING == true)
                 {
                     GameSettings.CEL_SHADING = false;
-//                    GameSettings.RED = 0.5444f;
-//                    GameSettings.GREEN = 0.62f;
-//                    GameSettings.BLUE = 0.69f;
                     Random rand = new Random();
                     GameSettings.RED = rand.nextFloat();
                     GameSettings.GREEN = rand.nextFloat();
@@ -195,6 +192,17 @@ public class MainCelShadingTester
                     SkyboxShader.FRAGMENT_FILE = "src/skybox/celSkyboxFragmentShader.glsl";
                     renderer = new MasterRenderer(loader);
                     System.out.println("Cel shading is ON");
+                }
+            }
+
+            if (InputHelper.isKeyPressed(Keyboard.KEY_R))
+            {
+                if(GameSettings.WIREFRAME_ENABLED == true)
+                {
+                    GameSettings.WIREFRAME_ENABLED = false;
+                } else
+                {
+                    GameSettings.WIREFRAME_ENABLED = true;
                 }
             }
 

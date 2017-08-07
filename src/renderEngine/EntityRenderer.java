@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import shaders.StaticShader;
 import textures.ModelTexture;
+import toolbox.GameSettings;
 import toolbox.Maths;
 
 import java.util.List;
@@ -48,6 +49,11 @@ public class EntityRenderer
 	 */
 	public void render(Map<TexturedModel, List<Entity>> entities)
 	{
+		if (GameSettings.WIREFRAME_ENABLED)
+			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+		else
+			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+
 		for (TexturedModel model : entities.keySet())
 		{
 			prepareTexturedModel(model);
