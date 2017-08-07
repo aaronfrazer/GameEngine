@@ -134,7 +134,7 @@ public class MasterRenderer
 
 		shader.start();
 		shader.loadClipPlane(clipPlane);
-		shader.loadSkyColour(GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE);
+		shader.loadSkyColour(GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE); // Color of entities
 		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
 		renderer.render(entities);
@@ -142,12 +142,13 @@ public class MasterRenderer
 
 		terrainShader.start();
 		terrainShader.loadClipPlane(clipPlane);
-		terrainShader.loadSkyColour(GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE);
+		terrainShader.loadSkyColour(GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE); // Color of terrain
 		terrainShader.loadLights(lights);
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);
 		terrainShader.stop();
-		skyboxRenderer.render(camera, GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE);
+
+		skyboxRenderer.render(camera, GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE); // Color of fog
 
 		terrains.clear();
 		entities.clear();
@@ -200,7 +201,7 @@ public class MasterRenderer
 	{
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glClearColor(GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE, 1); // blue color
+		GL11.glClearColor(0.5f, 0.5f, 0.5f, 1);
 	}
 
 	/**

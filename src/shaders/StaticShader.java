@@ -178,10 +178,10 @@ public class StaticShader extends ShaderProgram
 	 * Loads a sky color to a uniform variable (in vertex shader)
 	 *
 	 * @param r - red
-	 * @param g - green
 	 * @param b - blue
+	 * @param g - green
 	 */
-	public void loadSkyColour(float r, float g, float b)
+	public void loadSkyColour(float r, float b, float g)
 	{
 		super.load3DVector(location_skyColour, new Vector3f(r, b, g));
 	}
