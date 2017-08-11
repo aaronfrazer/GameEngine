@@ -9,7 +9,7 @@ import org.lwjgl.input.Mouse;
  * Handles mouse and keyboard input and stores values for keys down,
  * released, or pressed.  This class can be accessed from anywhere.
  * 
- * To updated the input helper, add this line into the main draw loop:
+ * To update the input helper, add this line into the main draw loop:
  * 	InputHelper.update();
  * 
  * Use as so (can be used from anywhere):

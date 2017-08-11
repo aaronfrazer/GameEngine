@@ -33,8 +33,8 @@ public class LockOnCamera extends Camera
     /**
      * Constructs a camera that is looking at a specified location in the world.
      *
-     * @param position - position of camera
-     * @param location - location camera is looking at
+     * @param position position of camera
+     * @param location location camera is looking at
      */
     public LockOnCamera(Vector3f position, Vector3f location)
     {

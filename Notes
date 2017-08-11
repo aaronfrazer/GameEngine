@@ -70,3 +70,21 @@ We will always do horizontal planes for water reflection/refraction
 (A, B, C) = (0, 1, 0) pointing upwards (culls everything under height D)
 or
 (A, B, C) = (0, -1, 0) pointing downwards (culls everything above height D)
+
+---
+
+Normal Mapping:
+
+Not going to implement normal mapping with current system.
+Instead, we are going to create a new rendering system just for normal mapped entities.
+This way you can choose which rendering system you want to use:
+1. Entities
+2. Entities rendered with normal maps
+These will be in the two new packages: normalMappingObjConverter and normalMappingRenderer
+
+---
+
+8/10 Tasks
+1. Fix pitch for the ThirdPersonCamera class
+2. Make sure that the MainCelShadingTester class works
+3. Refactor MainCelShadingTester code

@@ -39,7 +39,7 @@ public class ThirdPersonCamera extends Camera
         super();
         position = new Vector3f(0, 0, 0);
         this.player = player;
-        this.pitch = 10f;
+//        this.pitch = 10f;
     }
 
     /**

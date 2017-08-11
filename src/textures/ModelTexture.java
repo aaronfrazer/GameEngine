@@ -11,7 +11,12 @@ public class ModelTexture
 	 * Texture's ID
 	 */
 	private int textureID;
-	
+
+	/**
+	 * Normal map of this texture
+	 */
+	private int normalMap;
+
 	/**
 	 * Texture's shininess
 	 */
@@ -39,6 +44,42 @@ public class ModelTexture
 	 * Set to 1 for a single texture (no atlas)
 	 */
 	private int numberOfRows = 1;
+
+	/**
+	 * Constructor that sets the ID of the texture
+	 * @param id texture ID
+	 */
+	public ModelTexture(int id)
+	{
+		this.textureID = id;
+	}
+
+	/**
+	 * Returns the texture's ID
+	 * @return
+	 */
+	public int getTextureID()
+	{
+		return textureID;
+	}
+
+	/**
+	 * Returns the normal map associated with this model texture.
+	 * @return normalMap normal map
+	 */
+	public int getNormalMap()
+	{
+		return normalMap;
+	}
+
+	/**
+	 * Sets the normal map of this texture.
+	 * @param normalMap normal map
+	 */
+	public void setNormalMap(int normalMap)
+	{
+		this.normalMap = normalMap;
+	}
 
 	/**
 	 * Returns the shininess of the texture.
@@ -74,24 +115,6 @@ public class ModelTexture
 	public void setReflectivity(float reflectivity)
 	{
 		this.reflectivity = reflectivity;
-	}
-
-	/**
-	 * Constructor that sets the ID of the texture
-	 * @param id - texture ID
-	 */
-	public ModelTexture(int id)
-	{
-		this.textureID = id;
-	}
-	
-	/**
-	 * Returns the texture's ID
-	 * @return 
-	 */
-	public int getID()
-	{
-		return textureID;
 	}
 	
 	/**

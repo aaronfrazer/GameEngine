@@ -6,6 +6,7 @@ import entities.Entity;
 import entities.Light;
 import entities.Player;
 import models.TexturedModel;
+import normalMappingRenderer.NormalMappingRenderer;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -78,15 +79,26 @@ public class MasterRenderer
 	private TerrainShader terrainShader = new TerrainShader();
 
 	/**
-	 * Hashmap that contains all textured models and respective entities that need to be
-	 * rendered for a particular frame.
+	 * Hashmap that contains all textured models and respective
+	 * entities that need to be rendered for a particular frame.
 	 */
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
+
+	/**
+	 * Hashmap that contains all textured models and respective
+	 * entities that use normal mapping.
+	 */
+	private Map<TexturedModel, List<Entity>> normalMapEntities = new HashMap<>();
 
 	/**
 	 * List of terrains to be rendered
 	 */
 	private List<Terrain> terrains = new ArrayList<>();
+
+	/**
+	 * Renderer for entities with normal mapping
+	 */
+	private NormalMappingRenderer normalMapRenderer;
 
 	/**
 	 * Creates a master renderer by initializing an entity renderer
@@ -96,18 +108,18 @@ public class MasterRenderer
 	public MasterRenderer(Loader loader)
 	{
 		enableCulling();
-
 		createProjectionMatrix();
 		renderer = new EntityRenderer(shader, projectionMatrix);
 		terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
 		skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
+		normalMapRenderer = new NormalMappingRenderer(projectionMatrix);
 	}
 
 	/**
 	 * Enables backface culling.
 	 * Doesn't render backside of model (for optimization).
 	 */
-	static void enableCulling()
+	public static void enableCulling()
 	{
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glCullFace(GL11.GL_BACK);
@@ -116,134 +128,23 @@ public class MasterRenderer
 	/**
 	 * Disables backface culling.
 	 */
-	static void disableCulling()
+	public static void disableCulling()
 	{
 		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
 
 	/**
-	 * Renders all entities and lights in the scene.
-	 *
-	 * @param lights list of lights
-	 * @param camera camera
-	 * @param clipPlane clip plane
-	 */
-	public void render(List<Light> lights, Camera camera, Vector4f clipPlane)
-	{
-		prepare();
-
-		shader.start();
-		shader.loadClipPlane(clipPlane);
-		shader.loadSkyColour(GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE); // Color of entities
-		shader.loadLights(lights);
-		shader.loadViewMatrix(camera);
-		renderer.render(entities);
-		shader.stop();
-
-		terrainShader.start();
-		terrainShader.loadClipPlane(clipPlane);
-		terrainShader.loadSkyColour(GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE); // Color of terrain
-		terrainShader.loadLights(lights);
-		terrainShader.loadViewMatrix(camera);
-		terrainRenderer.render(terrains);
-		terrainShader.stop();
-
-		skyboxRenderer.render(camera, GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE); // Color of fog
-
-		terrains.clear();
-		entities.clear();
-	}
-
-	/**
-	 * Renders a terrain to the screen.
-	 *
-	 * @param terrain - terrain to be added
-	 */
-	public void processTerrain(Terrain terrain)
-	{
-		terrains.add(terrain);
-	}
-
-	/**
-	 * Processes an entity by putting it into an associated hashmap of it's model.
-	 *
-	 * @param entity - entity to be processed
-	 */
-	public void processEntity(Entity entity)
-	{
-		TexturedModel entityModel = entity.getModel();
-		List<Entity> batch = entities.get(entityModel);
-		if (batch != null)
-		{
-			batch.add(entity);
-		} else
-		{
-			List<Entity> newBatch = new ArrayList<>();
-			newBatch.add(entity);
-			entities.put(entityModel, newBatch);
-		}
-	}
-
-	/**
-	 * Cleans up vertex and fragment shaders.  Called when game is closed.
-	 */
-	public void cleanUp()
-	{
-		shader.cleanUp();
-		terrainShader.cleanUp();
-	}
-
-	/**
-	 * Prepares OpenGL to render the game.
-	 * Called once every frame.
-	 */
-	private void prepare()
-	{
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glClearColor(0.5f, 0.5f, 0.5f, 1);
-	}
-
-	/**
-	 * Creates a projeciton matrix (don't worry about how the math works
-	 * in this method).
-	 */
-	private void createProjectionMatrix()
-	{
-		float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
-		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
-		float x_scale = y_scale / aspectRatio;
-		float frustum_length = FAR_PLANE - NEAR_PLANE;
-
-		projectionMatrix = new Matrix4f();
-		projectionMatrix.m00 = x_scale;
-		projectionMatrix.m11 = y_scale;
-		projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
-		projectionMatrix.m23 = -1;
-		projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
-		projectionMatrix.m33 = 0;
-	}
-
-	/**
-	 * Returns the projection matrix.
-	 * @return projectionMatrix
-	 */
-	public Matrix4f getProjectionMatrix()
-	{
-		return projectionMatrix;
-	}
-
-	/**
-	 * Renders the entire scene of the game from scratch.
+	 * Renders the entire scene of the game from scratch.  Called from the mainGameLoop.
 	 *
 	 * @param entities list of entities
+	 * @param normalMapEntities list of entities using normal mapping
 	 * @param terrains list of terrains
 	 * @param lights list of lights
 	 * @param cameraManager camera manager (with cameras)
 	 * @param picker mouse picker
 	 * @param clipPlane clip plane, where (x, y, z) = plane's normal and D = clipping distance
 	 */
-	public void renderScene(Player player, List<Entity> entities, ArrayList<Terrain> terrains, List<Light> lights, CameraManager cameraManager, MousePicker picker, Vector4f clipPlane)
+	public void renderScene(Player player, List<Entity> entities, List<Entity> normalMapEntities, ArrayList<Terrain> terrains, List<Light> lights, CameraManager cameraManager, MousePicker picker, Vector4f clipPlane)
 	{
 		cameraManager.update(cameraManager); // update current camera selected
 		cameraManager.getCurrentCamera().move(); // move current camera
@@ -286,6 +187,146 @@ public class MasterRenderer
 //				entity.increaseRotation(0, 1, 0);
 			processEntity(entity);
 		}
+
+		for (Entity entity : normalMapEntities)
+		{
+			processNormalMapEntity(entity);
+		}
+	}
+
+	/**
+	 * Renders all entities and lights in the scene.
+	 *
+	 * @param lights list of lights
+	 * @param camera camera
+	 * @param clipPlane clip plane
+	 */
+	public void render(List<Light> lights, Camera camera, Vector4f clipPlane)
+	{
+		prepare();
+
+		shader.start();
+		shader.loadClipPlane(clipPlane);
+		shader.loadSkyColour(GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE); // Color of entities
+		shader.loadLights(lights);
+		shader.loadViewMatrix(camera);
+		renderer.render(entities);
+		shader.stop();
+
+		normalMapRenderer.render(normalMapEntities, clipPlane, lights, camera);
+
+		terrainShader.start();
+		terrainShader.loadClipPlane(clipPlane);
+		terrainShader.loadSkyColour(GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE); // Color of terrain
+		terrainShader.loadLights(lights);
+		terrainShader.loadViewMatrix(camera);
+		terrainRenderer.render(terrains);
+		terrainShader.stop();
+
+		skyboxRenderer.render(camera, GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE); // Color of fog
+
+		terrains.clear();
+		entities.clear();
+		normalMapEntities.clear();
+	}
+
+	/**
+	 * Renders a terrain to the screen.
+	 *
+	 * @param terrain - terrain to be added
+	 */
+	public void processTerrain(Terrain terrain)
+	{
+		terrains.add(terrain);
+	}
+
+	/**
+	 * Processes an entity by putting it into an associated hashmap of it's model.
+	 * @param entity entity to be processed
+	 */
+	public void processEntity(Entity entity)
+	{
+		TexturedModel entityModel = entity.getModel();
+		List<Entity> batch = entities.get(entityModel);
+		if (batch != null)
+		{
+			batch.add(entity);
+		} else
+		{
+			List<Entity> newBatch = new ArrayList<>();
+			newBatch.add(entity);
+			entities.put(entityModel, newBatch);
+		}
+	}
+
+	/**
+	 * Processes an entity that uses normal mapping by putting
+	 * it into an associated hashmap of it's model.
+	 * @param entity entity to be processed
+	 */
+	public void processNormalMapEntity(Entity entity)
+	{
+		TexturedModel entityModel = entity.getModel();
+		List<Entity> batch = normalMapEntities.get(entityModel);
+		if (batch != null)
+		{
+			batch.add(entity);
+		} else
+		{
+			List<Entity> newBatch = new ArrayList<>();
+			newBatch.add(entity);
+			normalMapEntities.put(entityModel, newBatch);
+		}
+	}
+
+	/**
+	 * Cleans up vertex and fragment shaders.  Called when game is closed.
+	 */
+	public void cleanUp()
+	{
+		shader.cleanUp();
+		terrainShader.cleanUp();
+		normalMapRenderer.cleanUp();
+	}
+
+	/**
+	 * Prepares OpenGL to render the game.
+	 * Called once every frame.
+	 */
+	private void prepare()
+	{
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		GL11.glClearColor(0.5f, 0.5f, 0.5f, 1);
+	}
+
+	/**
+	 * Creates a projeciton matrix (don't worry about how the math works
+	 * in this method).
+	 */
+	private void createProjectionMatrix()
+	{
+		float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
+		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
+		float x_scale = y_scale / aspectRatio;
+		float frustum_length = FAR_PLANE - NEAR_PLANE;
+
+		projectionMatrix = new Matrix4f();
+		projectionMatrix.m00 = x_scale;
+		projectionMatrix.m11 = y_scale;
+		projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
+		projectionMatrix.m23 = -1;
+		projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
+		projectionMatrix.m33 = 0;
+	}
+
+	/**
+	 * Returns the projection matrix.
+	 * @return projectionMatrix
+	 */
+	public Matrix4f getProjectionMatrix()
+	{
+		return projectionMatrix;
 	}
 
 	/**

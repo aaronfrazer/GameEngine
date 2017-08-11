@@ -24,7 +24,7 @@ import java.util.Map;
 public class EntityRenderer
 {	
 	/**
-	 * Instance of static shader.
+	 * Instance of static shader
 	 */
 	private StaticShader shader;
 	
@@ -32,12 +32,12 @@ public class EntityRenderer
 	 * Constructor that creates a projection matrix.
 	 * The projection matrix is to be set up only once.
 	 * This method should be only run once.
-	 * @param shader - shader program
+	 * @param shader shader program
+	 * @param projectionMatrix 4D projection matrix
 	 */
 	public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix)
 	{
 		this.shader = shader;
-		
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
@@ -100,11 +100,11 @@ public class EntityRenderer
 		
 		// Bind model's texture
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
 	}
 	
 	/**
-	 * Unbinds attributed of a textured model.
+	 * Unbinds attributes of a textured model.
 	 */
 	private void unbindTexturedModel()
 	{

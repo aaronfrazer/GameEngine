@@ -330,7 +330,7 @@ public class Terrain
 	 */
 	public Vector3f getCenter()
 	{
-		return new Vector3f(SIZE/2, 0, SIZE/2);
+		return new Vector3f(SIZE/2, 0, -SIZE/2);
 	}
 
 

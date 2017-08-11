@@ -27,7 +27,12 @@ public class ModelData
 	 * Array of normals of this model
 	 */
 	private float[] normals;
-	
+
+	/**
+	 * Array of tangents of this model
+	 */
+	private float[] tangents;
+
 	/**
 	 * Array of indices of this model
 	 */
@@ -40,17 +45,18 @@ public class ModelData
 
 	/**
 	 * Constructs a new data model.
-	 * @param vertices
-	 * @param textureCoords
-	 * @param normals
-	 * @param indices
-	 * @param furthestPoint
+	 * @param vertices vertices of the model
+	 * @param textureCoords texture coordinates
+	 * @param normals normals of the model
+	 * @param indices indices of the model
+	 * @param furthestPoint furthest point of the model
 	 */
-	public ModelData(float[] vertices, float[] textureCoords, float[] normals, int[] indices, float furthestPoint)
+	public ModelData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, float furthestPoint)
 	{
 		this.vertices = vertices;
 		this.textureCoords = textureCoords;
 		this.normals = normals;
+		this.tangents = tangents;
 		this.indices = indices;
 		this.furthestPoint = furthestPoint;
 	}

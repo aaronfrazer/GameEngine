@@ -8,7 +8,7 @@ import entities.Player;
 import toolbox.InputHelper;
 
 /**
- * A first-person camera that can use the player to view the world.
+ * A first-person camera that is used by a player to view the world.
  * 
  * @author Aaron Frazer
  */

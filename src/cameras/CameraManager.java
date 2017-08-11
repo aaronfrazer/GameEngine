@@ -68,27 +68,29 @@ public class CameraManager
 	{
 		if (InputHelper.isKeyPressed(Keyboard.KEY_1))
 		{
-			System.out.println("Switch to 3rd person camera");
+			System.out.println("Switched to 1st person camera");
 			cm.setCurrentCamera(0);
 		}
 		
 		if (InputHelper.isKeyPressed(Keyboard.KEY_2))
 		{
-			System.out.println("Switch to free roam camera");
+			System.out.println("Switched to free roam camera");
 			cm.setCurrentCamera(1);
 		}
 		
 		if (InputHelper.isKeyPressed(Keyboard.KEY_3))
 		{
-			System.out.println("Switch to 1st person camera");
+			System.out.println("Switched to 3rd person camera");
 			cm.setCurrentCamera(2);
 		}
 		
-//		if (InputHelper.isKeyPressed(Keyboard.KEY_4))
-//		{
-//			System.out.println("Switch to birds eye camera");
-//			cm.setCurrentCamera(3);
-//		}
+		if (InputHelper.isKeyPressed(Keyboard.KEY_4))
+		{
+			System.out.println("Switched to lock on camera");
+			cm.setCurrentCamera(3);
+		}
+
+		// TODO: Add birds eye camera
 	}
 
 }
