@@ -5,9 +5,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 /**
  * An entity that contains a light inside it.
- *
  * TODO: Finish this class.  When finished you should be able to create an entity with a light source attached to it.  It should be called in a single constructor.
- *
  * @author Aaron Frazer
  */
 public class LightEntity extends Entity
@@ -20,14 +18,14 @@ public class LightEntity extends Entity
 	/**
 	 * Creates an entity and a light in a position of the world.
 	 *
-	 * @param model       - textured model
-	 * @param position    - position of entity
-	 * @param rotX        - x axis rotation
-	 * @param rotY        - y axis rotation
-	 * @param rotZ        - z axis rotation
-	 * @param scale       - scale
-	 * @param color       - color of light
-	 * @param attenuation - attenuation of light
+	 * @param model textured model
+	 * @param position position of entity
+	 * @param rotX X axis rotation
+	 * @param rotY Y axis rotation
+	 * @param rotZ Z axis rotation
+	 * @param scale scale
+	 * @param color color of light
+	 * @param attenuation attenuation of light
 	 */
 	public LightEntity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale, Vector3f color, Vector3f attenuation)
 	{
@@ -55,8 +53,7 @@ public class LightEntity extends Entity
 
 	/**
 	 * Sets the position of the entity
-	 *
-	 * @param position - position
+	 * @param position position
 	 */
 	public void setPosition(Vector3f position)
 	{

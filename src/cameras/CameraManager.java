@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 /**
  * Responsible for managing all cameras in the game.
- * 
  * @author Aaron Frazer
  */
 public class CameraManager
@@ -25,7 +24,7 @@ public class CameraManager
 
 	/**
 	 * Returns the current camera being used.
-	 * @return currentCamera - current camera
+	 * @return current camera
 	 */
 	public Camera getCurrentCamera()
 	{
@@ -34,7 +33,7 @@ public class CameraManager
 
 	/**
 	 * Sets the current camera in use.
-	 * @param currentCamera - current camera
+	 * @param currentCamera current camera
 	 */
 	public void setCurrentCamera(Camera currentCamera)
 	{
@@ -43,16 +42,34 @@ public class CameraManager
 
 	/**
 	 * Sets the current camera in use by using the index of array list.
-	 * @param i - index
+	 * @param i index
 	 */
 	private void setCurrentCamera(int i)
 	{
-		this.currentCamera = cameraList.get(i);	
+		if ((i+1) > (cameraList.size()))
+		{
+			System.err.println("Camera out of bounds");
+			return;
+		} else if (cameraList.get(i) instanceof FirstPersonCamera)
+		{
+			System.out.println("Switched to 1st Person camera");
+		} else if (cameraList.get(i) instanceof FreeRoamCamera)
+		{
+			System.out.println("Switched to Free Roam camera");
+		} else if (cameraList.get(i) instanceof ThirdPersonCamera)
+		{
+			System.out.println("Switched to Third Person camera");
+		} else if (cameraList.get(i) instanceof LockOnCamera)
+		{
+			System.out.println("Switched to Lock On camera");
+		}
+
+		this.currentCamera = cameraList.get(i);
 	}
 	
 	/**
-	 * Adds a Camera to the list of cameras.
-	 * @param camera - camera to be added
+	 * Adds a camera to the list of cameras.
+	 * @param camera camera to be added
 	 */
 	public void addCamera(Camera camera)
 	{
@@ -61,34 +78,21 @@ public class CameraManager
 
 	/**
 	 * Updates which camera is currently selected by polling key presses from the user.
-	 * 
-	 * To be called in the main game loop.
+	 * Called in the main game loop.
 	 */
 	public void update(CameraManager cm)
 	{
 		if (InputHelper.isKeyPressed(Keyboard.KEY_1))
-		{
-			System.out.println("Switched to 1st person camera");
 			cm.setCurrentCamera(0);
-		}
 		
 		if (InputHelper.isKeyPressed(Keyboard.KEY_2))
-		{
-			System.out.println("Switched to free roam camera");
 			cm.setCurrentCamera(1);
-		}
 		
 		if (InputHelper.isKeyPressed(Keyboard.KEY_3))
-		{
-			System.out.println("Switched to 3rd person camera");
 			cm.setCurrentCamera(2);
-		}
 		
 		if (InputHelper.isKeyPressed(Keyboard.KEY_4))
-		{
-			System.out.println("Switched to lock on camera");
 			cm.setCurrentCamera(3);
-		}
 
 		// TODO: Add birds eye camera
 	}

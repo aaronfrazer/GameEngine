@@ -84,7 +84,3 @@ These will be in the two new packages: normalMappingObjConverter and normalMappi
 
 ---
 
-8/10 Tasks
-1. Fix pitch for the ThirdPersonCamera class
-2. Make sure that the MainCelShadingTester class works
-3. Refactor MainCelShadingTester code

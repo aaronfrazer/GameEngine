@@ -17,113 +17,111 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Responsible for rendering a model from a VAO.
- * 
+ * A class responsible for rendering a model from a VAO.
  * @author Aaron Frazer
  */
 public class EntityRenderer
-{	
-	/**
-	 * Instance of static shader
-	 */
-	private StaticShader shader;
-	
-	/**
-	 * Constructor that creates a projection matrix.
-	 * The projection matrix is to be set up only once.
-	 * This method should be only run once.
-	 * @param shader shader program
-	 * @param projectionMatrix 4D projection matrix
-	 */
-	public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix)
-	{
-		this.shader = shader;
-		shader.start();
-		shader.loadProjectionMatrix(projectionMatrix);
-		shader.stop();
-	}
-	
-	/**
-	 * Renders a hashmap of textured models and entities.
-	 * @param entities - hashmap of texturedModels and entities to be rendered
-	 */
-	public void render(Map<TexturedModel, List<Entity>> entities)
-	{
-		if (GameSettings.WIREFRAME_ENABLED)
-			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-		else
-			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+{
+    /**
+     * Instance of static shader
+     */
+    private StaticShader shader;
 
-		for (TexturedModel model : entities.keySet())
-		{
-			prepareTexturedModel(model);
-			List<Entity> batch = entities.get(model);
-			
-			for (Entity entity : batch)
-			{
-				prepareInstance(entity);
-				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-			}
-			
-			unbindTexturedModel();
-		}
-	}
-	
-	/**
-	 * Prepares a textured model.
-	 * @param model - model to be prepared
-	 */
-	private void prepareTexturedModel(TexturedModel model)
-	{
-		RawModel rawModel = model.getRawModel();
-		// Bind raw model
-		GL30.glBindVertexArray(rawModel.getVaoID());
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glEnableVertexAttribArray(1);
-		GL20.glEnableVertexAttribArray(2);
-		
-		ModelTexture texture = model.getTexture();
+    /**
+     * Creates a projection matrix.  This method is only run once.
+     * @param shader shader program
+     * @param projectionMatrix 4D projection matrix
+     */
+    public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix)
+    {
+        this.shader = shader;
+        shader.start();
+        shader.loadProjectionMatrix(projectionMatrix);
+        shader.stop();
+    }
 
-		// Load number of rows from texture atlas
-		shader.loadNumberOfRows(texture.getNumberOfRows());
+    /**
+     * Renders a hash map of textured models and entities.
+     * @param entities hash map of textured models and entities
+     */
+    public void render(Map<TexturedModel, List<Entity>> entities)
+    {
+        if (GameSettings.WIREFRAME_ENABLED)
+            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+        else
+            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 
-		if (texture.isHasTransparency())
-		{
-			MasterRenderer.disableCulling();
-		}
-		
-		// Load fake variable lighting
-		shader.loadFakeLightingVariable(texture.isUseFakeLighting());
-		
-		// Load shine settings
-		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
-		
-		// Bind model's texture
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
-	}
-	
-	/**
-	 * Unbinds attributes of a textured model.
-	 */
-	private void unbindTexturedModel()
-	{
-		MasterRenderer.enableCulling();
-		GL20.glDisableVertexAttribArray(0);
-		GL20.glDisableVertexAttribArray(1);
-		GL20.glDisableVertexAttribArray(2);
-		GL30.glBindVertexArray(0);
-	}
-	
-	/**
-	 * Prepares an entity of a textured model.
-	 * @param entity - instance of entity
-	 */
-	private void prepareInstance(Entity entity)
-	{
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
-		shader.loadTransformationMatrix(transformationMatrix);
-		shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
-	}
-	
+        for (TexturedModel model : entities.keySet())
+        {
+            prepareTexturedModel(model);
+            List<Entity> batch = entities.get(model);
+
+            for (Entity entity : batch)
+            {
+                prepareInstance(entity);
+                GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+            }
+
+            unbindTexturedModel();
+        }
+    }
+
+    /**
+     * Prepares a textured model.
+     * @param model model
+     */
+    private void prepareTexturedModel(TexturedModel model)
+    {
+        RawModel rawModel = model.getRawModel();
+
+        // Bind raw model
+        GL30.glBindVertexArray(rawModel.getVaoID());
+        GL20.glEnableVertexAttribArray(0);
+        GL20.glEnableVertexAttribArray(1);
+        GL20.glEnableVertexAttribArray(2);
+
+        ModelTexture texture = model.getTexture();
+
+        // Load number of rows from texture atlas
+        shader.loadNumberOfRows(texture.getNumberOfRows());
+
+        if (texture.isHasTransparency())
+        {
+            MasterRenderer.disableCulling();
+        }
+
+        // Load fake variable lighting
+        shader.loadFakeLightingVariable(texture.isUseFakeLighting());
+
+        // Load shine settings
+        shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
+
+        // Bind model's texture
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
+    }
+
+    /**
+     * Unbinds attributes of a textured model.
+     */
+    private void unbindTexturedModel()
+    {
+        MasterRenderer.enableCulling();
+        GL20.glDisableVertexAttribArray(0);
+        GL20.glDisableVertexAttribArray(1);
+        GL20.glDisableVertexAttribArray(2);
+        GL30.glBindVertexArray(0);
+    }
+
+    /**
+     * Prepares an entity of a textured model.
+     * @param entity instance of entity
+     */
+    private void prepareInstance(Entity entity)
+    {
+        Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
+        shader.loadTransformationMatrix(transformationMatrix);
+        shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
+    }
+
 }

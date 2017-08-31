@@ -1,15 +1,13 @@
 package cameras;
 
-import org.lwjgl.input.Mouse;
-import org.lwjgl.util.vector.Vector3f;
-
 import entities.Camera;
 import entities.Player;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.util.vector.Vector3f;
 import toolbox.InputHelper;
 
 /**
  * A third-person camera that is always attached to a player.
- *
  * @author Aaron Frazer
  */
 public class ThirdPersonCamera extends Camera
@@ -20,7 +18,7 @@ public class ThirdPersonCamera extends Camera
     private float distanceFromPlayer = 50;
 
     /**
-     * Angle of camera around player
+     * Angle of camera around player (X direction)
      */
     private float angleAroundPlayer = 0;
 
@@ -31,15 +29,14 @@ public class ThirdPersonCamera extends Camera
 
     /**
      * Constructs a third person camera around a player.
-     *
-     * @param player - player
+     * @param player player
      */
     public ThirdPersonCamera(Player player)
     {
         super();
         position = new Vector3f(0, 0, 0);
         this.player = player;
-//        this.pitch = 10f;
+        this.pitch = 10f;
     }
 
     /**
@@ -63,8 +60,7 @@ public class ThirdPersonCamera extends Camera
     }
 
     /**
-     * Calculates the X,Y,Z position of the camera in relation to the player.
-     *
+     * Calculates the position of the camera in relation to the player.
      * @param horizDistance  horizontal distance
      * @param verticDistance vertical distance
      */
@@ -75,13 +71,13 @@ public class ThirdPersonCamera extends Camera
         float offsetZ = (float) (horizDistance * Math.cos(Math.toRadians(theta)));
         position.x = player.getPosition().x - offsetX;
         position.z = player.getPosition().z - offsetZ;
-        position.y = player.getPosition().y + verticDistance;
+        position.y = player.getPosition().y + verticDistance + 4;
     }
 
     /**
      * Calculates the horizontal distance of the camera in relation to the player.
      *
-     * @return horizontalDistance - horizontal camera distance
+     * @return horizontal camera distance
      */
     private float calculateHorizontalDistance()
     {
@@ -96,8 +92,7 @@ public class ThirdPersonCamera extends Camera
 
     /**
      * Calculates the vertical distance of the camera in relation to the player.
-     *
-     * @return verticalDistance vertical camera distance
+     * @return vertical camera distance
      */
     private float calculateVerticalDistance()
     {
@@ -134,8 +129,6 @@ public class ThirdPersonCamera extends Camera
                 pitch = 0;
             else if (pitch > 90)
                 pitch = 90;
-
-            System.out.println("Pitch Change: " + pitchChange);
         }
     }
 

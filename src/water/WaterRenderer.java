@@ -17,156 +17,160 @@ import toolbox.Maths;
 import java.util.List;
 
 /**
- * A class responsible for rendering water in the game.
+ * A class that renders water.
  */
 public class WaterRenderer
 {
-	/**
-	 * Name of DuDv map file
-	 */
-	private static final String DUDV_MAP = "waterDUDV";
+    /**
+     * Name of DuDv map file
+     */
+    private static final String DUDV_MAP = "waterDUDV";
 
-	/**
-	 * Name of normal map file
-	 */
-	private static final String NORMAL_MAP = "normalMap";
+    /**
+     * Name of normal map file
+     */
+    private static final String NORMAL_MAP = "waterNormal";
 
-	/**
-	 * Speed of water movement
-	 */
-	private static final float WAVE_SPEED = 0.03f;
+    /**
+     * Water movement speed
+     */
+    private static final float WAVE_SPEED = 0.03f;
 
-	/**
-	 * 3D model of the water (just the quad)
-	 */
-	private RawModel quad;
 
-	/**
-	 * Water shader program
-	 */
-	private WaterShader shader;
+    /**
+     * 3D model of water (just the quad)
+     */
+    private RawModel quad;
 
-	/**
-	 * Water frame buffer object
-	 */
-	private WaterFrameBuffers fbos;
+    /**
+     * Water shader program
+     */
+    private WaterShader shader;
 
-	/**
-	 * Move factor of water
-	 */
-	private float moveFactor = 0;
+    /**
+     * Water frame buffer object
+     */
+    private WaterFrameBuffers fbos;
 
-	/**
-	 * ID of DuDv texture
-	 */
-	private int dudvTexture;
+    /**
+     * Move factor of water
+     */
+    private float moveFactor = 0;
 
-	/**
-	 * ID of normal map texture
-	 */
-	private int normalMap;
+    /**
+     * ID of DuDv texture
+     */
+    private int dudvTexture;
 
-	/**
-	 * Constructs a water renderer.
-	 *
-	 * @param loader           loader
-	 * @param shader           water shader program
-	 * @param projectionMatrix projection matrix
-	 */
-	public WaterRenderer(Loader loader, WaterShader shader, Matrix4f projectionMatrix, WaterFrameBuffers fbos)
-	{
-		this.shader = shader;
-		this.fbos = fbos;
-		dudvTexture = loader.loadTexture(DUDV_MAP);
-		normalMap = loader.loadTexture(NORMAL_MAP);
-		shader.start();
-		shader.connectTextureUnits();
-		shader.loadProjectionMatrix(projectionMatrix);
-		shader.stop();
-		setUpVAO(loader);
-	}
+    /**
+     * ID of normal map texture
+     */
+    private int normalMap;
 
-	/**
-	 * Renders water.
-	 *
-	 * @param water  list of water tiles
-	 * @param camera camera
-	 */
-	public void render(List<WaterTile> water, Camera camera, Light sun)
-	{
-		prepareRender(camera, sun);
-		for (WaterTile tile : water)
-		{
-			Matrix4f modelMatrix = Maths.createTransformationMatrix(new Vector3f(tile.getX(), tile.getHeight(), tile.getZ()), 0, 0, 0, WaterTile.TILE_SIZE);
-			shader.loadModelMatrix(modelMatrix);
-			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, quad.getVertexCount());
-		}
-		unbind();
-	}
+    /**
+     * Constructs a water renderer.
+     *
+     * @param loader           loader
+     * @param shader           water shader program
+     * @param projectionMatrix projection matrix
+     * @param fbos             frame buffer objects
+     */
+    public WaterRenderer(Loader loader, WaterShader shader, Matrix4f projectionMatrix, WaterFrameBuffers fbos)
+    {
+        this.shader = shader;
+        this.fbos = fbos;
+        dudvTexture = loader.loadTexture(DUDV_MAP);
+        normalMap = loader.loadTexture(NORMAL_MAP);
+        shader.start();
+        shader.connectTextureUnits();
+        shader.loadProjectionMatrix(projectionMatrix);
+        shader.stop();
+        setUpVAO(loader);
+    }
 
-	/**
-	 * Prepares water by loading the camera into the view matrix, setting the
-	 * move factor of water, binding quad texture to VAO attributes, and binding
-	 * reflection, refraction,and DuDv textures to their respective texture units.
-	 *
-	 * @param camera camera to be prepared
-	 */
-	private void prepareRender(Camera camera, Light sun)
-	{
-		shader.start();
-		shader.loadViewMatrix(camera);
+    /**
+     * Renders water.
+     *
+     * @param water  list of water tiles
+     * @param camera camera
+     * @param sun    sun light
+     */
+    public void render(List<WaterTile> water, Camera camera, Light sun)
+    {
+        prepareRender(camera, sun);
+        for (WaterTile tile : water)
+        {
+            Matrix4f modelMatrix = Maths.createTransformationMatrix(new Vector3f(tile.getX(), tile.getHeight(), tile.getZ()), 0, 0, 0, WaterTile.TILE_SIZE);
+            shader.loadModelMatrix(modelMatrix);
+            GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, quad.getVertexCount());
+        }
+        unbind();
+    }
 
-		moveFactor += WAVE_SPEED * DisplayManager.getFrameTimeSeconds();
-		moveFactor %= 1;
-		shader.loadMoveFactor(moveFactor);
+    /**
+     * Prepares water by loading the camera into the view matrix, setting the
+     * move factor of water, binding quad texture to VAO attributes, and binding
+     * reflection, refraction,and DuDv textures to their respective texture units.
+     *
+     * @param camera camera to be prepared
+     */
+    private void prepareRender(Camera camera, Light sun)
+    {
+        shader.start();
+        shader.loadViewMatrix(camera);
 
-		shader.loadNearPlane(MasterRenderer.getNearPlane());
-		shader.loadFarPlane(MasterRenderer.getFarPlane());
+        moveFactor += WAVE_SPEED * DisplayManager.getFrameTimeSeconds();
+        moveFactor %= 1;
+        shader.loadMoveFactor(moveFactor);
 
-		shader.loadLight(sun);
+        shader.loadNearPlane(MasterRenderer.getNearPlane());
+        shader.loadFarPlane(MasterRenderer.getFarPlane());
 
-		GL30.glBindVertexArray(quad.getVaoID());
-		GL20.glEnableVertexAttribArray(0);
+        shader.loadLight(sun);
 
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getReflectionTexture());
-		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getRefractionTexture());
-		GL13.glActiveTexture(GL13.GL_TEXTURE2);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, dudvTexture);
-		GL13.glActiveTexture(GL13.GL_TEXTURE3);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, normalMap);
-		GL13.glActiveTexture(GL13.GL_TEXTURE4);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getRefractionDepthTexture()); // depthMap
+        GL30.glBindVertexArray(quad.getVaoID());
+        GL20.glEnableVertexAttribArray(0);
 
-		// Enable alpha blending
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-	}
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getReflectionTexture());
+        GL13.glActiveTexture(GL13.GL_TEXTURE1);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getRefractionTexture());
+        GL13.glActiveTexture(GL13.GL_TEXTURE2);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, dudvTexture);
+        GL13.glActiveTexture(GL13.GL_TEXTURE3);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, normalMap);
+        GL13.glActiveTexture(GL13.GL_TEXTURE4);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getRefractionDepthTexture());
 
-	/**
-	 * Unbinds attributes of water.
-	 */
-	private void unbind()
-	{
-		// Disable alpha blending
-		GL11.glDisable(GL11.GL_BLEND);
+        // Enable alpha blending
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+    }
 
-		GL20.glDisableVertexAttribArray(0);
-		GL30.glBindVertexArray(0);
-		shader.stop();
-	}
+    /**
+     * Unbinds attributes of water.
+     */
+    private void unbind()
+    {
+        GL20.glDisableVertexAttribArray(0);
+        GL30.glBindVertexArray(0);
 
-	/**
-	 * Loads a quad into a VAO.
-	 *
-	 * @param loader - loader to load 3D model
-	 */
-	private void setUpVAO(Loader loader)
-	{
-		// Just x and z vertex positions here, y is set to 0 in v.shader
-		float[] vertices = {-1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1};
-		quad = loader.loadToVAO(vertices, 2);
-	}
+        // Disable alpha blending
+        GL11.glDisable(GL11.GL_BLEND);
+
+        shader.stop();
+    }
+
+    /**
+     * Loads a quad into a VAO.
+     *
+     * @param loader loader to load 3D model
+     */
+    private void setUpVAO(Loader loader)
+    {
+        // Just x and z vertex positions here, y is set to 0 in v.shader
+        float[] vertices = {-1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1};
+        quad = loader.loadToVAO(vertices, 2);
+    }
 
 }

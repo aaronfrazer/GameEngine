@@ -1,52 +1,45 @@
 package normalMappingObjConverter;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import models.RawModel;
+import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
+import renderEngine.Loader;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-
-import models.RawModel;
-import renderEngine.Loader;
-
 /**
- * A class responsible for parsing an OBJ file with normal mapping.
+ * A class responsible for parsing an OBJ file with normal mapping implemented.
  */
 public class ObjFileLoaderNM
 {
     /**
-     * Location of directory with OBJ files
+     * Location of the OBJ file directory
      */
-    private static final String RES_LOC = "res/models/";
+    private static final String MODELS_LOC = "res/models/";
 
     /**
      * Loads an OBJ file and returns the OBJ's model data.
      * @param objFileName name of OBJ file
-     * @param loader loader that loads 3D model
-     * @return data - information about model (vertices, texture coords, normals, tangents, indices)
+     * @param loader loader
+     * @return model data (vertices, texture coords, normals, indices)
      */
     public static RawModel loadOBJ(String objFileName, Loader loader)
     {
         FileReader isr = null;
-        File objFile = new File(RES_LOC + objFileName + ".obj");
-        try
-        {
+        File objFile = new File(MODELS_LOC + objFileName + ".obj");
+        try {
             isr = new FileReader(objFile);
-        } catch (FileNotFoundException e)
-        {
-            System.err.println("File not found in res. Don't use an extension for the file: " + objFileName);
+        } catch (FileNotFoundException e) {
+            System.err.println("File not found: " + MODELS_LOC + objFileName + ".obj");
         }
         BufferedReader reader = new BufferedReader(isr);
         String line;
-        List<VertexNM> vertices = new ArrayList<VertexNM>();
-        List<Vector2f> textures = new ArrayList<Vector2f>();
-        List<Vector3f> normals = new ArrayList<Vector3f>();
-        List<Integer> indices = new ArrayList<Integer>();
+        List<VertexNM> vertices = new ArrayList<>();
+        List<Vector2f> textures = new ArrayList<>();
+        List<Vector3f> normals = new ArrayList<>();
+        List<Integer> indices = new ArrayList<>();
         try
         {
             while (true)
@@ -55,19 +48,24 @@ public class ObjFileLoaderNM
                 if (line.startsWith("v "))
                 {
                     String[] currentLine = line.split(" ");
-                    Vector3f vertex = new Vector3f(Float.valueOf(currentLine[1]), Float.valueOf(currentLine[2]), Float.valueOf(currentLine[3]));
+                    Vector3f vertex = new Vector3f(Float.valueOf(currentLine[1]),
+                            Float.valueOf(currentLine[2]),
+                            Float.valueOf(currentLine[3]));
                     VertexNM newVertex = new VertexNM(vertices.size(), vertex);
                     vertices.add(newVertex);
 
                 } else if (line.startsWith("vt "))
                 {
                     String[] currentLine = line.split(" ");
-                    Vector2f texture = new Vector2f(Float.valueOf(currentLine[1]), Float.valueOf(currentLine[2]));
+                    Vector2f texture = new Vector2f(Float.valueOf(currentLine[1]),
+                            Float.valueOf(currentLine[2]));
                     textures.add(texture);
                 } else if (line.startsWith("vn "))
                 {
                     String[] currentLine = line.split(" ");
-                    Vector3f normal = new Vector3f(Float.valueOf(currentLine[1]), Float.valueOf(currentLine[2]), Float.valueOf(currentLine[3]));
+                    Vector3f normal = new Vector3f(Float.valueOf(currentLine[1]),
+                            Float.valueOf(currentLine[2]),
+                            Float.valueOf(currentLine[3]));
                     normals.add(normal);
                 } else if (line.startsWith("f "))
                 {
@@ -83,32 +81,25 @@ public class ObjFileLoaderNM
                 VertexNM v0 = processVertex(vertex1, vertices, indices);
                 VertexNM v1 = processVertex(vertex2, vertices, indices);
                 VertexNM v2 = processVertex(vertex3, vertices, indices);
-                calculateTangents(v0, v1, v2, textures);//NEW
+                calculateTangents(v0, v1, v2, textures);
                 line = reader.readLine();
             }
             reader.close();
         } catch (IOException e)
         {
-            System.err.println("Error reading OBJ file: " + objFileName);
+            System.err.println("Error reading the file: " + MODELS_LOC + objFileName + ".obj");
         }
         removeUnusedVertices(vertices);
         float[] verticesArray = new float[vertices.size() * 3];
         float[] texturesArray = new float[vertices.size() * 2];
         float[] normalsArray = new float[vertices.size() * 3];
+        float[] tangentsArray = new float[vertices.size() * 3];
+        float furthest = convertDataToArrays(vertices, textures, normals, verticesArray, texturesArray, normalsArray, tangentsArray);
         int[] indicesArray = convertIndicesListToArray(indices);
-//        float[] tangentsArray = new float[vertices.size() * 3];
-//        float furthest = convertDataToArrays(vertices, textures, normals, verticesArray, texturesArray, normalsArray, tangentsArray);
 
-        return loader.loadToVAO(verticesArray, texturesArray, normalsArray, indicesArray);
+        return loader.loadToVAO(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray);
     }
 
-    /**
-     * Locates tangent vectors for each vertex.
-     * @param v0 first vertex
-     * @param v1 second vertex
-     * @param v2 third vertex
-     * @param textures list of textures
-     */
     private static void calculateTangents(VertexNM v0, VertexNM v1, VertexNM v2, List<Vector2f> textures)
     {
         Vector3f delatPos1 = Vector3f.sub(v1.getPosition(), v0.getPosition(), null);
@@ -129,8 +120,7 @@ public class ObjFileLoaderNM
         v2.addTangent(tangent);
     }
 
-    private static VertexNM processVertex(String[] vertex, List<VertexNM> vertices,
-                                          List<Integer> indices)
+    private static VertexNM processVertex(String[] vertex, List<VertexNM> vertices, List<Integer> indices)
     {
         int index = Integer.parseInt(vertex[0]) - 1;
         VertexNM currentVertex = vertices.get(index);
@@ -144,8 +134,7 @@ public class ObjFileLoaderNM
             return currentVertex;
         } else
         {
-            return dealWithAlreadyProcessedVertex(currentVertex, textureIndex, normalIndex, indices,
-                    vertices);
+            return dealWithAlreadyProcessedVertex(currentVertex, textureIndex, normalIndex, indices, vertices);
         }
     }
 
@@ -159,9 +148,7 @@ public class ObjFileLoaderNM
         return indicesArray;
     }
 
-    private static float convertDataToArrays(List<VertexNM> vertices, List<Vector2f> textures,
-                                             List<Vector3f> normals, float[] verticesArray, float[] texturesArray,
-                                             float[] normalsArray, float[] tangentsArray)
+    private static float convertDataToArrays(List<VertexNM> vertices, List<Vector2f> textures, List<Vector3f> normals, float[] verticesArray, float[] texturesArray, float[] normalsArray, float[] tangentsArray)
     {
         float furthestPoint = 0;
         for (int i = 0; i < vertices.size(); i++)
@@ -207,7 +194,7 @@ public class ObjFileLoaderNM
                         newNormalIndex, indices, vertices);
             } else
             {
-                VertexNM duplicateVertex = previousVertex.duplicate(vertices.size());//NEW
+                VertexNM duplicateVertex = new VertexNM(vertices.size(), previousVertex.getPosition());
                 duplicateVertex.setTextureIndex(newTextureIndex);
                 duplicateVertex.setNormalIndex(newNormalIndex);
                 previousVertex.setDuplicateVertex(duplicateVertex);
@@ -215,6 +202,7 @@ public class ObjFileLoaderNM
                 indices.add(duplicateVertex.getIndex());
                 return duplicateVertex;
             }
+
         }
     }
 

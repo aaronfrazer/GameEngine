@@ -8,9 +8,7 @@ import toolbox.InputHelper;
 /**
  * A camera that can be used to lock onto a location.  Once it is locked onto
  * a location, it is able to pan around the location and zoom in and out.
- *
  * TODO: Mouse picking entities does not work
- *
  * @author Aaron Frazer
  */
 public class LockOnCamera extends Camera
@@ -23,16 +21,15 @@ public class LockOnCamera extends Camera
     /**
      * Angle of camera around location
      */
-    public float angleAroundLocation = 0;
+    private float angleAroundLocation = 0;
 
     /**
-     * Player the camera is following
+     * Position the camera is following
      */
     private Vector3f location;
 
     /**
      * Constructs a camera that is looking at a specified location in the world.
-     *
      * @param position position of camera
      * @param location location camera is looking at
      */
@@ -64,7 +61,6 @@ public class LockOnCamera extends Camera
 
     /**
      * Calculates the X and Y positions of the camera in relation to the location.
-     *
      * @param horizDistance  horizontal distance
      * @param verticDistance vertical distance
      */
@@ -80,8 +76,7 @@ public class LockOnCamera extends Camera
 
     /**
      * Calculates the horizontal distance of the camera in relation to the location.
-     *
-     * @return horizontalDistance - horizontal camera distance
+     * @return horizontal camera distance
      */
     private float calculateHorizontalDistance()
     {
@@ -96,8 +91,7 @@ public class LockOnCamera extends Camera
 
     /**
      * Calculates the vertical distance of the camera in relation to the player.
-     *
-     * @return verticalDistance vertical camera distance
+     * @return vertical camera distance
      */
     private float calculateVerticalDistance()
     {
@@ -132,16 +126,16 @@ public class LockOnCamera extends Camera
             angleAroundLocation -= angleChange;
 
             // prevent pitch from looking away from player when hD/vD = 0.
-//            if (pitch <= 0)
-//                pitch = 0;
-//            else if (pitch > 90)
-//                pitch = 90;
+            if (pitch <= 0)
+                pitch = 0;
+            else if (pitch > 90)
+                pitch = 90;
         }
     }
 
     /**
      * Spins the camera around the location it is locked onto on the (x, z) axis.
-     * @param angleChange - camera speed
+     * @param angleChange camera speed
      */
     public void changeAngle(float angleChange)
     {

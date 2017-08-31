@@ -1,12 +1,13 @@
 package normalMappingObjConverter;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.util.vector.Vector3f;
-
 /**
- * Represents a vertex using normal mapping.
+ * A vertex that implements normal mapping.
+ * @author Aaron Frazer
  */
 public class VertexNM
 {
@@ -21,30 +22,29 @@ public class VertexNM
     private VertexNM duplicateVertex = null;
     private int index;
     private float length;
-    private List<Vector3f> tangents = new ArrayList<Vector3f>();
+    private List<Vector3f> tangents = new ArrayList<>();
     private Vector3f averagedTangent = new Vector3f(0, 0, 0);
 
-    protected VertexNM(int index, Vector3f position)
+    public VertexNM(int index, Vector3f position)
     {
         this.index = index;
         this.position = position;
         this.length = position.length();
     }
 
-    protected void addTangent(Vector3f tangent)
+    /**
+     * Adds a tangent to this vertex.
+     * @param tangent tangent
+     */
+    public void addTangent(Vector3f tangent)
     {
         tangents.add(tangent);
     }
 
-    //NEW
-    protected VertexNM duplicate(int newIndex)
-    {
-        VertexNM vertex = new VertexNM(newIndex, position);
-        vertex.tangents = this.tangents;
-        return vertex;
-    }
-
-    protected void averageTangents()
+    /**
+     * Averages the list of tangents.
+     */
+    public void averageTangents()
     {
         if (tangents.isEmpty())
         {
@@ -57,62 +57,112 @@ public class VertexNM
         averagedTangent.normalise();
     }
 
-    protected Vector3f getAverageTangent()
-    {
-        return averagedTangent;
-    }
-
-    protected int getIndex()
-    {
-        return index;
-    }
-
-    protected float getLength()
-    {
-        return length;
-    }
-
-    protected boolean isSet()
+    /**
+     * Returns true if this vertex is set.
+     * @return true if set
+     */
+    public boolean isSet()
     {
         return textureIndex != NO_INDEX && normalIndex != NO_INDEX;
     }
 
-    protected boolean hasSameTextureAndNormal(int textureIndexOther, int normalIndexOther)
+    /**
+     * Compares this vertex's texture and normal.
+     * @param textureIndexOther texture index
+     * @param normalIndexOther normal index
+     * @return true if texture and normal are the same
+     */
+    public boolean hasSameTextureAndNormal(int textureIndexOther, int normalIndexOther)
     {
         return textureIndexOther == textureIndex && normalIndexOther == normalIndex;
     }
 
-    protected void setTextureIndex(int textureIndex)
-    {
-        this.textureIndex = textureIndex;
-    }
-
-    protected void setNormalIndex(int normalIndex)
-    {
-        this.normalIndex = normalIndex;
-    }
-
-    protected Vector3f getPosition()
+    /**
+     * Returns the position of this vertex.
+     * @return 3D position
+     */
+    public Vector3f getPosition()
     {
         return position;
     }
 
-    protected int getTextureIndex()
+    /**
+     * Returns the texture index ID of this vertex.
+     * @return texutre index ID
+     */
+    public int getTextureIndex()
     {
         return textureIndex;
     }
 
-    protected int getNormalIndex()
+    /**
+     * Returns the normal index ID of this vertex.
+     * @return normal index ID
+     */
+    public int getNormalIndex()
     {
         return normalIndex;
     }
 
-    protected VertexNM getDuplicateVertex()
+    /**
+     * Returns the average tangent of this vertex.
+     * @return 3D tangent
+     */
+    public Vector3f getAverageTangent()
+    {
+        return averagedTangent;
+    }
+
+    /**
+     * Returns the duplicate vertex of this vertex.
+     * @return duplicate vertex with normal mapping
+     */
+    public VertexNM getDuplicateVertex()
     {
         return duplicateVertex;
     }
 
-    protected void setDuplicateVertex(VertexNM duplicateVertex)
+    /**
+     * Returns the index of this tangent.
+     * @return index value
+     */
+    public int getIndex()
+    {
+        return index;
+    }
+
+    /**
+     * Returns the length of this tangent.
+     * @return length of tangent
+     */
+    public float getLength()
+    {
+        return length;
+    }
+
+    /**
+     * Sets the texture index of this vertex.
+     * @param textureIndex texture index
+     */
+    public void setTextureIndex(int textureIndex)
+    {
+        this.textureIndex = textureIndex;
+    }
+
+    /**
+     * Sets the normal index of this vertex.
+     * @param normalIndex normal index
+     */
+    public void setNormalIndex(int normalIndex)
+    {
+        this.normalIndex = normalIndex;
+    }
+
+    /**
+     * Sets the duplicate vertex of this vertex.
+     * @param duplicateVertex duplicate vertex with normal mapping
+     */
+    public void setDuplicateVertex(VertexNM duplicateVertex)
     {
         this.duplicateVertex = duplicateVertex;
     }

@@ -1,15 +1,13 @@
 package cameras;
 
-import org.lwjgl.input.Mouse;
-import org.lwjgl.util.vector.Vector3f;
-
 import entities.Camera;
 import entities.Player;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.util.vector.Vector3f;
 import toolbox.InputHelper;
 
 /**
- * A first-person camera that is used by a player to view the world.
- * 
+ * A first-person camera used by a player to view the world.
  * @author Aaron Frazer
  */
 public class FirstPersonCamera extends Camera
@@ -25,8 +23,8 @@ public class FirstPersonCamera extends Camera
 	private Player player;
 	
 	/**
-	 * Constructs a first person camera.
-	 * @param player - player
+	 * Constructs a first-person camera.
+	 * @param player player
 	 */
 	public FirstPersonCamera(Player player)
 	{

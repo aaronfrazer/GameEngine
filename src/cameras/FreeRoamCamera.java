@@ -1,15 +1,13 @@
 package cameras;
 
+import entities.Camera;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
-
-import entities.Camera;
 import toolbox.InputHelper;
 
 /**
- * A free-roam camera that is not attached to an entity.
- * 
+ * A free-roam camera not attached to an entity.
  * @author Aaron Frazer
  */
 public class FreeRoamCamera extends Camera
@@ -20,8 +18,8 @@ public class FreeRoamCamera extends Camera
 	private float speed;
 	
 	/**
-	 * Constructs free-roaming camera.
-	 * @param position - camera position
+	 * Constructs free-roam camera.
+	 * @param position camera position
 	 */
 	public FreeRoamCamera(Vector3f position)
 	{
@@ -30,38 +28,26 @@ public class FreeRoamCamera extends Camera
 	}
 	
 	/**
-	 * Moves the camera around the world via keypresses.
+	 * Moves the camera around the world via key presses.
 	 */
 	@Override
 	public void move()
 	{
 		super.move();
-		
+
 		if (Keyboard.isKeyDown(Keyboard.KEY_W))
-		{
 			position.z -= speed;
-		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_S))
-		{
 			position.z += speed;
-		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_D))
-		{
 			position.x += speed;
-		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_A))
-		{
 			position.x -= speed;
-		}
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_Q))
-		{
 			position.y += speed;
-		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_E))
-		{
 			position.y -= speed;
-		}
 
 		// Look up/down controlled by right mouse button
 		if (InputHelper.isButtonDown(0))
