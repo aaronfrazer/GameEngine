@@ -107,7 +107,7 @@ public class MasterRenderer
         createProjectionMatrix();
         renderer = new EntityRenderer(shader, projectionMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
-        skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
+        if (GameSettings.SKYBOX_ENABLED) { skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix); }
         normalMapRenderer = new NormalMappingRenderer(projectionMatrix);
     }
 
@@ -214,7 +214,10 @@ public class MasterRenderer
         terrainRenderer.render(terrains);
         terrainShader.stop();
 
-        skyboxRenderer.render(camera, GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE); // color of fog
+        if (GameSettings.SKYBOX_ENABLED)
+        {
+            skyboxRenderer.render(camera, GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE); // color of fog
+        }
 
         terrains.clear();
         entities.clear();
