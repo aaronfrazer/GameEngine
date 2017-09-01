@@ -8,29 +8,19 @@ package toolbox;
 public class GameSettings
 {
     /**
-     * Amount of mipmapping for entities.
+     * Enable/disable wireframe
      */
-    public static final float MIPMAPPING = -0.8f;
+    public static boolean WIREFRAME_ENABLED = false;
 
     /**
-     * Maximum fog color values for daylight hours (used in SkyboxRenderer).
-     */
-    public static final float DAY_FOG_MAX_RED = 0.5444f, DAY_FOG_MAX_GREEN = 0.62f, DAY_FOG_MAX_BLUE = 0.69f;
-
-    /**
-     * Maximum fog color values for night hours (used in SkyboxRenderer).
-     */
-    public static final float NIGHT_FOG_MAX_RED = 0.01f, NIGHT_FOG_MAX_GREEN = 0.01f, NIGHT_FOG_MAX_BLUE = 0.01f;
-
-    /**
-     * Fog enabled? (used in SkyboxRenderer)
+     * Fog enabled?
      */
     public static boolean FOG_ENABLED = false;
 
     /**
-     * Brightness of the sun during nighttime/daytime hours. (used in SkyboxRenderer)
+     * Enable/disable sky box
      */
-    public static final float NIGHT_LIGHT_CONST_HOURS = 0.3f, DAY_LIGHT_CONST_HOURS = 1.0f;
+    public static boolean SKYBOX_ENABLED = true;
 
     /**
      * Enable/disable night and day mode
@@ -43,12 +33,33 @@ public class GameSettings
     public static boolean CEL_SHADING = false;
 
     /**
+     * Amount of mipmapping for entities.
+     */
+    public static final float MIPMAPPING = -0.8f;
+
+    /**
      * Fog color
      */
     public static float RED = 0.5444f, GREEN = 0.62f, BLUE = 0.69f;
 
     /**
-     * Enable/disable wireframe
+     * Sky color (seen only when sky box is disabled)
      */
-    public static boolean WIREFRAME_ENABLED = false;
+    public static float SKY_RED = 0.1f, SKY_GREEN = 0.4f, SKY_BLUE = 0.2f;
+
+    /**
+     * Maximum fog color values for daylight hours (used in SkyboxRenderer).
+     */
+    public static final float DAY_FOG_MAX_RED = 0.5444f, DAY_FOG_MAX_GREEN = 0.62f, DAY_FOG_MAX_BLUE = 0.69f;
+
+    /**
+     * Maximum fog color values for night hours (used in SkyboxRenderer).
+     */
+    public static final float NIGHT_FOG_MAX_RED = 0.01f, NIGHT_FOG_MAX_GREEN = 0.01f, NIGHT_FOG_MAX_BLUE = 0.01f;
+
+    /**
+     * Brightness of the sun during nighttime/daytime hours. (used in SkyboxRenderer)
+     */
+    public static final float NIGHT_LIGHT_CONST_HOURS = 0.3f, DAY_LIGHT_CONST_HOURS = 1.0f;
+
 }

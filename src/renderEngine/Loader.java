@@ -8,6 +8,7 @@ import org.lwjgl.opengl.*;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import textures.TextureData;
+import toolbox.GameSettings;
 
 import java.io.FileInputStream;
 import java.nio.ByteBuffer;
@@ -116,7 +117,7 @@ public class Loader
             texture = TextureLoader.getTexture("PNG", new FileInputStream(TEXTURES_LOC + fileName + ".png"));
             GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
-            GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -0.4f);
+            GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, GameSettings.MIPMAPPING);
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Failed to load texture: " + fileName + ".png");
