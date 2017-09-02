@@ -114,8 +114,9 @@ public class NormalMappingRenderer
     {
         shader.loadClipPlane(clipPlane);
 
-        // TODO: need to be public variables in MasterRenderer
-        shader.loadSkyColour(GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE);
+        shader.loadDensity(GameSettings.FOG_DENSITY);
+        shader.loadGradient(GameSettings.FOG_GRADIENT);
+        shader.loadSkyColour(GameSettings.FOG_RED, GameSettings.FOG_GREEN, GameSettings.FOG_BLUE);
         Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 
         shader.loadLights(lights, viewMatrix);

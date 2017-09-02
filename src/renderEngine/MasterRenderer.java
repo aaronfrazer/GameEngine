@@ -156,13 +156,11 @@ public class MasterRenderer
 //            }
         }
         for (Entity entity : entities)
-        {
             processEntity(entity);
-        }
+
         for (Entity entity : normalMapEntities)
-        {
             processNormalMapEntity(entity);
-        }
+
         render(lights, cameraManager.getCurrentCamera(), clipPlane);
     }
 
@@ -174,15 +172,15 @@ public class MasterRenderer
      */
     public void renderScene(List<Entity> entities, List<Entity> normalEntities, List<Terrain> terrains, List<Light> lights, Camera camera, Vector4f clipPlane)
     {
-        for (Terrain terrain : terrains) {
+        for (Terrain terrain : terrains)
             processTerrain(terrain);
-        }
-        for (Entity entity : entities) {
+
+        for (Entity entity : entities)
             processEntity(entity);
-        }
-        for(Entity entity : normalEntities){
+
+        for(Entity entity : normalEntities)
             processNormalMapEntity(entity);
-        }
+
         render(lights, camera, clipPlane);
     }
 
@@ -198,9 +196,11 @@ public class MasterRenderer
 
         shader.start();
         shader.loadClipPlane(clipPlane);
-        shader.loadSkyColour(GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE); // color of entities
+        shader.loadSkyColour(GameSettings.FOG_RED, GameSettings.FOG_GREEN, GameSettings.FOG_BLUE); // color of entities
         shader.loadLights(lights);
         shader.loadViewMatrix(camera);
+        shader.loadDensity(GameSettings.FOG_DENSITY);
+        shader.loadGradient(GameSettings.FOG_GRADIENT);
         renderer.render(entities);
         shader.stop();
 
@@ -208,16 +208,16 @@ public class MasterRenderer
 
         terrainShader.start();
         terrainShader.loadClipPlane(clipPlane);
-        terrainShader.loadSkyColour(GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE); // color of terrain
+        terrainShader.loadSkyColour(GameSettings.FOG_RED, GameSettings.FOG_GREEN, GameSettings.FOG_BLUE); // color of terrain
         terrainShader.loadLights(lights);
         terrainShader.loadViewMatrix(camera);
+        terrainShader.loadDensity(GameSettings.FOG_DENSITY);
+        terrainShader.loadGradient(GameSettings.FOG_GRADIENT);
         terrainRenderer.render(terrains);
         terrainShader.stop();
 
         if (GameSettings.SKYBOX_ENABLED)
-        {
-            skyboxRenderer.render(camera, GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE); // color of fog
-        }
+            skyboxRenderer.render(camera, GameSettings.FOG_RED, GameSettings.FOG_GREEN, GameSettings.FOG_BLUE); // color of fog
 
         terrains.clear();
         entities.clear();
@@ -297,7 +297,7 @@ public class MasterRenderer
     {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        GL11.glClearColor(GameSettings.RED, GameSettings.GREEN, GameSettings.BLUE, 1);
+        GL11.glClearColor(GameSettings.FOG_RED, GameSettings.FOG_GREEN, GameSettings.FOG_BLUE, 1);
     }
 
     /**

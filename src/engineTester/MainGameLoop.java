@@ -23,6 +23,7 @@ import terrain.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
+import toolbox.GameSettings;
 import toolbox.InputHelper;
 import toolbox.MousePicker;
 import toolbox.VirtualClock;
@@ -180,6 +181,7 @@ public class MainGameLoop
         //********** WATER RENDERING ***************
         WaterFrameBuffers buffers = new WaterFrameBuffers();
         WaterShader waterShader = new WaterShader();
+        waterShader.loadSkyColour(GameSettings.FOG_RED, GameSettings.FOG_GREEN, GameSettings.FOG_BLUE);
         WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), buffers);
         WaterTile water = new WaterTile(75, -75, 0);
         waters.add(water);

@@ -15,12 +15,12 @@ public class GameSettings
     /**
      * Fog enabled?
      */
-    public static boolean FOG_ENABLED = false;
+    public static boolean FOG_ENABLED = true;
 
     /**
      * Enable/disable sky box
      */
-    public static boolean SKYBOX_ENABLED = true;
+    public static boolean SKYBOX_ENABLED = false;
 
     /**
      * Enable/disable night and day mode
@@ -38,27 +38,33 @@ public class GameSettings
     public static final float MIPMAPPING = -0.8f;
 
     /**
-     * Fog color
+     * Fog/background color(seen only when sky box is disabled)
      */
-    public static float RED = 0.5444f, GREEN = 0.62f, BLUE = 0.69f;
+    public static float FOG_RED = 0.5444f, FOG_GREEN = 0.62f, FOG_BLUE = 0.69f;
+//    public static float FOG_RED = 0.1f, FOG_GREEN = 0.4f, FOG_BLUE = 0.2f;
 
     /**
-     * Sky color (seen only when sky box is disabled)
+     * Fog density
      */
-    public static float SKY_RED = 0.1f, SKY_GREEN = 0.4f, SKY_BLUE = 0.2f;
+    public static float FOG_DENSITY = 0.007f;
 
     /**
-     * Maximum fog color values for daylight hours (used in SkyboxRenderer).
+     * Fog gradient
+     */
+    public static float FOG_GRADIENT = 1.5f;
+
+    /**
+     * Maximum fog color values for daylight hours
      */
     public static final float DAY_FOG_MAX_RED = 0.5444f, DAY_FOG_MAX_GREEN = 0.62f, DAY_FOG_MAX_BLUE = 0.69f;
 
     /**
-     * Maximum fog color values for night hours (used in SkyboxRenderer).
+     * Maximum fog color values for night hours
      */
     public static final float NIGHT_FOG_MAX_RED = 0.01f, NIGHT_FOG_MAX_GREEN = 0.01f, NIGHT_FOG_MAX_BLUE = 0.01f;
 
     /**
-     * Brightness of the sun during nighttime/daytime hours. (used in SkyboxRenderer)
+     * Brightness of the sun during nighttime/daytime hours
      */
     public static final float NIGHT_LIGHT_CONST_HOURS = 0.3f, DAY_LIGHT_CONST_HOURS = 1.0f;
 

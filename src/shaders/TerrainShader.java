@@ -50,6 +50,8 @@ public class TerrainShader extends ShaderProgram
     private int location_bTexture;
     private int location_blendMap;
     private int location_plane;
+    private int location_density;
+    private int location_gradient;
 
     /**
      * Creates a terrain shader program.
@@ -82,6 +84,8 @@ public class TerrainShader extends ShaderProgram
         location_bTexture = super.getUniformLocation("bTexture");
         location_blendMap = super.getUniformLocation("blendMap");
         location_plane = super.getUniformLocation("plane");
+        location_density = super.getUniformLocation("density");
+        location_gradient = super.getUniformLocation("gradient");
 
         location_lightPosition = new int[MAX_LIGHTS];
         location_lightColour = new int[MAX_LIGHTS];
@@ -129,6 +133,25 @@ public class TerrainShader extends ShaderProgram
     {
         super.loadMatrix(location_projectionMatrix, projection);
     }
+
+    /**
+     * Loads density to a uniform variable (in vertex shader).
+     * @param density density of fog
+     */
+    public void loadDensity(float density)
+    {
+        super.loadFloat(location_density, density);
+    }
+
+    /**
+     * Loads gradient to a uniform variable (in vertex shader).
+     * @param gradient gradient of fog
+     */
+    public void loadGradient(float gradient)
+    {
+        super.loadFloat(location_gradient, gradient);
+    }
+
 
     /**
      * Loads a texture's properties to a uniform variable (in vertex shader code).

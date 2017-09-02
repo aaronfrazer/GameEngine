@@ -52,6 +52,8 @@ public class NormalMappingShader extends ShaderProgram
     private int location_plane;
     private int location_modelTexture;
     private int location_normalMap;
+    private int location_density;
+    private int location_gradient;
 
     /**
      * Creates a normal mapping shader program.
@@ -84,6 +86,8 @@ public class NormalMappingShader extends ShaderProgram
         location_plane = super.getUniformLocation("plane");
         location_modelTexture = super.getUniformLocation("modelTexture");
         location_normalMap = super.getUniformLocation("normalMap");
+        location_density = super.getUniformLocation("density");
+        location_gradient = super.getUniformLocation("gradient");
 
         location_lightPositionEyeSpace = new int[MAX_LIGHTS];
         location_lightColour = new int[MAX_LIGHTS];
@@ -143,6 +147,24 @@ public class NormalMappingShader extends ShaderProgram
                 super.load3DVector(location_attenuation[i], new Vector3f(1, 0, 0));
             }
         }
+    }
+
+    /**
+     * Loads density to a uniform variable (in vertex shader).
+     * @param density density of fog
+     */
+    public void loadDensity(float density)
+    {
+        super.loadFloat(location_density, density);
+    }
+
+    /**
+     * Loads gradient to a uniform variable (in vertex shader).
+     * @param gradient gradient of fog
+     */
+    public void loadGradient(float gradient)
+    {
+        super.loadFloat(location_gradient, gradient);
     }
 
     /**

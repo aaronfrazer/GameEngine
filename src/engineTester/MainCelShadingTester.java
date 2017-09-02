@@ -170,9 +170,9 @@ public class MainCelShadingTester
                 {
                     GameSettings.CEL_SHADING = false;
                     Random rand = new Random();
-                    GameSettings.RED = rand.nextFloat();
-                    GameSettings.GREEN = rand.nextFloat();
-                    GameSettings.BLUE = rand.nextFloat();
+                    GameSettings.FOG_RED = rand.nextFloat();
+                    GameSettings.FOG_GREEN = rand.nextFloat();
+                    GameSettings.FOG_BLUE = rand.nextFloat();
                     StaticShader.FRAGMENT_FILE = "src/shaders/fragmentShader.glsl";
                     TerrainShader.FRAGMENT_FILE = "src/shaders/terrainFragmentShader.glsl";
                     SkyboxShader.FRAGMENT_FILE = "src/skybox/skyboxFragmentShader.glsl";
@@ -181,9 +181,9 @@ public class MainCelShadingTester
                 } else
                 {
                     GameSettings.CEL_SHADING = true;
-                    GameSettings.RED = 1.0f;
-                    GameSettings.GREEN = 0.3f;
-                    GameSettings.BLUE = 0.7f;
+                    GameSettings.FOG_RED = 1.0f;
+                    GameSettings.FOG_GREEN = 0.3f;
+                    GameSettings.FOG_BLUE = 0.7f;
                     StaticShader.FRAGMENT_FILE = "src/shaders/celFragmentShader.glsl";
                     TerrainShader.FRAGMENT_FILE = "src/shaders/celTerrainFragmentShader.glsl";
                     SkyboxShader.FRAGMENT_FILE = "src/skybox/celSkyboxFragmentShader.glsl";
