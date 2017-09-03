@@ -6,6 +6,8 @@ out vec4 clipSpace;
 out vec2 textureCoords;
 out vec3 toCameraVector;
 out vec3 fromLightVector;
+out float visibility;
+out vec3 skyColour;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
@@ -23,5 +25,13 @@ void main(void) {
  	textureCoords = vec2(position.x/2.0 + 0.5, position.y/2.0 + 0.5) * tiling;
  	toCameraVector = cameraPosition - worldPosition.xyz;
  	fromLightVector = worldPosition.xyz - lightPosition;
- 	
+
+    // TODO: these two variables need to be loaded into vertexShader via uniform variables (see other VSs)
+ 	float density = 0.007;
+    float gradient = 1.5;
+
+    vec4 positionRelativeToCam = viewMatrix * worldPosition;
+    float distance = length(positionRelativeToCam.xyz);
+    visibility = exp(-pow((distance*density),gradient));
+    visibility = clamp(visibility,0.0,1.0);
 }

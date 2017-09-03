@@ -84,3 +84,4 @@ These will be in the two new packages: normalMappingObjConverter and normalMappi
 
 ---
 
+skyColour variable is not being loaded into waterFragmentShader.glsl

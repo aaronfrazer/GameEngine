@@ -4,15 +4,20 @@ in vec4 clipSpace;
 in vec2 textureCoords;
 in vec3 toCameraVector;
 in vec3 fromLightVector;
+in float visibility;
 
 out vec4 out_Color;
 
+// input variables from WaterShader
 uniform sampler2D reflectionTexture;
 uniform sampler2D refractionTexture;
 uniform sampler2D dudvMap;
 uniform sampler2D normalMap;
 uniform sampler2D depthMap;
 uniform vec3 lightColour;
+uniform vec3 skyColour;
+//in vec3 skyColour; // test
+//const vec3 skyColour = vec3(0.5444, 0.62, 0.69);
 
 uniform float moveFactor;
 
@@ -67,6 +72,6 @@ void main(void) {
 	out_Color = mix(reflectColour, refractColour, refractiveFactor);
 	out_Color = mix(out_Color, vec4(0.0, 0.3, 0.5, 1.0), 0.2) + vec4(specularHighlights, 0.0); // add blue color
 	out_Color.a = clamp(waterDepth/5.0, 0.0, 1.0); // 5.0 = depth where alpha value is
-
+	out_Color = mix(vec4(skyColour,1.0),out_Color, visibility);
 	
 }

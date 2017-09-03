@@ -12,6 +12,7 @@ import org.lwjgl.util.vector.Vector3f;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
+import toolbox.GameSettings;
 import toolbox.Maths;
 
 import java.util.List;
@@ -95,15 +96,18 @@ public class WaterRenderer
      * @param camera camera
      * @param sun    sun light
      */
-    public void render(List<WaterTile> water, Camera camera, Light sun)
+    public void render(List<WaterTile> water, Camera camera, Light sun, WaterShader waterShader)
     {
         prepareRender(camera, sun);
+        waterShader.loadSkyColour(GameSettings.FOG_RED, GameSettings.FOG_GREEN, GameSettings.FOG_BLUE);
+
         for (WaterTile tile : water)
         {
             Matrix4f modelMatrix = Maths.createTransformationMatrix(new Vector3f(tile.getX(), tile.getHeight(), tile.getZ()), 0, 0, 0, WaterTile.TILE_SIZE);
             shader.loadModelMatrix(modelMatrix);
             GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, quad.getVertexCount());
         }
+
         unbind();
     }
 

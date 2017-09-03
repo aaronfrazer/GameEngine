@@ -181,7 +181,6 @@ public class MainGameLoop
         //********** WATER RENDERING ***************
         WaterFrameBuffers buffers = new WaterFrameBuffers();
         WaterShader waterShader = new WaterShader();
-        waterShader.loadSkyColour(GameSettings.FOG_RED, GameSettings.FOG_GREEN, GameSettings.FOG_BLUE);
         WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), buffers);
         WaterTile water = new WaterTile(75, -75, 0);
         waters.add(water);
@@ -224,7 +223,7 @@ public class MainGameLoop
             buffers.unbindCurrentFrameBuffer();
             renderer.renderScene(player, entities, normalMapEntities, terrains, lights, cameraManager, picker, new Vector4f(0, -1, 0, 100000));
 //            renderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
-            waterRenderer.render(waters, camera, sun);
+            waterRenderer.render(waters, camera, sun, waterShader);
             guiRenderer.render(guiTextures);
 
             DisplayManager.updateDisplay();

@@ -3,6 +3,7 @@ package water;
 import entities.Camera;
 import entities.Light;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 import shaders.ShaderProgram;
 import toolbox.Maths;
 
@@ -36,6 +37,7 @@ public class WaterShader extends ShaderProgram
     private int location_normalMap;
     private int location_lightPosition;
     private int location_lightColour;
+    private int location_skyColour;
     private int location_depthMap;
     private int location_near;
     private int location_far;
@@ -68,6 +70,7 @@ public class WaterShader extends ShaderProgram
         location_normalMap = getUniformLocation("normalMap");
         location_lightPosition = getUniformLocation("lightPosition");
         location_lightColour = getUniformLocation("lightColour");
+        location_skyColour = getUniformLocation("skyColour");
         location_depthMap = getUniformLocation("depthMap");
         location_near = getUniformLocation("near");
         location_far = getUniformLocation("far");
@@ -104,6 +107,17 @@ public class WaterShader extends ShaderProgram
     public void loadMoveFactor(float factor)
     {
         super.loadFloat(location_moveFactor, factor);
+    }
+
+    /**
+     * Loads a sky color to a uniform variable (in vertex shader).
+     * @param r red value
+     * @param g green value
+     * @param b blue value
+     */
+    public void loadSkyColour(float r, float g, float b)
+    {
+        super.load3DVector(location_skyColour, new Vector3f(r, g, b));
     }
 
     /**
