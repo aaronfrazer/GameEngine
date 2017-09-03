@@ -70,7 +70,6 @@ public class WaterRenderer
 
     /**
      * Constructs a water renderer.
-     *
      * @param loader           loader
      * @param shader           water shader program
      * @param projectionMatrix projection matrix
@@ -91,7 +90,6 @@ public class WaterRenderer
 
     /**
      * Renders water.
-     *
      * @param water  list of water tiles
      * @param camera camera
      * @param sun    sun light
@@ -115,7 +113,6 @@ public class WaterRenderer
      * Prepares water by loading the camera into the view matrix, setting the
      * move factor of water, binding quad texture to VAO attributes, and binding
      * reflection, refraction,and DuDv textures to their respective texture units.
-     *
      * @param camera camera to be prepared
      */
     private void prepareRender(Camera camera, Light sun)
@@ -129,6 +126,9 @@ public class WaterRenderer
 
         shader.loadNearPlane(MasterRenderer.getNearPlane());
         shader.loadFarPlane(MasterRenderer.getFarPlane());
+
+        shader.loadDensity(GameSettings.FOG_DENSITY);
+        shader.loadGradient(GameSettings.FOG_GRADIENT);
 
         shader.loadLight(sun);
 
@@ -167,7 +167,6 @@ public class WaterRenderer
 
     /**
      * Loads a quad into a VAO.
-     *
      * @param loader loader to load 3D model
      */
     private void setUpVAO(Loader loader)

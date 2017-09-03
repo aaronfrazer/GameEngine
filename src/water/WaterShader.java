@@ -22,7 +22,6 @@ public class WaterShader extends ShaderProgram
      */
     private final static String FRAGMENT_FILE = "src/water/waterFragmentShader.glsl";
 
-
     /**
      * Location of uniform variables in vertex/fragment programs
      */
@@ -41,6 +40,8 @@ public class WaterShader extends ShaderProgram
     private int location_depthMap;
     private int location_near;
     private int location_far;
+    private int location_density;
+    private int location_gradient;
 
     /**
      * Creates a water shader program.
@@ -59,21 +60,23 @@ public class WaterShader extends ShaderProgram
     @Override
     protected void getAllUniformLocations()
     {
-        location_projectionMatrix = getUniformLocation("projectionMatrix");
-        location_viewMatrix = getUniformLocation("viewMatrix");
-        location_modelMatrix = getUniformLocation("modelMatrix");
-        location_reflectionTexture = getUniformLocation("reflectionTexture");
-        location_refractionTexture = getUniformLocation("refractionTexture");
-        location_dudvMap = getUniformLocation("dudvMap");
-        location_moveFactor = getUniformLocation("moveFactor");
-        location_cameraPosition = getUniformLocation("cameraPosition");
-        location_normalMap = getUniformLocation("normalMap");
-        location_lightPosition = getUniformLocation("lightPosition");
-        location_lightColour = getUniformLocation("lightColour");
-        location_skyColour = getUniformLocation("skyColour");
-        location_depthMap = getUniformLocation("depthMap");
-        location_near = getUniformLocation("near");
-        location_far = getUniformLocation("far");
+        location_projectionMatrix = super.getUniformLocation("projectionMatrix");
+        location_viewMatrix = super.getUniformLocation("viewMatrix");
+        location_modelMatrix = super.getUniformLocation("modelMatrix");
+        location_reflectionTexture = super.getUniformLocation("reflectionTexture");
+        location_refractionTexture = super.getUniformLocation("refractionTexture");
+        location_dudvMap = super.getUniformLocation("dudvMap");
+        location_moveFactor = super.getUniformLocation("moveFactor");
+        location_cameraPosition = super.getUniformLocation("cameraPosition");
+        location_normalMap = super.getUniformLocation("normalMap");
+        location_lightPosition = super.getUniformLocation("lightPosition");
+        location_lightColour = super.getUniformLocation("lightColour");
+        location_skyColour = super.getUniformLocation("skyColour");
+        location_depthMap = super.getUniformLocation("depthMap");
+        location_near = super.getUniformLocation("near");
+        location_far = super.getUniformLocation("far");
+        location_density = super.getUniformLocation("density");
+        location_gradient = super.getUniformLocation("gradient");
     }
 
     /**
@@ -90,7 +93,6 @@ public class WaterShader extends ShaderProgram
 
     /**
      * Loads light color and position.
-     *
      * @param sun sun light
      */
     public void loadLight(Light sun)
@@ -101,7 +103,6 @@ public class WaterShader extends ShaderProgram
 
     /**
      * Loads a float to the moveFactor variable by changing the DuDv map offset over time to simulate water movement.
-     *
      * @param factor move factor value
      */
     public void loadMoveFactor(float factor)
@@ -122,7 +123,6 @@ public class WaterShader extends ShaderProgram
 
     /**
      * Loads a projection matrix to a uniform variable (in vertex shader code).
-     *
      * @param projection projection matrix
      */
     public void loadProjectionMatrix(Matrix4f projection)
@@ -133,7 +133,6 @@ public class WaterShader extends ShaderProgram
     /**
      * Loads the view matrix and camera position to uniform variables (in vertex shader code).
      * Loads camera position to uniform variable.
-     *
      * @param camera camera
      */
     public void loadViewMatrix(Camera camera)
@@ -145,7 +144,6 @@ public class WaterShader extends ShaderProgram
 
     /**
      * Loads a model matrix to a uniform variable (in vertex shader code).
-     *
      * @param modelMatrix - model matrix
      */
     public void loadModelMatrix(Matrix4f modelMatrix)
@@ -154,8 +152,25 @@ public class WaterShader extends ShaderProgram
     }
 
     /**
+     * Loads density to a uniform variable (in vertex shader).
+     * @param density density of fog
+     */
+    public void loadDensity(float density)
+    {
+        super.loadFloat(location_density, density);
+    }
+
+    /**
+     * Loads gradient to a uniform variable (in vertex shader).
+     * @param gradient gradient of fog
+     */
+    public void loadGradient(float gradient)
+    {
+        super.loadFloat(location_gradient, gradient);
+    }
+
+    /**
      * Loads a float to the near variable (in waterFragmentShader.glsl)
-     *
      * @param near near plane value
      */
     public void loadNearPlane(float near)
@@ -165,7 +180,6 @@ public class WaterShader extends ShaderProgram
 
     /**
      * Loads a float to the far variable (in waterFragmentShader.glsl)
-     *
      * @param far far plane value
      */
     public void loadFarPlane(float far)

@@ -15,6 +15,9 @@ uniform mat4 modelMatrix;
 uniform vec3 lightPosition;
 uniform vec3 cameraPosition;
 
+uniform float density;
+uniform float gradient;
+
 const float tiling = 4.0;
 
 void main(void) {
@@ -25,10 +28,6 @@ void main(void) {
  	textureCoords = vec2(position.x/2.0 + 0.5, position.y/2.0 + 0.5) * tiling;
  	toCameraVector = cameraPosition - worldPosition.xyz;
  	fromLightVector = worldPosition.xyz - lightPosition;
-
-    // TODO: these two variables need to be loaded into vertexShader via uniform variables (see other VSs)
- 	float density = 0.007;
-    float gradient = 1.5;
 
     vec4 positionRelativeToCam = viewMatrix * worldPosition;
     float distance = length(positionRelativeToCam.xyz);

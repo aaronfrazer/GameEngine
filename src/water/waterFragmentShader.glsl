@@ -16,8 +16,6 @@ uniform sampler2D normalMap;
 uniform sampler2D depthMap;
 uniform vec3 lightColour;
 uniform vec3 skyColour;
-//in vec3 skyColour; // test
-//const vec3 skyColour = vec3(0.5444, 0.62, 0.69);
 
 uniform float moveFactor;
 
