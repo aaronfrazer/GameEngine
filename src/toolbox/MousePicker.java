@@ -53,7 +53,6 @@ public class MousePicker
 
     /**
      * Constructs a MousePicker by setting the camera, projection matrix, view matrix, and terrain.
-     *
      * @param cam        camera
      * @param projection projection matrix
      * @param terrain    terrain TODO: Make this method take in a grid (array) of terrain
@@ -68,7 +67,6 @@ public class MousePicker
 
     /**
      * Returns the current position the mouse is on the terrain.
-     *
      * @return mouse position on terrain
      */
     public Vector3f getCurrentTerrainPoint()
@@ -78,7 +76,6 @@ public class MousePicker
 
     /**
      * Returns the current ray of the mouse.
-     *
      * @return mouse ray
      */
     public Vector3f getCurrentRay()
@@ -104,7 +101,6 @@ public class MousePicker
 
     /**
      * Returns the mouse ray as a 3D vector.
-     *
      * @return 3D coordinates of mouse ray
      */
     private Vector3f calculateMouseRay()

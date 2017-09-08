@@ -69,6 +69,22 @@ public class Loader
     }
 
     /**
+     * Loads positions into a VAO.  Used for font rendering.
+     * @param positions array of vertex positions
+     * @param textureCoords array of texture coordinate vartices
+     * @return VAO ID
+     */
+    public int loadToVAO(float[] positions, float[] textureCoords)
+    {
+        int vaoID = createVAO();
+        storeDataInAttributeList(0, 2, positions);
+        storeDataInAttributeList(1, 2, textureCoords);
+        unbindVAO();
+
+        return vaoID;
+    }
+
+    /**
      * Loads positions into a VAO with normal mapping.
      * @param positions array of vertex positions
      * @param textureCoords array of texture coordinate vertices
@@ -86,6 +102,7 @@ public class Loader
         storeDataInAttributeList(2, 3, normals);
         storeDataInAttributeList(3, 3, tangents);
         unbindVAO();
+
         return new RawModel(vaoID, indices.length);
     }
 
@@ -155,25 +172,6 @@ public class Loader
         textures.add(texID);
 
         return texID;
-    }
-
-    /**
-     * Deletes all VAOs, VBOs, and textures.
-     */
-    public void cleanUp()
-    {
-        for (int vao : vaos)
-        {
-            GL30.glDeleteVertexArrays(vao);
-        }
-        for (int vbo : vbos)
-        {
-            GL15.glDeleteBuffers(vbo);
-        }
-        for (int texture : textures)
-        {
-            GL11.glDeleteTextures(texture);
-        }
     }
 
     /**
@@ -282,6 +280,25 @@ public class Loader
         buffer.flip();
 
         return buffer;
+    }
+
+    /**
+     * Deletes all VAOs, VBOs, and textures.
+     */
+    public void cleanUp()
+    {
+        for (int vao : vaos)
+        {
+            GL30.glDeleteVertexArrays(vao);
+        }
+        for (int vbo : vbos)
+        {
+            GL15.glDeleteBuffers(vbo);
+        }
+        for (int texture : textures)
+        {
+            GL11.glDeleteTextures(texture);
+        }
     }
 
 }

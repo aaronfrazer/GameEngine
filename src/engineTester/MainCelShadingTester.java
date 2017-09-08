@@ -151,8 +151,6 @@ public class MainCelShadingTester
 //		guiTextures.add(reflectionGui);
         //*****************************************
 
-        // TODO: Add a method to Terrain that will get the highest/lowest part on the terrain
-
         while (!Display.isCloseRequested()) { // loops until exit button pushed
 
             VirtualClock.update();
