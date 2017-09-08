@@ -3,6 +3,9 @@ package fontRendering;
 import fontMeshCreator.FontType;
 import fontMeshCreator.GUIText;
 import fontMeshCreator.TextMeshData;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 import renderEngine.Loader;
 
 import java.awt.*;
@@ -25,7 +28,7 @@ public class TextMaster
     private static Loader loader;
 
     /**
-     * Each GUI list holds the font type used in that list
+     * Maps a font type to a list of texts
      */
     private static Map<FontType, List<GUIText>> texts = new HashMap<>();
 
@@ -45,7 +48,15 @@ public class TextMaster
     }
 
     /**
-     * Loads up a text and adds it to the screen.
+     * Renders a font.
+     */
+    public static void render()
+    {
+        renderer.render(texts);
+    }
+
+    /**
+     * Loads a text and adds it to the screen.
      * @param text text
      */
     public static void loadText(GUIText text)
@@ -57,7 +68,7 @@ public class TextMaster
         List<GUIText> textBatch = texts.get(font);
         if (textBatch == null)
         {
-            textBatch = new ArrayList<GUIText>();
+            textBatch = new ArrayList<>();
             texts.put(font, textBatch);
         }
         textBatch.add(text);
@@ -65,24 +76,64 @@ public class TextMaster
 
     /**
      * Removes text from the screen.
-     * @param text text
+     * @param text text to be removed
      */
     public static void removeText(GUIText text)
     {
         List<GUIText> textBatch = texts.get(text.getFont());
         textBatch.remove(text);
-        if (textBatch.isEmpty())
+        if (textBatch.isEmpty()) // if list of texts is empty
         {
-            texts.remove(text.getFont());
+            texts.remove(text.getFont()); // remove the list of texts from the hashmap
+
             // TODO: delete the text's VAO and related VBOs from memory if the text is never going to be used again
             // TODO: See Tutorial 32 @ 11:20
-            // remove the VAO from the list in the Loader class and
-            // delete the VAO and VBO
+
+            if (loader.vaos.contains(text.getMesh()))
+            {
+//                System.out.println("Removed text");
+
+                // remove the VAO from the list in the Loader class and
+                loader.vaos.remove(text.getMesh());
+
+                // ThinMatrix method
+                deleteVaoFromCache(loader.vaos);
+
+                // delete the VAO and VBO
+                GL20.glDisableVertexAttribArray(0);
+                for (int vboID : loader.vaos)
+                {
+                    System.out.println("Removed VBO ID: " + vboID);
+                    System.out.println("Removed VAO ID: " + text.getMesh());
+                    GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+                    GL15.glDeleteBuffers(vboID); // delete VBO
+                    GL30.glBindVertexArray(0);
+                    GL30.glDeleteVertexArrays(text.getMesh()); // delete VAO
+                }
+            }
         }
     }
 
     /**
-     * Cleans up renderer when game is closed.
+     * Deletes a VAO and its associated VBOs.
+     * @param vaos VAO to be deleted
+     */
+    public static void deleteVaoFromCache(List<Integer> vaos)
+    {
+        // remove VBOs
+
+        // remove VAO
+
+//        List<Integer> vbos = vaoCache.remove(vao);
+//        List<Integer> vbos = vaoID.
+//        for (int vbo : vbos) {
+//            GL15.glDeleteBuffers(vbo);
+//        }
+//        GL30.glDeleteVertexArrays(vao);
+    }
+
+    /**
+     * Cleans up renderer when the game closes.
      */
     public static void cleanUp()
     {

@@ -23,20 +23,24 @@ import java.util.List;
 public class Loader
 {
     /**
-     * Location of the textures file directory
+     * Location of the textures directory
      */
     private static final String TEXTURES_LOC = "res/textures/";
 
     /**
-     * Location of sky box file directory
+     * Location of font textures directory
+     */
+    private static final String FONT_TEXTURES_LOC = "res/font/textures/";
+
+    /**
+     * Location of sky box directory
      */
     private static final String SKYBOX_LOC = "res/skybox/";
 
-
     /**
-     * Array list of VAOs
+     * Array list of VAOs that store VBOs
      */
-    private List<Integer> vaos = new ArrayList<>();
+    public List<Integer> vaos = new ArrayList<>();
 
     /**
      * Array list of VBOs
@@ -122,12 +126,13 @@ public class Loader
     }
 
     /**
-     * Loads a texture in OpenGL.
+     * Loads a texture into the game.
      * Implements mipmapping for textures that are further away from camera.
+     * This makes normal maps sharper.
      * @param fileName filepath of texture
      * @return loaded texture's ID
      */
-    public int loadTexture(String fileName)
+    public int loadGameTexture(String fileName)
     {
         Texture texture = null;
         try {
@@ -135,6 +140,30 @@ public class Loader
             GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
             GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, GameSettings.MIPMAPPING);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Failed to load texture: " + fileName + ".png");
+            System.exit(-1);
+        }
+        textures.add(texture.getTextureID());
+
+        return texture.getTextureID();
+    }
+
+    /**
+     * Loads a font texture atlas.
+     * Fully implements mipmapping effect.
+     * @param fileName filepath of texture
+     * @return loaded texture's ID
+     */
+    public int loadFontTextureAtlas(String fileName)
+    {
+        Texture texture = null;
+        try {
+            texture = TextureLoader.getTexture("PNG", new FileInputStream(FONT_TEXTURES_LOC + fileName + ".png"));
+            GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+            GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, 0);
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Failed to load texture: " + fileName + ".png");
@@ -183,6 +212,7 @@ public class Loader
         int vaoID = GL30.glGenVertexArrays();
         vaos.add(vaoID);
         GL30.glBindVertexArray(vaoID);
+
         return vaoID;
     }
 

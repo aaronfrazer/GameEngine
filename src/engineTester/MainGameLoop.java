@@ -5,15 +5,20 @@ import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
+import fontMeshCreator.FontType;
+import fontMeshCreator.GUIText;
+import fontRendering.TextMaster;
 import guis.GuiRenderer;
 import guis.GuiTexture;
 import models.RawModel;
 import models.TexturedModel;
 import normalMappingObjConverter.ObjFileLoaderNM;
 import objConverter.OBJFileLoader;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 import renderEngine.DisplayManager;
@@ -23,7 +28,6 @@ import terrain.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
-import toolbox.GameSettings;
 import toolbox.InputHelper;
 import toolbox.MousePicker;
 import toolbox.VirtualClock;
@@ -32,6 +36,8 @@ import water.WaterRenderer;
 import water.WaterShader;
 import water.WaterTile;
 
+import java.io.File;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -56,13 +62,13 @@ public class MainGameLoop
         Loader loader = new Loader();
 
         // *********** TERRAIN TEXTURE **********
-        TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassTexture"));
-        TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("mudTexture"));
-        TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("grassFlowersTexture"));
-        TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("pathTexture"));
+        TerrainTexture backgroundTexture = new TerrainTexture(loader.loadGameTexture("grassTexture"));
+        TerrainTexture rTexture = new TerrainTexture(loader.loadGameTexture("mudTexture"));
+        TerrainTexture gTexture = new TerrainTexture(loader.loadGameTexture("grassFlowersTexture"));
+        TerrainTexture bTexture = new TerrainTexture(loader.loadGameTexture("pathTexture"));
 
         TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
-        TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMapCelShading"));
+        TerrainTexture blendMap = new TerrainTexture(loader.loadGameTexture("blendMapCelShading"));
         // **************************************
 
         // ********** TERRAIN CREATION **********
@@ -72,43 +78,43 @@ public class MainGameLoop
 
         //********** MODELS CREATION ************
         TexturedModel rocks = new TexturedModel(OBJFileLoader.loadOBJ("rocksModel", loader),
-                new ModelTexture(loader.loadTexture("rocksTexture")));
+                new ModelTexture(loader.loadGameTexture("rocksTexture")));
 
-        ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fernTextureAtlas"));
+        ModelTexture fernTextureAtlas = new ModelTexture(loader.loadGameTexture("fernTextureAtlas"));
         fernTextureAtlas.setNumberOfRows(2);
         TexturedModel fern = new TexturedModel(OBJFileLoader.loadOBJ("fernModel", loader),
                 fernTextureAtlas);
         fern.getTexture().setHasTransparency(true);
 
         TexturedModel pine = new TexturedModel(OBJFileLoader.loadOBJ("pineModel", loader),
-                new ModelTexture(loader.loadTexture("pineTexture")));
+                new ModelTexture(loader.loadGameTexture("pineTexture")));
         pine.getTexture().setHasTransparency(true);
 
         TexturedModel lamp = new TexturedModel(OBJFileLoader.loadOBJ("lampModel", loader),
-                new ModelTexture(loader.loadTexture("lampTexture")));
+                new ModelTexture(loader.loadGameTexture("lampTexture")));
         lamp.getTexture().setUseFakeLighting(true);
 
         RawModel personModel = OBJFileLoader.loadOBJ("personModel", loader);
         TexturedModel personTexturedModel = new TexturedModel(personModel, new ModelTexture(
-                loader.loadTexture("personTexture")));
+                loader.loadGameTexture("personTexture")));
         // **************************************
 
         //********* NORMAL MAP MODELS CREATION ***********
         TexturedModel barrelModel = new TexturedModel(ObjFileLoaderNM.loadOBJ("barrelModel", loader),
-                new ModelTexture(loader.loadTexture("barrelTexture")));
-        barrelModel.getTexture().setNormalMap(loader.loadTexture("barrelNormal"));
+                new ModelTexture(loader.loadGameTexture("barrelTexture")));
+        barrelModel.getTexture().setNormalMap(loader.loadGameTexture("barrelNormal"));
         barrelModel.getTexture().setShineDamper(10);
         barrelModel.getTexture().setReflectivity(0.5f);
 
         TexturedModel crateModel = new TexturedModel(ObjFileLoaderNM.loadOBJ("crateModel", loader),
-                new ModelTexture(loader.loadTexture("crateTexture")));
-        crateModel.getTexture().setNormalMap(loader.loadTexture("crateNormal"));
+                new ModelTexture(loader.loadGameTexture("crateTexture")));
+        crateModel.getTexture().setNormalMap(loader.loadGameTexture("crateNormal"));
         crateModel.getTexture().setShineDamper(10);
         crateModel.getTexture().setReflectivity(0.5f);
 
         TexturedModel boulderModel = new TexturedModel(ObjFileLoaderNM.loadOBJ("boulderModel", loader),
-                new ModelTexture(loader.loadTexture("boulderTexture")));
-        boulderModel.getTexture().setNormalMap(loader.loadTexture("boulderNormal"));
+                new ModelTexture(loader.loadGameTexture("boulderTexture")));
+        boulderModel.getTexture().setNormalMap(loader.loadGameTexture("boulderNormal"));
         boulderModel.getTexture().setShineDamper(10);
         boulderModel.getTexture().setReflectivity(0.5f);
         //***************************************
@@ -178,7 +184,7 @@ public class MainGameLoop
 
         MousePicker picker = new MousePicker(cameraManager.getCurrentCamera(), renderer.getProjectionMatrix(), terrain);
 
-        //********** WATER RENDERING ***************
+        //********** WATER RENDERING ************
         WaterFrameBuffers buffers = new WaterFrameBuffers();
         WaterShader waterShader = new WaterShader();
         WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), buffers);
@@ -186,7 +192,15 @@ public class MainGameLoop
         waters.add(water);
         // **************************************
 
-        // **************** Game Loop Below *********************
+        //********** TEXT RENDERING *************
+        TextMaster.init(loader);
+        FontType font = new FontType(loader.loadFontTextureAtlas("arial"), new File("res/font/arial.fnt"));
+        GUIText text = new GUIText("This is a test text!", 1, font, new Vector2f(0.5f, 0.5f), 0.5f, true);
+        text.setColour(1, 0, 0);
+        // **************************************
+
+
+        // ********* Game Loop Below ************
         while (!Display.isCloseRequested())
         {
             VirtualClock.update();
@@ -226,16 +240,36 @@ public class MainGameLoop
             waterRenderer.render(waters, camera, sun, waterShader);
             guiRenderer.render(guiTextures);
 
+            TextMaster.render(); // render text on top of everything
+
+            // Remove/add text
+            if (InputHelper.isKeyPressed(Keyboard.KEY_Y))
+            {
+                if (text.isOnScreen())
+                    text.remove();
+                else
+                    text.add();
+            }
+
+            // Change text
+            if (InputHelper.isKeyPressed(Keyboard.KEY_N))
+            {
+                text.update("This is my new text!");
+            }
+
             DisplayManager.updateDisplay();
         }
 
-        // ******** Clean Up Below *************
-
+        // ********* Clean Up Below *************
+        TextMaster.cleanUp();
         buffers.cleanUp();
         waterShader.cleanUp();
         guiRenderer.cleanUp();
         renderer.cleanUp();
         loader.cleanUp();
+        // **************************************
+
+
         DisplayManager.closeDisplay();
 
     }

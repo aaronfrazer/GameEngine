@@ -9,6 +9,8 @@ import toolbox.Maths;
 
 /**
  * A shader program used to create water models.
+ *
+ * @author Aaron Frazer
  */
 public class WaterShader extends ShaderProgram
 {
@@ -143,7 +145,7 @@ public class WaterShader extends ShaderProgram
     }
 
     /**
-     * Loads a model matrix to a uniform variable (in vertex shader code).
+     * Loads a model matrix to a uniform variable (in vertex shader).
      * @param modelMatrix - model matrix
      */
     public void loadModelMatrix(Matrix4f modelMatrix)
@@ -170,7 +172,7 @@ public class WaterShader extends ShaderProgram
     }
 
     /**
-     * Loads a float to the near variable (in waterFragmentShader.glsl)
+     * Loads a float to the near variable (in fragment shader).
      * @param near near plane value
      */
     public void loadNearPlane(float near)
@@ -179,7 +181,7 @@ public class WaterShader extends ShaderProgram
     }
 
     /**
-     * Loads a float to the far variable (in waterFragmentShader.glsl)
+     * Loads a float to the far variable (in fragment shader).
      * @param far far plane value
      */
     public void loadFarPlane(float far)

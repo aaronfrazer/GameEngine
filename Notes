@@ -103,7 +103,7 @@ related VBOs from memory if the text is never going
 to be used again
 
 You just need to remove the vao from the list in
-the Loader class  and delete the VAO and VBO.
+the Loader class and delete the VAO and VBO.
 If you have a look in the Loader class you'll find
 the OpenGL methods needed to delete VAOs and VBOs
 GL30.glDeleteVertexArrays(vao);

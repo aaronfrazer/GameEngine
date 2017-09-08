@@ -72,13 +72,13 @@ public class MainCelShadingTester
         //*********************************
 
         //********** TERRAIN TEXTURES **********
-        TerrainTexture grassTexture = new TerrainTexture(loader.loadTexture("celGrassTexture"));
-        TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirtTexture"));
-        TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("celGrassTexture"));
-        TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("pathTexture"));
+        TerrainTexture grassTexture = new TerrainTexture(loader.loadGameTexture("celGrassTexture"));
+        TerrainTexture rTexture = new TerrainTexture(loader.loadGameTexture("dirtTexture"));
+        TerrainTexture gTexture = new TerrainTexture(loader.loadGameTexture("celGrassTexture"));
+        TerrainTexture bTexture = new TerrainTexture(loader.loadGameTexture("pathTexture"));
 
         TerrainTexturePack texturePack1 = new TerrainTexturePack(grassTexture, rTexture, gTexture, bTexture);
-        TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMapCelShading"));
+        TerrainTexture blendMap = new TerrainTexture(loader.loadGameTexture("blendMapCelShading"));
         //**************************************
 
         //********** TERRAIN CREATION **********
@@ -94,11 +94,11 @@ public class MainCelShadingTester
         //********** ENTITY CREATION ***********
         RawModel bobbleTreeModel = OBJFileLoader.loadOBJ("bobbleTreeModel", loader);
         TexturedModel bobbleTreeTexturedModel = new TexturedModel(bobbleTreeModel, new ModelTexture(
-                loader.loadTexture("bobbleTreeTexture")));
+                loader.loadGameTexture("bobbleTreeTexture")));
 
         RawModel rockRawModel = OBJFileLoader.loadOBJ("toonRocksModel", loader);
         TexturedModel rockTexturedModel = new TexturedModel(rockRawModel, new ModelTexture(
-                loader.loadTexture("toonRocksTexture")));
+                loader.loadGameTexture("toonRocksTexture")));
 
         Random random = new Random(676452);
         for (Terrain terrain : terrains)

@@ -1,7 +1,10 @@
 package fontMeshCreator;
 
+import fontRendering.TextMaster;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+
+import javax.xml.soap.Text;
 
 /**
  * Represents a piece of text in the game.
@@ -46,7 +49,12 @@ public class GUIText
     /**
      * Is text centered?
      */
-    private boolean centerText = false;
+    private boolean centerText;
+
+    /**
+     * Is text currently on screen?
+     */
+    private boolean isOnScreen;
 
     /**
      * Color of text
@@ -81,15 +89,36 @@ public class GUIText
         this.position = position;
         this.lineMaxSize = maxLineLength;
         this.centerText = centered;
-        // load text
+        this.isOnScreen = true;
+        TextMaster.loadText(this);
     }
 
     /**
-     * Removes the text from the screen.
+     * Adds this text to the screen.
+     */
+    public void add()
+    {
+        TextMaster.loadText(this);
+        isOnScreen = true;
+    }
+
+    /**
+     * Replaces this text with a new string of text.
+     */
+    public void update(String newString)
+    {
+        remove();
+        this.textString = newString;
+        TextMaster.loadText(this);
+    }
+
+    /**
+     * Removes this text from the screen.
      */
     public void remove()
     {
-        // remove text
+        TextMaster.removeText(this);
+        isOnScreen = false;
     }
 
     /**
@@ -113,7 +142,7 @@ public class GUIText
 
     /**
      * Returns the ID of this text's VAO which contains all vertex data for quads on which the text will be rendered.
-     * @return text mesh VAO
+     * @return VAO ID
      */
     public int getMesh()
     {
@@ -155,6 +184,15 @@ public class GUIText
     protected boolean isCentered()
     {
         return centerText;
+    }
+
+    /**
+     * Returns true if the text is currently displayed on the screen.
+     * @return {@code true} text is on screen
+     */
+    public boolean isOnScreen()
+    {
+        return isOnScreen;
     }
 
     /**
