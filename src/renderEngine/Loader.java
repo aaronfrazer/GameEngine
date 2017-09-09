@@ -204,7 +204,7 @@ public class Loader
     }
 
     /**
-     * Creates an empty VAO.
+     * Creates an empty VAO by adding it to the map with an empty list.
      * @return ID of created VAO
      */
     private int createVAO()

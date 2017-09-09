@@ -80,31 +80,28 @@ public class TextMaster
      */
     public static void removeText(GUIText text)
     {
+        System.out.println("All of the VAOs: " + loader.vaos);
+
         List<GUIText> textBatch = texts.get(text.getFont());
         textBatch.remove(text);
         if (textBatch.isEmpty()) // if list of texts is empty
         {
-            texts.remove(text.getFont()); // remove the list of texts from the hashmap
+            // remove the list of texts from the hashmap
+            texts.remove(text.getFont());
 
             // TODO: delete the text's VAO and related VBOs from memory if the text is never going to be used again
             // TODO: See Tutorial 32 @ 11:20
-
             if (loader.vaos.contains(text.getMesh()))
             {
-//                System.out.println("Removed text");
-
-                // remove the VAO from the list in the Loader class and
-                loader.vaos.remove(text.getMesh());
-
-                // ThinMatrix method
-                deleteVaoFromCache(loader.vaos);
+                // remove the VAO from the list in the Loader class
+//                loader.vaos.remove(text.getMesh());
 
                 // delete the VAO and VBO
                 GL20.glDisableVertexAttribArray(0);
                 for (int vboID : loader.vaos)
                 {
-                    System.out.println("Removed VBO ID: " + vboID);
-                    System.out.println("Removed VAO ID: " + text.getMesh());
+//                    System.out.println("Removed VBO ID: " + vboID);
+//                    System.out.println("Removed VAO ID: " + text.getMesh());
                     GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
                     GL15.glDeleteBuffers(vboID); // delete VBO
                     GL30.glBindVertexArray(0);
@@ -115,18 +112,15 @@ public class TextMaster
     }
 
     /**
-     * Deletes a VAO and its associated VBOs.
-     * @param vaos VAO to be deleted
+     * Deletes a VAO and its associated VBOs from memory if the text is never
+     * going to be used again.
+     * @param vaoID VAO to be deleted
      */
-    public static void deleteVaoFromCache(List<Integer> vaos)
+    public static void deleteVaoFromCache(int vaoID)
     {
-        // remove VBOs
-
-        // remove VAO
-
 //        List<Integer> vbos = vaoCache.remove(vao);
-//        List<Integer> vbos = vaoID.
-//        for (int vbo : vbos) {
+//        for (int vbo : vbos)
+//        {
 //            GL15.glDeleteBuffers(vbo);
 //        }
 //        GL30.glDeleteVertexArrays(vao);
