@@ -15,6 +15,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -38,12 +39,17 @@ public class Loader
     private static final String SKYBOX_LOC = "res/skybox/";
 
     /**
-     * Array list of VAOs that store VBOs
+     * List of VAOs stored in memory
      */
     public List<Integer> vaos = new ArrayList<>();
 
     /**
-     * Array list of VBOs
+     * Map of VAO -> VBO's
+     */
+    public static HashMap<Integer, List<Integer>> vaoCache = new HashMap();
+
+    /**
+     * List of VBOs stored in memory
      */
     private List<Integer> vbos = new ArrayList<>();
 
@@ -54,6 +60,7 @@ public class Loader
 
     /**
      * Loads positions into a VAO.
+     * Used by ObjectFileLoader and Terrain.
      * @param positions array of vertex positions
      * @param textureCoords array of texture coordinate vertices
      * @param normals array of normals
@@ -64,32 +71,17 @@ public class Loader
     {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
-        storeDataInAttributeList(0, 3, positions);
-        storeDataInAttributeList(1, 2, textureCoords);
-        storeDataInAttributeList(2, 3, normals);
+        storeDataInAttributeList(0, 3, positions, vaoID);
+        storeDataInAttributeList(1, 2, textureCoords, vaoID);
+        storeDataInAttributeList(2, 3, normals, vaoID);
         unbindVAO();
 
         return new RawModel(vaoID, indices.length);
     }
 
     /**
-     * Loads positions into a VAO.  Used for font rendering.
-     * @param positions array of vertex positions
-     * @param textureCoords array of texture coordinate vartices
-     * @return VAO ID
-     */
-    public int loadToVAO(float[] positions, float[] textureCoords)
-    {
-        int vaoID = createVAO();
-        storeDataInAttributeList(0, 2, positions);
-        storeDataInAttributeList(1, 2, textureCoords);
-        unbindVAO();
-
-        return vaoID;
-    }
-
-    /**
      * Loads positions into a VAO with normal mapping.
+     * Used by NormalMappingObjectFileLoader.
      * @param positions array of vertex positions
      * @param textureCoords array of texture coordinate vertices
      * @param normals array of normals
@@ -101,10 +93,10 @@ public class Loader
     {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
-        storeDataInAttributeList(0, 3, positions);
-        storeDataInAttributeList(1, 2, textureCoords);
-        storeDataInAttributeList(2, 3, normals);
-        storeDataInAttributeList(3, 3, tangents);
+        storeDataInAttributeList(0, 3, positions, vaoID);
+        storeDataInAttributeList(1, 2, textureCoords, vaoID);
+        storeDataInAttributeList(2, 3, normals, vaoID);
+        storeDataInAttributeList(3, 3, tangents, vaoID);
         unbindVAO();
 
         return new RawModel(vaoID, indices.length);
@@ -112,6 +104,7 @@ public class Loader
 
     /**
      * Loads positions into a VAO and returns information about VAO as a RawModel object.
+     * Used by GuiRenderer, SkyboxRenderer, and WaterRenderer.
      * @param positions array of vertex positions
      * @param dimensions number of dimensions (2D or 3D)
      * @return RawModel object of VAO
@@ -119,10 +112,91 @@ public class Loader
     public RawModel loadToVAO(float[] positions, int dimensions)
     {
         int vaoID = createVAO();
-        this.storeDataInAttributeList(0, dimensions, positions);
+        this.storeDataInAttributeList(0, dimensions, positions, vaoID);
         unbindVAO();
 
         return new RawModel(vaoID, positions.length / dimensions);
+    }
+
+    /**
+     * Loads positions into a VAO.
+     * Used by TextMaster for font rendering.
+     * @param positions array of vertex positions
+     * @param textureCoords array of texture coordinate vartices
+     * @return VAO ID
+     */
+    public int loadToVAO(float[] positions, float[] textureCoords)
+    {
+        int vaoID = createVAO();
+        storeDataInAttributeList(0, 2, positions, vaoID);
+        storeDataInAttributeList(1, 2, textureCoords, vaoID);
+        unbindVAO();
+
+        return vaoID;
+    }
+
+    /**
+     * Creates an empty VAO by adding it to the map with an empty list.
+     * @return ID of created VAO
+     */
+    private int createVAO()
+    {
+        // There should be no VAO (good)
+        int vaoID = GL30.glGenVertexArrays();
+        GL30.glBindVertexArray(vaoID);
+        vaos.add(vaoID); // add it to list of VAOs (so that we can delete them later)
+        List<Integer> associatedVbos = new ArrayList<>(); // List of VBOs associated to this VAO
+        vaoCache.put(vaoID, associatedVbos); // add VBO to VAO
+
+        return vaoID;
+
+//        int vaoID = GL30.glGenVertexArrays();
+//        vaos.add(vaoID); // add it to list of VAOs (so that we can delete them later)
+//        GL30.glBindVertexArray(vaoID);
+//        return vaoID;
+    }
+
+    /**
+     * Stores data into an attribute list of a VAO.
+     * @param attributeNumber number of attribute list
+     * @param coordinateSize size of coordinate (2D or 3D)
+     * @param data data to be stored
+     */
+    private void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data, int vaoID)
+    {
+        int vboID = GL15.glGenBuffers();
+        vaoCache.get(vaoID).add(vboID);
+        vbos.add(vboID); // add it to list of VBOs (so that we can delete them later)
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+        FloatBuffer buffer = storeDataInFloatBuffer(data);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+        GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+    }
+
+    /**
+     * Unbinds a VAO.
+     * This method is called when VAO is no longer in use.
+     */
+    private void unbindVAO()
+    {
+        GL30.glBindVertexArray(0);
+    }
+
+    /**
+     * Deletes a VAO and its associated VBOs from memory if the text is never
+     * going to be used again.
+     * @param vaoID ID of VAO to be deleted
+     */
+    public void deleteVaoFromCache(int vaoID)
+    {
+        System.out.println("Deleting VAO: " + vaoID);
+        List<Integer> associatedVbos = vaoCache.remove(vaoID);
+        for (int vboID : associatedVbos)
+        {
+            GL15.glDeleteBuffers(vboID);
+        }
+        GL30.glDeleteVertexArrays(vaoID);
     }
 
     /**
@@ -204,45 +278,6 @@ public class Loader
     }
 
     /**
-     * Creates an empty VAO by adding it to the map with an empty list.
-     * @return ID of created VAO
-     */
-    private int createVAO()
-    {
-        int vaoID = GL30.glGenVertexArrays();
-        vaos.add(vaoID);
-        GL30.glBindVertexArray(vaoID);
-
-        return vaoID;
-    }
-
-    /**
-     * Unbinds a VAO.
-     * This method is called when VAO is no longer in use.
-     */
-    private void unbindVAO()
-    {
-        GL30.glBindVertexArray(0);
-    }
-
-    /**
-     * Stores data into an attribute list of a VAO.
-     * @param attributeNumber number of attribute list
-     * @param coordinateSize size of coordinate (2D or 3D)
-     * @param data data to be stored
-     */
-    private void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data)
-    {
-        int vboID = GL15.glGenBuffers();
-        vbos.add(vboID);
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
-        FloatBuffer buffer = storeDataInFloatBuffer(data);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
-        GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-    }
-
-    /**
      * Loads indices buffer and binds it to a VAO.
      * @param indices array of indices
      */
@@ -317,17 +352,17 @@ public class Loader
      */
     public void cleanUp()
     {
-        for (int vao : vaos)
+        for (int vaoID : vaos)
         {
-            GL30.glDeleteVertexArrays(vao);
+            GL30.glDeleteVertexArrays(vaoID);
         }
-        for (int vbo : vbos)
+        for (int vboID : vbos)
         {
-            GL15.glDeleteBuffers(vbo);
+            GL15.glDeleteBuffers(vboID);
         }
-        for (int texture : textures)
+        for (int textureID : textures)
         {
-            GL11.glDeleteTextures(texture);
+            GL11.glDeleteTextures(textureID);
         }
     }
 

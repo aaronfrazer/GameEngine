@@ -125,7 +125,7 @@ public class GUIText
      * Returns the string of this text.
      * @return string
      */
-    protected String getTextString()
+    public String getTextString()
     {
         return textString;
     }

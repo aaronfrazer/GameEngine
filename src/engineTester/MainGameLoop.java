@@ -194,9 +194,9 @@ public class MainGameLoop
 
         //********** TEXT RENDERING *************
         TextMaster.init(loader);
-        FontType font = new FontType(loader.loadFontTextureAtlas("arial"), new File("res/font/arial.fnt"));
-        GUIText text = new GUIText("This is a test text!", 1, font, new Vector2f(0.5f, 0.5f), 0.5f, true);
-        text.setColour(1, 0, 0);
+        FontType font = new FontType(loader.loadFontTextureAtlas("candara"), new File("res/font/candara.fnt"));
+        GUIText text = new GUIText("A sample string of text man!", 3, font, new Vector2f(0.0f, 0.4f), 1f, true);
+        text.setColour(0, 0, 0);
         // **************************************
 
 
@@ -246,15 +246,25 @@ public class MainGameLoop
             if (InputHelper.isKeyPressed(Keyboard.KEY_Y))
             {
                 if (text.isOnScreen())
+                {
+                    System.out.println("Removing text: " + text.getTextString());
                     text.remove();
+                }
                 else
+                {
+                    System.out.println("Adding text: " + text.getTextString());
                     text.add();
+                }
             }
 
             // Change text
             if (InputHelper.isKeyPressed(Keyboard.KEY_N))
             {
-                text.update("This is my new text!");
+                if (!text.isOnScreen())
+                {
+                    System.out.println("Updating text: " + "This is my new text!");
+                    text.update("This is my new text!");
+                }
             }
 
             DisplayManager.updateDisplay();

@@ -108,3 +108,5 @@ If you have a look in the Loader class you'll find
 the OpenGL methods needed to delete VAOs and VBOs
 GL30.glDeleteVertexArrays(vao);
 GL15.glDeleteBuffers(vbo);
+
+vaoCache is the same as vaos
