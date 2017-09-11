@@ -26,6 +26,12 @@ public class FontShader extends ShaderProgram
      */
     private int location_colour;
     private int location_translation;
+    private int location_width;
+    private int location_edge;
+    private int location_borderWidth;
+    private int location_borderEdge;
+    private int location_offset;
+    private int location_outlineColour;
 
     /**
      * Creates a font shader program.
@@ -40,6 +46,13 @@ public class FontShader extends ShaderProgram
     {
         location_colour = super.getUniformLocation("colour");
         location_translation = super.getUniformLocation("translation");
+        location_width = super.getUniformLocation("width");
+        location_edge = super.getUniformLocation("edge");
+        location_borderWidth = super.getUniformLocation("borderWidth");
+        location_borderEdge = super.getUniformLocation("borderEdge");
+        location_offset = super.getUniformLocation("offset");
+        location_outlineColour = super.getUniformLocation("outlineColour");
+
     }
 
     @Override
@@ -65,5 +78,63 @@ public class FontShader extends ShaderProgram
     protected void loadTranslation(Vector2f translation)
     {
         super.load2DVector(location_translation, translation);
+    }
+
+    /**
+     * Loads width to a uniform variable (in vertex shader).
+     * @param width width of character (between 1 and 0)
+     */
+    public void loadWidth(float width)
+    {
+        super.loadFloat(location_width, width);
+    }
+
+    /**
+     * Loads edge to a uniform variable (in vertex shader).
+     * @param edge pixelation of edge (soft/hard edge)
+     */
+    public void loadEdge(float edge)
+    {
+        super.loadFloat(location_edge, edge);
+    }
+
+    /**
+     * Loads borderWidth to a uniform variable (in vertex shader).
+     * @param borderWidth outline width of character
+     */
+    public void loadBorderWidth(float borderWidth)
+    {
+        super.loadFloat(location_borderWidth, borderWidth);
+    }
+
+    /**
+     * Loads borderEdge to a uniform variable (in vertex shader).
+     * @param borderEdge edge transition distance
+     */
+    public void loadBorderEdge(float borderEdge)
+    {
+        super.loadFloat(location_borderEdge, borderEdge);
+    }
+
+    /**
+     * Loads offset variable to a uniform variable (in vertex shader).
+     * @param x x offset
+     * @param y y offset
+     */
+    protected void loadOffset(float x, float y)
+    {
+        super.load2DVector(location_offset, new Vector2f(x, y));
+    }
+
+    /**
+     * Loads outlineColour to a uniform variable (in vertex shader).
+     * @param r red color value
+     * @param g green color value
+     * @param b blue color value
+     */
+    public void loadOutlineColour(float r, float g, float b)
+    {
+        super.load3DVector(location_outlineColour, new Vector3f(r, g, b));
+
     }
 }

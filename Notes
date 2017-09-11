@@ -109,4 +109,29 @@ the OpenGL methods needed to delete VAOs and VBOs
 GL30.glDeleteVertexArrays(vao);
 GL15.glDeleteBuffers(vbo);
 
-vaoCache is the same as vaos
+---
+
+Distance Field Text Rendering:
+
+in fontFragmentShader.glsl
+For large texts use:
+Width: 0.51
+Edge: 0.02
+
+For small texts use:
+Width 0.46
+Edge: 0.19
+
+For glowing effect use:
+borderWidth: 0.4
+borderEdge: 0.5
+
+For shadow effect use:
+offset = vec2(0.006, 0.006);
+
+For plain text with no effects use:
+offset = vec2(0.0, 0.0);
+borderWidth = 0.0;
+borderEdge: 0.4;
+
+Todo: add glowing effect to text by using uniform variables

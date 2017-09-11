@@ -27,7 +27,7 @@ public class MetaFile
     /**
      * Desired padding
      */
-    private static final int DESIRED_PADDING = 3;
+    private static final int DESIRED_PADDING = 8;
 
     /**
      * String splitter (space character)
