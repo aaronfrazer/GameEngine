@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 import toolbox.GameSettings;
 
 import java.util.List;
@@ -83,12 +84,12 @@ public class FontRenderer
         shader.loadColour(text.getColour());
         shader.loadTranslation(text.getPosition());
 
-        shader.loadWidth(GameSettings.FONT_WIDTH);
-        shader.loadEdge(GameSettings.FONT_EDGE);
-        shader.loadBorderWidth(GameSettings.FONT_BORDER_WIDTH);
-        shader.loadBorderEdge(GameSettings.FONT_BORDER_EDGE);
-        shader.loadOffset(GameSettings.FONT_OFFSET_X, GameSettings.FONT_OFFSET_Y);
-        shader.loadOutlineColour(GameSettings.FONT_OUTLINE_COLOR_RED, GameSettings.FONT_OUTLINE_COLOR_GREEN, GameSettings.FONT_OUTLINE_COLOR_BLUE);
+        shader.loadWidth(text.getDistanceFieldWidth());
+        shader.loadEdge(text.getDistanceFieldEdge());
+        shader.loadBorderWidth(text.getBorderWidth());
+        shader.loadBorderEdge(text.getBorderEdge());
+        shader.loadOffset(text.getOffset());
+        shader.loadOutlineColour(text.getOutlineColour());
 
         GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, text.getVertexCount());
 

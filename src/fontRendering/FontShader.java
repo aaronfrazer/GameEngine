@@ -118,23 +118,20 @@ public class FontShader extends ShaderProgram
 
     /**
      * Loads offset variable to a uniform variable (in vertex shader).
-     * @param x x offset
-     * @param y y offset
+     * @param offset dropshadow effect
      */
-    protected void loadOffset(float x, float y)
+    protected void loadOffset(Vector2f offset)
     {
-        super.load2DVector(location_offset, new Vector2f(x, y));
+        super.load2DVector(location_offset, offset);
     }
 
     /**
      * Loads outlineColour to a uniform variable (in vertex shader).
-     * @param r red color value
-     * @param g green color value
-     * @param b blue color value
+     * @param outlineColour outline color
      */
-    public void loadOutlineColour(float r, float g, float b)
+    public void loadOutlineColour(Vector3f outlineColour)
     {
-        super.load3DVector(location_outlineColour, new Vector3f(r, g, b));
+        super.load3DVector(location_outlineColour, outlineColour);
 
     }
 }

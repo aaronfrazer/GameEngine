@@ -70,34 +70,4 @@ public class GameSettings
      * Brightness of the sun during nighttime/daytime hours
      */
     public static final float NIGHT_LIGHT_CONST_HOURS = 0.3f, DAY_LIGHT_CONST_HOURS = 1.0f;
-
-    /**
-     * Width of character (between 0 and 1)
-     */
-    public static final float FONT_WIDTH = 0.5f;
-
-    /**
-     * Pixelation of edge (soft/hard edge)
-     */
-    public static final float FONT_EDGE = 0.1f;
-
-    /**
-     * Outline of character
-     */
-    public static final float FONT_BORDER_WIDTH = 0.4f;
-
-    /**
-     * Edge transition distance
-     */
-    public static final float FONT_BORDER_EDGE = 0.5f;
-
-    /**
-     * Dropshadow effect
-     */
-    public static final float FONT_OFFSET_X = 0.000f, FONT_OFFSET_Y = 0.000f;
-
-    /**
-     * Outline color
-     */
-    public static final float FONT_OUTLINE_COLOR_RED = 1.0f, FONT_OUTLINE_COLOR_GREEN = 0.0f, FONT_OUTLINE_COLOR_BLUE = 1.0f;
 }

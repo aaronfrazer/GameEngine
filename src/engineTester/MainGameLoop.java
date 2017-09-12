@@ -42,6 +42,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static java.lang.Math.sin;
+
 public class MainGameLoop
 {
 
@@ -195,10 +197,55 @@ public class MainGameLoop
         //********** TEXT RENDERING *************
         TextMaster.init(loader);
         FontType font = new FontType(loader.loadFontTextureAtlas("candara"), new File("res/font/candara.fnt"));
-        GUIText text = new GUIText("A sample string of text man!", 3, font, new Vector2f(0.0f, 0.4f), 1f, true);
-        text.setColour(0, 0, 0);
+
+        GUIText normalText = new GUIText("Some black and white text", 3, font, new Vector2f(0.0f, 0.0f), 1f, true);
+        normalText.setColour(0, 0, 0);
+        normalText.setDistanceFieldWidth(0.5f);
+        normalText.setDistanceFieldEdge(0.1f);
+        normalText.setBorderWidth(0);
+        normalText.setBorderEdge(0.4f);
+        normalText.setOffset(0.0f, 0.0f);
+        normalText.setOutlineColour(1, 0, 1);
+        normalText.add();
+
+        // Purple with pink outline
+        GUIText outlineText = new GUIText("Some text with an outline", 4, font, new Vector2f(0.0f, 0.2f), 1f, true);
+        outlineText.setColour(0.5f, 0, 1);
+        outlineText.setDistanceFieldWidth(0.5f);
+        outlineText.setDistanceFieldEdge(0.1f);
+        outlineText.setBorderWidth(0.4f);
+        outlineText.setBorderEdge(0.5f);
+        outlineText.setOffset(0.0f, 0.0f);
+        outlineText.setOutlineColour(1, 0, 0.1f);
+        outlineText.add();
+
+        // Glowing effect
+        GUIText glowText = new GUIText("A glowing bit of text!", 6, font, new Vector2f(0.0f, 0.4f), 1f, true);
+        float borderEdge = 0.5f;
+        glowText.setColour(0, 1, 0.5f);
+        glowText.setDistanceFieldWidth(0.5f);
+        glowText.setDistanceFieldEdge(0.1f);
+        glowText.setBorderWidth(0.4f);
+        glowText.setBorderEdge(borderEdge);
+        glowText.setOffset(0.0f, 0.0f);
+        glowText.setOutlineColour(1, 1, 0);
+        glowText.add();
+
+        // Dropshadow effect
+        GUIText shadowText = new GUIText("Drop shadow!", 5, font, new Vector2f(0.0f, 0.6f), 1f, true);
+        shadowText.setColour(0.5f, 0.1f, 0.3f);
+        shadowText.setDistanceFieldWidth(0.5f);
+        shadowText.setDistanceFieldEdge(0.1f);
+        shadowText.setBorderWidth(0.3f);
+        shadowText.setBorderEdge(0.5f);
+        shadowText.setOffset(0.006f, 0.006f);
+        shadowText.setOutlineColour(0, 0, 0);
+        shadowText.add();
+
         // **************************************
 
+        float time = 0;
+        float CHANGE_SPEED = 0.5f;
 
         // ********* Game Loop Below ************
         while (!Display.isCloseRequested())
@@ -242,30 +289,43 @@ public class MainGameLoop
 
             TextMaster.render(); // render text on top of everything
 
-            // Remove/add text
-            if (InputHelper.isKeyPressed(Keyboard.KEY_Y))
-            {
-                if (text.isOnScreen())
-                {
-                    System.out.println("Removing text: " + text.getTextString());
-                    text.remove();
-                }
-                else
-                {
-                    System.out.println("Adding text: " + text.getTextString());
-                    text.add();
-                }
-            }
+            // Apply glowing text effect
 
-            // Change text
-            if (InputHelper.isKeyPressed(Keyboard.KEY_N))
-            {
-                if (!text.isOnScreen())
-                {
-                    System.out.println("Updating text: " + "This is my new text!");
-                    text.update("This is my new text!");
-                }
-            }
+            time += DisplayManager.getFrameTimeSeconds() * CHANGE_SPEED;
+            time %= 1;
+            float value = Math.abs((float) sin(time * Math.PI * 2));
+            if (value > 0.6f) { value = 0.6f; }
+            glowText.setBorderEdge(value);
+            shadowText.setOffset(value*0.015f, value*0.015f);
+
+//            // Remove/add text
+//            if (InputHelper.isKeyPressed(Keyboard.KEY_Y))
+//            {
+//                if (text.isOnScreen())
+//                {
+//                    System.out.println("Removing text: " + text.getTextString());
+//                    text.remove();
+//                }
+//                else
+//                {
+//                    System.out.println("Adding text: " + text.getTextString());
+//                    text.add();
+//                }
+//            }
+//
+//            // Change text
+//            if (InputHelper.isKeyPressed(Keyboard.KEY_N))
+//            {
+//                if (!text.isOnScreen())
+//                {
+//                    System.out.println("Updating text: " + "This is my new text!");
+//                    text.update("This is my new text!");
+//                }
+//            }
+
+            // Pink text
+
+            // Glowing text
 
             DisplayManager.updateDisplay();
         }

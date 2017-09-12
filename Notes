@@ -111,9 +111,8 @@ GL15.glDeleteBuffers(vbo);
 
 ---
 
-Distance Field Text Rendering:
+Distance Field Text Rendering
 
-in fontFragmentShader.glsl
 For large texts use:
 Width: 0.51
 Edge: 0.02
@@ -133,5 +132,3 @@ For plain text with no effects use:
 offset = vec2(0.0, 0.0);
 borderWidth = 0.0;
 borderEdge: 0.4;
-
-Todo: add glowing effect to text by using uniform variables

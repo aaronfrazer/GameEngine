@@ -57,11 +57,6 @@ public class GUIText
     private boolean isOnScreen;
 
     /**
-     * Color of text
-     */
-    private Vector3f colour = new Vector3f(0f, 0f, 0f);
-
-    /**
      * Position on the screen where top left corner of text will be rendered
      * Top left corner of the screen is (0, 0) and bottom right is (1, 1)
      */
@@ -71,6 +66,41 @@ public class GUIText
      * Font type for this text
      */
     private FontType font;
+
+    /**
+     * Color of text
+     */
+    private Vector3f colour;
+
+    /**
+     * Width of character (between 0 and 1
+     */
+    private float distanceFieldWidth;
+
+    /**
+     * Pixelation of edge (soft/hard edge)
+     */
+    private float distanceFieldEdge;
+
+    /**
+     * Outline of character
+     */
+    private float borderWidth;
+
+    /**
+     * Edge transition distance
+     */
+    private float borderEdge;
+
+    /**
+     * Dropshadow effect
+     */
+    private Vector2f offset;
+
+    /**
+     * Outline color of text
+     */
+    private Vector3f outlineColour;
 
     /**
      * Creates a text, loads the text's quads into a VAO, and adds the text to the screen.
@@ -90,7 +120,10 @@ public class GUIText
         this.lineMaxSize = maxLineLength;
         this.centerText = centered;
         this.isOnScreen = true;
-        TextMaster.loadText(this);
+        this.colour = new Vector3f(0f, 0f, 0f);
+        this.offset = new Vector2f(0f, 0f);
+        this.outlineColour = new Vector3f(0f, 0f, 0f);
+//        TextMaster.loadText(this);
     }
 
     /**
@@ -252,5 +285,69 @@ public class GUIText
     public void setColour(float r, float g, float b)
     {
         colour.set(r, g, b);
+    }
+
+    /**********************************
+     * Text effects getters/setters
+     **********************************/
+
+    public float getDistanceFieldWidth()
+    {
+        return distanceFieldWidth;
+    }
+
+    public float getDistanceFieldEdge()
+    {
+        return distanceFieldEdge;
+    }
+
+    public float getBorderWidth()
+    {
+        return borderWidth;
+    }
+
+    public float getBorderEdge()
+    {
+        return borderEdge;
+    }
+
+    public Vector2f getOffset()
+    {
+        return offset;
+    }
+
+    public Vector3f getOutlineColour()
+    {
+        return outlineColour;
+    }
+
+    public void setDistanceFieldWidth(float distanceFieldWidth)
+    {
+        this.distanceFieldWidth = distanceFieldWidth;
+    }
+
+    public void setDistanceFieldEdge(float distanceFieldEdge)
+    {
+        this.distanceFieldEdge = distanceFieldEdge;
+    }
+
+    public void setBorderWidth(float borderWidth)
+    {
+        this.borderWidth = borderWidth;
+    }
+
+    public void setBorderEdge(float borderEdge)
+    {
+        this.borderEdge = borderEdge;
+    }
+
+    public void setOffset(float x, float y)
+    {
+        offset.set(x, y);
+    }
+
+    public void setOutlineColour(float r, float g, float b)
+    {
+        outlineColour.set(r, g, b);
     }
 }
