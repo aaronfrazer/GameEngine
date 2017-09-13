@@ -63,4 +63,21 @@ public class GuiTexture
         return scale;
     }
 
+    /**
+     * Sets the position of this GUI texture.
+     * @param position position
+     */
+    public void setPosition(Vector2f position)
+    {
+        this.position = position;
+    }
+
+    /**
+     * Sets the scale of this GUI texture.
+     * @param scale scale
+     */
+    public void setScale(Vector2f scale)
+    {
+        this.scale = scale;
+    }
 }

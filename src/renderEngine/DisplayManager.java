@@ -2,7 +2,9 @@ package renderEngine;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.*;
+import org.lwjgl.util.vector.Vector2f;
 
 /**
  * A class used to manage the display for the game.
@@ -88,15 +90,6 @@ public class DisplayManager
     }
 
     /**
-     * Returns the delta value.
-     * @return delta value
-     */
-    public static float getFrameTimeSeconds()
-    {
-        return delta;
-    }
-
-    /**
      * Closes the display.
      */
     public static void closeDisplay()
@@ -105,12 +98,31 @@ public class DisplayManager
     }
 
     /**
+     * Returns the delta value.
+     *
+     * @return delta value
+     */
+    public static float getFrameTimeSeconds()
+    {
+        return delta;
+    }
+
+    /**
      * Returns the current time in milliseconds
+     *
      * @return time in ms
      */
     private static long getCurrentTime()
     {
         return Sys.getTime() * 1000 / Sys.getTimerResolution();
+    }
+
+    public static Vector2f getNormalizedMouseCoordinates()
+    {
+        float normalizedX = -1.0f + 2.0f * Mouse.getX() / Display.getWidth();
+        float normalizedY = -(1.0f - 2.0f * Mouse.getY() / Display.getHeight());
+
+        return new Vector2f(normalizedX, normalizedY);
     }
 
 }

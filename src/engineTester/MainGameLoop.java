@@ -1,5 +1,6 @@
 package engineTester;
 
+import buttons.Button;
 import cameras.*;
 import entities.Camera;
 import entities.Entity;
@@ -37,7 +38,6 @@ import water.WaterShader;
 import water.WaterTile;
 
 import java.io.File;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -206,7 +206,7 @@ public class MainGameLoop
         normalText.setBorderEdge(0.4f);
         normalText.setOffset(0.0f, 0.0f);
         normalText.setOutlineColour(1, 0, 1);
-        normalText.add();
+//        normalText.add();
 
         // Purple with pink outline
         GUIText outlineText = new GUIText("Some text with an outline", 4, font, new Vector2f(0.0f, 0.2f), 1f, true);
@@ -217,7 +217,7 @@ public class MainGameLoop
         outlineText.setBorderEdge(0.5f);
         outlineText.setOffset(0.0f, 0.0f);
         outlineText.setOutlineColour(1, 0, 0.1f);
-        outlineText.add();
+//        outlineText.add();
 
         // Glowing effect
         GUIText glowText = new GUIText("A glowing bit of text!", 6, font, new Vector2f(0.0f, 0.4f), 1f, true);
@@ -229,7 +229,7 @@ public class MainGameLoop
         glowText.setBorderEdge(borderEdge);
         glowText.setOffset(0.0f, 0.0f);
         glowText.setOutlineColour(1, 1, 0);
-        glowText.add();
+//        glowText.add();
 
         // Dropshadow effect
         GUIText shadowText = new GUIText("Drop shadow!", 5, font, new Vector2f(0.0f, 0.6f), 1f, true);
@@ -240,8 +240,40 @@ public class MainGameLoop
         shadowText.setBorderEdge(0.5f);
         shadowText.setOffset(0.006f, 0.006f);
         shadowText.setOutlineColour(0, 0, 0);
-        shadowText.add();
+//        shadowText.add();
 
+        // **************************************
+
+        //********** BUTTON RENDERING *************
+        // TODO: Move all methods inside of Button class and call them from there
+        Button pathButton = new Button(loader, "pathTexture", new Vector2f(0, 0), new Vector2f(0.2f, 0.2f))
+        {
+            @Override
+            public void onClick()
+            {
+                if (!isHidden())
+                    System.out.println("Button was clicked");
+            }
+
+            @Override
+            public void startHover()
+            {
+                System.out.println("Button was hovered over");
+                playHoverAnimation(0.092f);
+            }
+
+            @Override
+            public void stopHover()
+            {
+                setScale(new Vector2f(0.2f, 0.2f)); // reset scale
+            }
+
+            @Override
+            public void whileHover()
+            {
+//                System.out.println("You are now hovering over the button");
+            }
+        };
         // **************************************
 
         float time = 0;
@@ -294,10 +326,12 @@ public class MainGameLoop
             time += DisplayManager.getFrameTimeSeconds() * CHANGE_SPEED;
             time %= 1;
             float value = Math.abs((float) sin(time * Math.PI * 2));
-            if (value > 0.6f) { value = 0.6f; }
+            if (value > 0.6f)
+            {
+                value = 0.6f;
+            }
             glowText.setBorderEdge(value);
-            shadowText.setOffset(value*0.015f, value*0.015f);
-
+            shadowText.setOffset(value * 0.015f, value * 0.015f);
 //            // Remove/add text
 //            if (InputHelper.isKeyPressed(Keyboard.KEY_Y))
 //            {
@@ -326,6 +360,16 @@ public class MainGameLoop
             // Pink text
 
             // Glowing text
+
+            // Update buttons
+            if (InputHelper.isKeyPressed(Keyboard.KEY_L))
+            {
+                if (pathButton.isHidden())
+                    pathButton.show(guiTextures);
+                else
+                    pathButton.hide(guiTextures);
+            }
+            pathButton.update();
 
             DisplayManager.updateDisplay();
         }
