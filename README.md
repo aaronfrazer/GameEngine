@@ -15,6 +15,6 @@ lwjgl.jar --> http://legacy.lwjgl.org/javadoc/
 <br/>
 lwjgl_util.jar --> http://legacy.lwjgl.org/javadoc/
 <br/>
-PNGDecoder.jar --> http://twl.l33tabs.org/dist/javadoc/
+PNGDecoder.jar --> http://twl.l33tlabs.org/dist/javadoc/
 <br/>
 slick-util.jar --> http://slick.ninjacave.com/javadoc/
