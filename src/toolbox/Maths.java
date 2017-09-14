@@ -12,7 +12,6 @@ public class Maths
 {
     /**
      * Creates a 4x4 transformation matrix of a 2D vector.
-     *
      * @param translation translation (2D vector)
      * @param scale       scale value
      * @return 4x4 transformation matrix
@@ -29,7 +28,6 @@ public class Maths
 
     /**
      * Creates a 4x4 transformation matrix of a 3D vector.
-     *
      * @param translation translation (3D vector)
      * @param rx          rotation x
      * @param ry          rotation y
@@ -54,7 +52,6 @@ public class Maths
     /**
      * Returns the height of triangle at a player's position.
      * Takes in three 3D vectors (three points on triangle) and a 2D vector of the player's coordinates.
-     *
      * @param p1  first point of triangle
      * @param p2  second point of triangle
      * @param p3  third point of triangle
@@ -67,12 +64,12 @@ public class Maths
         float l1 = ((p2.z - p3.z) * (pos.x - p3.x) + (p3.x - p2.x) * (pos.y - p3.z)) / det;
         float l2 = ((p3.z - p1.z) * (pos.x - p3.x) + (p1.x - p3.x) * (pos.y - p3.z)) / det;
         float l3 = 1.0f - l1 - l2;
+
         return l1 * p1.y + l2 * p2.y + l3 * p3.y;
     }
 
     /**
      * Creates a view matrix.
-     *
      * @param camera camera
      * @return view matrix
      */

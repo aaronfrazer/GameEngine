@@ -1,6 +1,7 @@
 package engineTester;
 
 import buttons.Button;
+import buttons.ColorButton;
 import cameras.*;
 import entities.Camera;
 import entities.Entity;
@@ -245,35 +246,10 @@ public class MainGameLoop
         // **************************************
 
         //********** BUTTON RENDERING *************
-        // TODO: Move all methods inside of Button class and call them from there
-        Button pathButton = new Button(loader, "pathTexture", new Vector2f(0, 0), new Vector2f(0.2f, 0.2f))
-        {
-            @Override
-            public void onClick()
-            {
-                if (!isHidden())
-                    System.out.println("Button was clicked");
-            }
-
-            @Override
-            public void startHover()
-            {
-                System.out.println("Button was hovered over");
-                playHoverAnimation(0.092f);
-            }
-
-            @Override
-            public void stopHover()
-            {
-                setScale(new Vector2f(0.2f, 0.2f)); // reset scale
-            }
-
-            @Override
-            public void whileHover()
-            {
-//                System.out.println("You are now hovering over the button");
-            }
-        };
+        Button simpleButton = new Button(loader, "greenButtonTexture", new Vector2f(-0.5f, 0), new Vector2f(0.2f, 0.2f));
+        ColorButton colorButton = new ColorButton(loader, new Vector2f(0.5f, 0), new Vector2f(0.2f, 0.2f));
+        simpleButton.show(guiTextures);
+        colorButton.show(guiTextures);
         // **************************************
 
         float time = 0;
@@ -317,7 +293,6 @@ public class MainGameLoop
             renderer.renderScene(player, entities, normalMapEntities, terrains, lights, cameraManager, picker, new Vector4f(0, -1, 0, 100000));
 //            renderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
             waterRenderer.render(waters, camera, sun, waterShader);
-            guiRenderer.render(guiTextures);
 
             TextMaster.render(); // render text on top of everything
 
@@ -362,14 +337,24 @@ public class MainGameLoop
             // Glowing text
 
             // Update buttons
-            if (InputHelper.isKeyPressed(Keyboard.KEY_L))
+            if (InputHelper.isKeyPressed(Keyboard.KEY_K))
             {
-                if (pathButton.isHidden())
-                    pathButton.show(guiTextures);
-                else
-                    pathButton.hide(guiTextures);
+//                if (simpleButton.isHidden())
+//                    simpleButton.show(guiTextures);
+//                else
+//                    simpleButton.hide(guiTextures);
             }
-            pathButton.update();
+//            if (InputHelper.isKeyPressed(Keyboard.KEY_L))
+//            {
+//                if (colorButton.isHidden())
+//                    colorButton.show(guiTextures);
+//                else
+//                    colorButton.hide(guiTextures);
+//            }
+
+            simpleButton.update();
+            colorButton.update();
+            guiRenderer.render(guiTextures);
 
             DisplayManager.updateDisplay();
         }

@@ -21,10 +21,10 @@ Mouse picking
 ---
 
 Need to take into consideration when creating world:
-Entities - texture, shape, reflectivity
+Entities - textureID, shape, reflectivity
 Players - same as entities
 Lighting - specular, diffuse
-Terrain - texture, reflectivity, size
+Terrain - textureID, reflectivity, size
 Cameras - 1st, 3rd, freeroam
 
 ---
@@ -91,8 +91,8 @@ skyColour variable is not being loaded into waterFragmentShader.glsl
 Font Rendering:
 
 In order to render font we need two things:
-1. Font's texture atlas - contains all characters
-2. Font file - contains information about each character in the texture atlas (size, position, coordinates)
+1. Font's textureID atlas - contains all characters
+2. Font file - contains information about each character in the textureID atlas (size, position, coordinates)
 
 Use "Hiero" jar to create your own files.
 
@@ -132,3 +132,23 @@ For plain text with no effects use:
 offset = vec2(0.0, 0.0);
 borderWidth = 0.0;
 borderEdge: 0.4;
+
+---
+
+GUI Buttons
+
+The goal is to get this:
+When idle the button should be red.
+When hovered over, the button should be larger and red
+When clicked, the button should turn to green and be original size
+
+Combinations for hovering and clicking:
+1. mouse is not hovering and not clicking (red)
+2. mouse is not hovering and clicking (red)
+3. mouse is hovering and not clicking (yellow)
+4. mouse is hovering and clicking (green)
+5. mouse has stopped clicking and is hovering
+6. mouse has stopped clicking and is not hovering
+
+Need it for this case:
+startHover and button is down

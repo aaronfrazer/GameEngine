@@ -3,15 +3,15 @@ package guis;
 import org.lwjgl.util.vector.Vector2f;
 
 /**
- * A class that represents a GUI texture.
+ * A class that represents a GUI textureID.
  * @author Aaron Frazer
  */
 public class GuiTexture
 {
     /**
-     * ID of texture
+     * ID of textureID
      */
-    private int texture;
+    private int textureID;
 
     /**
      * Position on the display
@@ -24,30 +24,30 @@ public class GuiTexture
     private Vector2f scale;
 
     /**
-     * Creates a GUI texture.
-     * @param texture texture ID
+     * Creates a GUI textureID.
+     * @param textureID textureID ID
      * @param position 2D vector position
      * @param scale scale
      */
-    public GuiTexture(int texture, Vector2f position, Vector2f scale)
+    public GuiTexture(int textureID, Vector2f position, Vector2f scale)
     {
-        this.texture = texture;
+        this.textureID = textureID;
         this.position = position;
         this.scale = scale;
     }
 
     /**
-     * Returns this GUI texture's ID.
-     * @return texture ID
+     * Returns this GUI textureID's ID.
+     * @return textureID ID
      */
-    public int getTexture()
+    public int getTextureID()
     {
-        return texture;
+        return textureID;
     }
 
     /**
-     * Returns the position of this GUI texture.
-     * @return 2D coordinates of texture's position
+     * Returns the position of this GUI textureID.
+     * @return 2D coordinates of textureID's position
      */
     public Vector2f getPosition()
     {
@@ -55,7 +55,7 @@ public class GuiTexture
     }
 
     /**
-     * Returns the scale of this GUI texture.
+     * Returns the scale of this GUI textureID.
      * @return scale
      */
     public Vector2f getScale()
@@ -64,7 +64,7 @@ public class GuiTexture
     }
 
     /**
-     * Sets the position of this GUI texture.
+     * Sets the position of this GUI textureID.
      * @param position position
      */
     public void setPosition(Vector2f position)
@@ -73,7 +73,7 @@ public class GuiTexture
     }
 
     /**
-     * Sets the scale of this GUI texture.
+     * Sets the scale of this GUI textureID.
      * @param scale scale
      */
     public void setScale(Vector2f scale)

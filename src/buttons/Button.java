@@ -1,9 +1,7 @@
 package buttons;
 
 import guis.GuiTexture;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector4f;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import toolbox.InputHelper;
@@ -14,7 +12,7 @@ import java.util.List;
  * An abstract class that implements the IButton interface.
  * @author Aaron Frazer
  */
-public abstract class Button implements IButton
+public class Button implements IButton
 {
     /**
      * Is this button hidden?
@@ -47,11 +45,6 @@ public abstract class Button implements IButton
     private Vector2f scale;
 
     /**
-     * Color of this button
-     */
-    private Vector4f color;
-
-    /**
      * Creates a button.
      * @param loader   loader
      * @param texture  filepath of texture
@@ -63,10 +56,47 @@ public abstract class Button implements IButton
         this.texture = texture;
         this.position = position;
         this.scale = scale;
-        this.color = new Vector4f(1, 1, 1, 1);
         this.isHidden = true;
         this.isHovering = false;
         this.guiTexture = new GuiTexture(loader.loadGameTexture(texture), position, scale);
+    }
+
+    /**
+     * Event that occurs when this button is clicked.
+     */
+    public void onClick()
+    {
+        if (!isHidden)
+        {
+            playClickAnimation(0.08f);
+        }
+    }
+
+    /**
+     * Event that occurs while the mouse is being hovered over this button.
+     */
+    public void whileHover()
+    {
+//        System.out.println("Mouse is hovering over button");
+        playHoverAnimation(0.092f);
+    }
+
+    /**
+     * Event that occurs when the mouse first makes contact with this button.
+     */
+    public void startHover()
+    {
+//        System.out.println("Button was hovered over");
+        playHoverAnimation(0.092f);
+    }
+
+    /**
+     * Event that occurs when the mouse leaves this button.
+     */
+    public void stopHover()
+    {
+//        System.out.println("Mouse has stopped hovering over button");
+        setScale(new Vector2f(0.2f, 0.2f)); // reset scale
     }
 
     /**
@@ -93,7 +123,12 @@ public abstract class Button implements IButton
                 }
                 if (InputHelper.isButtonDown(0))
                 {
-                    onClick();
+                    onClick(); // mouse is pressed down on button
+                    System.out.println("mouse pressed");
+                } else {
+                    // mouse is not pressed down on button
+//                    guiTexture = texture;
+                    System.out.println("mouse hovering");
                 }
 
             } else // mouse is outside of button
@@ -126,22 +161,24 @@ public abstract class Button implements IButton
     }
 
     /**
-     * Shows this button on the screen
+     * Shows this button on the screen.
+     * Adds this button's GUI texture to the list of textures.
      * @param guiTextures list of GUI textures
      */
     public void show(List<GuiTexture> guiTextures)
     {
-        startRender(guiTextures);
+        guiTextures.add(guiTexture);
         isHidden = false;
     }
 
     /**
      * Hides this button from the screen.
+     * Removes this button's GUI texture from the list of textures.
      * @param guiTextures list of GUI textures
      */
     public void hide(List<GuiTexture> guiTextures)
     {
-        stopRender(guiTextures);
+        guiTextures.remove(guiTexture);
         isHidden = true;
     }
 
@@ -153,24 +190,6 @@ public abstract class Button implements IButton
     {
         hide(guiTextures);
         show(guiTextures);
-    }
-
-    /**
-     * Adds this button's GUI texture to the list of textures.
-     * @param guiTextureList list of GUI textures
-     */
-    private void startRender(List<GuiTexture> guiTextureList)
-    {
-        guiTextureList.add(guiTexture);
-    }
-
-    /**
-     * Removes this button's GUI texture from the list of textures.
-     * @param guiTextureList list of GUI textures
-     */
-    private void stopRender(List<GuiTexture> guiTextureList)
-    {
-        guiTextureList.remove(guiTexture);
     }
 
     /**
@@ -207,15 +226,6 @@ public abstract class Button implements IButton
     public Vector2f getScale()
     {
         return scale;
-    }
-
-    /**
-     * Returns the color of this button
-     * @return button color
-     */
-    public Vector4f getColor()
-    {
-        return color;
     }
 
     /**
