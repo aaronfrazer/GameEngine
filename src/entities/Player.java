@@ -30,8 +30,9 @@ public class Player extends Entity
 
     /**
      * Gravity affecting the player
+     * TODO: move this out of the Player class; it affects Particle class as well
      */
-    private static final float GRAVITY = -50;
+    public static final float GRAVITY = -50;
 
     /**
      * Jump power

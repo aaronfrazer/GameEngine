@@ -146,7 +146,7 @@ public class WaterShader extends ShaderProgram
 
     /**
      * Loads a model matrix to a uniform variable (in vertex shader).
-     * @param modelMatrix - model matrix
+     * @param modelMatrix model matrix
      */
     public void loadModelMatrix(Matrix4f modelMatrix)
     {

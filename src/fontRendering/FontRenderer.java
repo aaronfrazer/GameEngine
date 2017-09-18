@@ -15,7 +15,6 @@ import java.util.Map;
 
 /**
  * Responsible for rendering font the the screen.
- *
  * @author Aaron Frazer
  */
 public class FontRenderer

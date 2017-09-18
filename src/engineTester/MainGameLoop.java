@@ -23,6 +23,10 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
+import particles.ComplexParticleSystem;
+import particles.Particle;
+import particles.ParticleMaster;
+import particles.SimpleParticleSystem;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -245,11 +249,22 @@ public class MainGameLoop
 
         // **************************************
 
-        //********** BUTTON RENDERING *************
+        // ********* BUTTON RENDERING ***********
         Button simpleButton = new Button(loader, "greenButtonTexture", new Vector2f(-0.5f, 0), new Vector2f(0.2f, 0.2f));
         ColorButton colorButton = new ColorButton(loader, new Vector2f(0.5f, 0), new Vector2f(0.2f, 0.2f));
         simpleButton.show(guiTextures);
         colorButton.show(guiTextures);
+        // **************************************
+
+        // ******** PARTICLE RENDERING **********
+        ParticleMaster.init(loader, renderer.getProjectionMatrix());
+        SimpleParticleSystem simpleParticleSystem = new SimpleParticleSystem(50, 25, 0.3f, 4);
+
+        ComplexParticleSystem complexParticleSystem = new ComplexParticleSystem(50, 25, 0.3f, 4, 1);
+        complexParticleSystem.randomizeRotation();
+        complexParticleSystem.setLifeError(0.1f);
+        complexParticleSystem.setSpeedError(0.4f);
+        complexParticleSystem.setScaleError(0.8f);
         // **************************************
 
         float time = 0;
@@ -267,6 +282,18 @@ public class MainGameLoop
             player.move(terrain);
             camera.move();
             picker.update();
+
+//            if (InputHelper.isKeyDown(Keyboard.KEY_Y))
+//            {
+//                new Particle(new Vector3f(player.getPosition()), new Vector3f(0, 30, 0), 1, 4, 0, 1);
+//            }
+//            simpleParticleSystem.generateParticles(player.getPosition());
+
+            complexParticleSystem.generateParticles(player.getPosition());
+            complexParticleSystem.generateParticles(new Vector3f(50, 10, -30));
+
+            ParticleMaster.update();
+
             entity.increaseRotation(0, 1, 0);
             entity2.increaseRotation(0, 1, 0);
             entity3.increaseRotation(0, 1, 0);
@@ -294,10 +321,12 @@ public class MainGameLoop
 //            renderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
             waterRenderer.render(waters, camera, sun, waterShader);
 
+            // Particles have to be rendered after 3D stuff, but before 2D stuff
+            ParticleMaster.renderParticles(camera);
+
             TextMaster.render(); // render text on top of everything
 
             // Apply glowing text effect
-
             time += DisplayManager.getFrameTimeSeconds() * CHANGE_SPEED;
             time %= 1;
             float value = Math.abs((float) sin(time * Math.PI * 2));
@@ -360,6 +389,7 @@ public class MainGameLoop
         }
 
         // ********* Clean Up Below *************
+        ParticleMaster.cleanUp();
         TextMaster.cleanUp();
         buffers.cleanUp();
         waterShader.cleanUp();
