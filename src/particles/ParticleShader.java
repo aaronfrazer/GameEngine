@@ -2,6 +2,7 @@ package particles;
 
 import org.lwjgl.util.vector.Matrix4f;
 
+import org.lwjgl.util.vector.Vector2f;
 import shaders.ShaderProgram;
 
 /**
@@ -25,6 +26,9 @@ public class ParticleShader extends ShaderProgram
      */
     private int location_modelViewMatrix;
     private int location_projectionMatrix;
+    private int location_texOffset1;
+    private int location_texOffset2;
+    private int location_texCoordInfo;
 
     /**
      * Creates a particle shader program.
@@ -39,6 +43,9 @@ public class ParticleShader extends ShaderProgram
     {
         location_modelViewMatrix = super.getUniformLocation("modelViewMatrix");
         location_projectionMatrix = super.getUniformLocation("projectionMatrix");
+        location_texOffset1 = super.getUniformLocation("texOffset1");
+        location_texOffset2 = super.getUniformLocation("texOffset2");
+        location_texCoordInfo = super.getUniformLocation("texCoordInfo");
     }
 
     @Override
@@ -57,7 +64,7 @@ public class ParticleShader extends ShaderProgram
     }
 
     /**
-     * Loads a projection matrix to a uniform variable (in vertex shader code).
+     * Loads a projection matrix to a uniform variable (in vertex shader).
      * @param projectionMatrix projection matrix
      */
     protected void loadProjectionMatrix(Matrix4f projectionMatrix)
@@ -65,4 +72,17 @@ public class ParticleShader extends ShaderProgram
         super.loadMatrix(location_projectionMatrix, projectionMatrix);
     }
 
+    /**
+     * Loads offset values to uniform variable (in vertex shader).
+     * @param offset1 first offset
+     * @param offset2 second offset
+     * @param numRows number of rows in X component
+     * @param blend blend factor in Y component
+     */
+    protected void loadTextureCoordInfo(Vector2f offset1, Vector2f offset2, float numRows, float blend)
+    {
+        super.load2DVector(location_texOffset1, offset1);
+        super.load2DVector(location_texOffset2, offset2);
+        super.load2DVector(location_texCoordInfo, new Vector2f(numRows, blend));
+    }
 }

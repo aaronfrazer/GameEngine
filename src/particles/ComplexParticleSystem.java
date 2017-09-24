@@ -75,6 +75,11 @@ public class ComplexParticleSystem
     private Random random = new Random();
 
     /**
+     * Particle's texture
+     */
+    private ParticleTexture texture;
+
+    /**
      * Creates a complex particle system
      * @param pps particles per second
      * @param speed speed at which particles are emitted
@@ -82,24 +87,14 @@ public class ComplexParticleSystem
      * @param lifeLength particle life length
      * @param scale scale of particles
      */
-    public ComplexParticleSystem(float pps, float speed, float gravityComplient, float lifeLength, float scale)
+    public ComplexParticleSystem(ParticleTexture texture, float pps, float speed, float gravityComplient, float lifeLength, float scale)
     {
+        this.texture = texture;
         this.pps = pps;
         this.averageSpeed = speed;
         this.gravityComplient = gravityComplient;
         this.averageLifeLength = lifeLength;
         this.averageScale = scale;
-    }
-
-    /**
-     * Sets the direction in which particles are emitted.
-     * @param direction average direction in which particles are emitted
-     * @param deviation value between 0 and 1 indicating how far from the chosen direction particles can deviate
-     */
-    public void setDirection(Vector3f direction, float deviation)
-    {
-        this.direction = new Vector3f(direction);
-        this.directionDeviation = (float) (deviation * Math.PI);
     }
 
     /**
@@ -141,7 +136,7 @@ public class ComplexParticleSystem
         velocity.scale(generateValue(averageSpeed, speedError));
         float scale = generateValue(averageScale, scaleError);
         float lifeLength = generateValue(averageLifeLength, lifeError);
-        new Particle(new Vector3f(center), velocity, gravityComplient, lifeLength, generateRotation(), scale);
+        new Particle(texture, new Vector3f(center), velocity, gravityComplient, lifeLength, generateRotation(), scale);
     }
 
     /**
@@ -252,4 +247,14 @@ public class ComplexParticleSystem
         this.scaleError = error * averageScale;
     }
 
+    /**
+     * Sets the direction in which particles are emitted.
+     * @param direction average direction in which particles are emitted
+     * @param deviation value between 0 and 1 indicating how far from the chosen direction particles can deviate
+     */
+    public void setDirection(Vector3f direction, float deviation)
+    {
+        this.direction = new Vector3f(direction);
+        this.directionDeviation = (float) (deviation * Math.PI);
+    }
 }

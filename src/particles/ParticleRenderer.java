@@ -1,8 +1,10 @@
 package particles;
 
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
@@ -50,17 +52,32 @@ public class ParticleRenderer
 
     /**
      * Renders a list of particles.
-     * @param particles list of particles to be rendered
+     * @param particles hashmap of lists of particles to be rendered
      * @param camera camera
      */
-    protected void render(List<Particle> particles, Camera camera)
+    protected void render(Map<ParticleTexture, List<Particle>> particles, Camera camera)
     {
         Matrix4f viewMatrix = Maths.createViewMatrix(camera);
         prepare();
-        for (Particle particle : particles)
+
+        for (ParticleTexture texture : particles.keySet())
         {
-            updateModelViewMatrix(particle.getPosition(), particle.getRotation(), particle.getScale(), viewMatrix);
-            GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
+            // choose between alpha or additive blending
+            if (texture.useAdditiveBlending())
+                GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE); // additive blending (good for fire/magic effects)
+            else
+                GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA); // alpha blending (good for smoke / falling leaves)
+
+            // bind texture
+            GL13.glActiveTexture(GL13.GL_TEXTURE0);
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
+
+            for (Particle particle : particles.get(texture))
+            {
+                updateModelViewMatrix(particle.getPosition(), particle.getRotation(), particle.getScale(), viewMatrix);
+                shader.loadTextureCoordInfo(particle.getTexOffset1(), particle.getTexOffset2(), texture.getNumberOfRows(), particle.getBlend());
+                GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
+            }
         }
         finishRendering();
     }
@@ -118,7 +135,9 @@ public class ParticleRenderer
 
         // Enable alpha blending
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA); // alpha blending (good for smoke / falling leaves)
+//        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE); // additive blending (good for fire/magic effects)
+
 
         // Stop particles from being rendered to depth buffer
         GL11.glDepthMask(false);

@@ -23,10 +23,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
-import particles.ComplexParticleSystem;
-import particles.Particle;
-import particles.ParticleMaster;
-import particles.SimpleParticleSystem;
+import particles.*;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -162,9 +159,9 @@ public class MainGameLoop
         Entity entity = new Entity(barrelModel, new Vector3f(75, 10, -75), 0, 0, 0, 1f);
         Entity entity2 = new Entity(boulderModel, new Vector3f(85, 10, -75), 0, 0, 0, 1f);
         Entity entity3 = new Entity(crateModel, new Vector3f(65, 10, -75), 0, 0, 0, 0.04f);
-        normalMapEntities.add(entity);
-        normalMapEntities.add(entity2);
-        normalMapEntities.add(entity3);
+//        normalMapEntities.add(entity);
+//        normalMapEntities.add(entity2);
+//        normalMapEntities.add(entity3);
         // **************************************
 
         // *********** LIGHT CREATION ***********
@@ -250,21 +247,42 @@ public class MainGameLoop
         // **************************************
 
         // ********* BUTTON RENDERING ***********
-        Button simpleButton = new Button(loader, "greenButtonTexture", new Vector2f(-0.5f, 0), new Vector2f(0.2f, 0.2f));
-        ColorButton colorButton = new ColorButton(loader, new Vector2f(0.5f, 0), new Vector2f(0.2f, 0.2f));
-        simpleButton.show(guiTextures);
-        colorButton.show(guiTextures);
+//        Button simpleButton = new Button(loader, "greenButtonTexture", new Vector2f(-0.5f, 0), new Vector2f(0.2f, 0.2f));
+//        ColorButton colorButton = new ColorButton(loader, new Vector2f(0.5f, 0), new Vector2f(0.2f, 0.2f));
+//        simpleButton.show(guiTextures);
+//        colorButton.show(guiTextures);
         // **************************************
 
         // ******** PARTICLE RENDERING **********
-        ParticleMaster.init(loader, renderer.getProjectionMatrix());
-        SimpleParticleSystem simpleParticleSystem = new SimpleParticleSystem(50, 25, 0.3f, 4);
+        ParticleTexture particleFireTextureAtlas = new ParticleTexture(loader.loadGameTexture("particleFireTextureAtlas"), 8, true);
+        ParticleTexture particleStarTexture = new ParticleTexture(loader.loadGameTexture("particleStarTexture"), 1, true);
+        ParticleTexture particleSmokeTextureAtlas = new ParticleTexture(loader.loadGameTexture("particleSmokeTextureAtlas"), 8, false);
+        ParticleTexture particleMagicTextureAtlas = new ParticleTexture(loader.loadGameTexture("particleMagicTextureAtlas"), 4, false);
 
-        ComplexParticleSystem complexParticleSystem = new ComplexParticleSystem(50, 25, 0.3f, 4, 1);
-        complexParticleSystem.randomizeRotation();
-        complexParticleSystem.setLifeError(0.1f);
-        complexParticleSystem.setSpeedError(0.4f);
-        complexParticleSystem.setScaleError(0.8f);
+        ParticleMaster.init(loader, renderer.getProjectionMatrix());
+
+        ComplexParticleSystem fireParticleSystem = new ComplexParticleSystem(particleFireTextureAtlas, 100, 15, 0.1f, 1, 15);
+        fireParticleSystem.setDirection(new Vector3f(0, 1, 0), 0.01f);
+        fireParticleSystem.setLifeError(0.1f);
+        fireParticleSystem.setSpeedError(0.4f);
+        fireParticleSystem.setScaleError(0.8f);
+
+        ComplexParticleSystem starParticleSystem = new ComplexParticleSystem(particleStarTexture, 50, 15, 1.0f, 1, 3);
+        starParticleSystem.setDirection(new Vector3f(0, 1, 0), 1);
+        starParticleSystem.setScaleError(0.8f);
+        starParticleSystem.randomizeRotation();
+
+        ComplexParticleSystem smokeParticleSystem = new ComplexParticleSystem(particleSmokeTextureAtlas, 20, 5, 0.001f, 20, 20);
+        smokeParticleSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
+        smokeParticleSystem.setLifeError(0.8f);
+        smokeParticleSystem.setSpeedError(0.4f);
+        smokeParticleSystem.randomizeRotation();
+
+        ComplexParticleSystem magicParticleSystem = new ComplexParticleSystem(particleMagicTextureAtlas, 10, 2, 0.001f, 10, 2);
+        magicParticleSystem.setDirection(new Vector3f(0, 1, 0), 0.2f);
+        magicParticleSystem.setLifeError(0.8f);
+        magicParticleSystem.setSpeedError(0.4f);
+        magicParticleSystem.randomizeRotation();
         // **************************************
 
         float time = 0;
@@ -283,16 +301,14 @@ public class MainGameLoop
             camera.move();
             picker.update();
 
-//            if (InputHelper.isKeyDown(Keyboard.KEY_Y))
-//            {
-//                new Particle(new Vector3f(player.getPosition()), new Vector3f(0, 30, 0), 1, 4, 0, 1);
-//            }
-//            simpleParticleSystem.generateParticles(player.getPosition());
+            fireParticleSystem.generateParticles(new Vector3f(150, 10, -100));
+            starParticleSystem.generateParticles(new Vector3f(150, 20, -80));
+            smokeParticleSystem.generateParticles(new Vector3f(150, 10, -60));
+            magicParticleSystem.generateParticles(new Vector3f(150, 10, -40));
 
-            complexParticleSystem.generateParticles(player.getPosition());
-            complexParticleSystem.generateParticles(new Vector3f(50, 10, -30));
+//            fireParticleSystem.generateParticles(new Vector3f(player.getPosition().x + 1, player.getPosition().y + 8, player.getPosition().z));
 
-            ParticleMaster.update();
+            ParticleMaster.update(camera);
 
             entity.increaseRotation(0, 1, 0);
             entity2.increaseRotation(0, 1, 0);
@@ -366,23 +382,9 @@ public class MainGameLoop
             // Glowing text
 
             // Update buttons
-            if (InputHelper.isKeyPressed(Keyboard.KEY_K))
-            {
-//                if (simpleButton.isHidden())
-//                    simpleButton.show(guiTextures);
-//                else
-//                    simpleButton.hide(guiTextures);
-            }
-//            if (InputHelper.isKeyPressed(Keyboard.KEY_L))
-//            {
-//                if (colorButton.isHidden())
-//                    colorButton.show(guiTextures);
-//                else
-//                    colorButton.hide(guiTextures);
-//            }
 
-            simpleButton.update();
-            colorButton.update();
+//            simpleButton.update();
+//            colorButton.update();
             guiRenderer.render(guiTextures);
 
             DisplayManager.updateDisplay();

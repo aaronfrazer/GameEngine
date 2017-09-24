@@ -31,14 +31,21 @@ public class SimpleParticleSystem
     private float lifeLength;
 
     /**
+     * Particle's texture
+     */
+    private ParticleTexture texture;
+
+    /**
      * Creates a simple particle system.
+     * @param texture particle's texture
      * @param pps particles per second
      * @param speed speed particles are emitted
      * @param gravityComplient amount of gravity
      * @param lifeLength particle life length
      */
-    public SimpleParticleSystem(float pps, float speed, float gravityComplient, float lifeLength)
+    public SimpleParticleSystem(ParticleTexture texture, float pps, float speed, float gravityComplient, float lifeLength)
     {
+        this.texture = texture;
         this.pps = pps;
         this.speed = speed;
         this.gravityComplient = gravityComplient;
@@ -77,6 +84,6 @@ public class SimpleParticleSystem
         Vector3f velocity = new Vector3f(dirX, 1, dirZ);
         velocity.normalise();
         velocity.scale(speed);
-        new Particle(new Vector3f(center), velocity, gravityComplient, lifeLength, 0, 1);
+        new Particle(texture, new Vector3f(center), velocity, gravityComplient, lifeLength, 0, 1);
     }
 }

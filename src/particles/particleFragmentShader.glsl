@@ -2,8 +2,17 @@
 
 out vec4 out_colour;
 
+in vec2 textureCoords1; // current stage
+in vec2 textureCoords2; // next stage
+in float blend;
+
+uniform sampler2D particleTexture;
+
 void main(void) {
 
-	out_colour = vec4(1.0);
+    vec4 colour1 = texture(particleTexture, textureCoords1);
+    vec4 colour2 = texture(particleTexture, textureCoords2);
+
+	out_colour = mix(colour1, colour2, blend);
 
 }
