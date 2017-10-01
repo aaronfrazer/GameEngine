@@ -52,6 +52,11 @@ public class Particle
      */
     private float distance;
 
+	/**
+	 * Blend factor
+	 */
+	private float blend;
+
     /**
      * Particle's texture
      */
@@ -66,11 +71,6 @@ public class Particle
      * Next stage in texture atlas
      */
     private Vector2f texOffset2 = new Vector2f();
-
-    /**
-     * Blend factor
-     */
-    private float blend;
 
     /**
      * Creates a particle and adds it to the particle list in the particle master.
