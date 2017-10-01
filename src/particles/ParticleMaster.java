@@ -4,7 +4,13 @@ import entities.Camera;
 import org.lwjgl.util.vector.Matrix4f;
 import renderEngine.Loader;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 
 /**
  * Responsible for managing all particles in the scene and keeps them updated.
@@ -41,10 +47,11 @@ public class ParticleMaster
     public static void update(Camera camera)
     {
         // Create new iterator to iterate through each list of particles in the hashmap
-        Iterator<Map.Entry<ParticleTexture, List<Particle>>> mapIterator = particles.entrySet().iterator();
+        Iterator<Entry<ParticleTexture, List<Particle>>> mapIterator = particles.entrySet().iterator();
         while(mapIterator.hasNext())
         {
-            List<Particle> list = mapIterator.next().getValue();
+            Entry<ParticleTexture, List<Particle>> entry = mapIterator.next();
+            List<Particle> list = entry.getValue();
 
             Iterator<Particle> iterator = list.iterator();
             while(iterator.hasNext())
@@ -60,7 +67,12 @@ public class ParticleMaster
                     }
                 }
             }
-            InsertionSort.sortHighToLow(list);
+
+            // Only sort particles which use alpha blending
+            if (!entry.getKey().useAdditiveBlending())
+            {
+                InsertionSort.sortHighToLow(list);
+            }
         }
     }
 

@@ -73,6 +73,11 @@ public class Particle
     private Vector2f texOffset2 = new Vector2f();
 
     /**
+     * Particle's direction
+     */
+    private Vector3f reusableChange = new Vector3f();
+
+    /**
      * Creates a particle and adds it to the particle list in the particle master.
      * @param texture texture
      * @param position position
@@ -102,9 +107,9 @@ public class Particle
     protected boolean update(Camera camera)
     {
         velocity.y += Player.GRAVITY * gravityEffect * DisplayManager.getFrameTimeSeconds();
-        Vector3f change = new Vector3f(velocity);
-        change.scale(DisplayManager.getFrameTimeSeconds());
-        Vector3f.add(change, position, position);
+        reusableChange.set(velocity);
+        reusableChange.scale(DisplayManager.getFrameTimeSeconds());
+        Vector3f.add(reusableChange, position, position);
         distance = Vector3f.sub(camera.getPosition(), position, null).lengthSquared();
         updateTextureCoordInfo();
         elapsedTime += DisplayManager.getFrameTimeSeconds();

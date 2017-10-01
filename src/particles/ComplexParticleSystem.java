@@ -124,7 +124,7 @@ public class ComplexParticleSystem
      */
     private void emitParticle(Vector3f center)
     {
-        Vector3f velocity = null;
+        Vector3f velocity;
         if (direction != null)
         {
             velocity = generateRandomUnitVectorWithinCone(direction, directionDeviation);
