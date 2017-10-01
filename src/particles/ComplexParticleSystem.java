@@ -134,7 +134,8 @@ public class ComplexParticleSystem
         }
         velocity.normalise();
         velocity.scale(generateValue(averageSpeed, speedError));
-        float scale = generateValue(averageScale, scaleError);
+//        float scale = generateValue(averageScale, scaleError);
+        float scale = averageScale;
         float lifeLength = generateValue(averageLifeLength, lifeError);
         new Particle(texture, new Vector3f(center), velocity, gravityComplient, lifeLength, generateRotation(), scale);
     }

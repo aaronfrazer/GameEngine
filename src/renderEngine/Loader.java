@@ -136,6 +136,59 @@ public class Loader
     }
 
     /**
+     * Creates a new empty VBO.
+     * The VBO will be filled every frame with new info for particles
+     * @param floatCount maximum number of floats this VBO will hold
+     * @return ID of VBO
+     */
+    public int createEmptyVbo(int floatCount)
+    {
+        int vboID = GL15.glGenBuffers();
+        vbos.add(vboID);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, floatCount * 4, GL15.GL_STREAM_DRAW);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
+        return vboID;
+    }
+
+    /**
+     * Updates a VBO with data.
+     * @param vbo VBO to update
+     * @param data array of data
+     * @param buffer float buffer that can be reused
+     */
+    public void updateVbo(int vbo, float[] data, FloatBuffer buffer)
+    {
+        buffer.clear();
+        buffer.put(data);
+        buffer.flip();
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer.capacity() * 4, GL15.GL_STREAM_DRAW);
+        GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, buffer);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+    }
+
+    /**
+     * Adds a per instance attribute to a VAO.
+     * @param vao VAO attribute will be applied to
+     * @param vbo VBO where attribute retrieves data from
+     * @param attribute attribute number where data will be stored
+     * @param dataSize size of data element
+     * @param instanceDataLength stride
+     * @param offset offset
+     */
+    public void addInstancedAttribute(int vao, int vbo, int attribute, int dataSize, int instanceDataLength, int offset)
+    {
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+        GL30.glBindVertexArray(vao);
+        GL20.glVertexAttribPointer(attribute, dataSize, GL11.GL_FLOAT, false, instanceDataLength * 4, offset * 4);
+        GL33.glVertexAttribDivisor(attribute, 1);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+        GL30.glBindVertexArray(0);
+    }
+
+    /**
      * Creates an empty VAO by adding it to the map with an empty list.
      * @return ID of created VAO
      */
