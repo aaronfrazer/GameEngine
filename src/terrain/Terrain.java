@@ -16,13 +16,16 @@ import java.io.IOException;
 
 /**
  * Represents a terrain.
+ * Terrains can either implement a heightmap or be randomly generated.
+ *
+ * @author Aaron Frazer
  */
 public class Terrain
 {
     /**
      * Size of terrain
      */
-    public static float SIZE = 150;
+    public static float SIZE = 800;
 
     /**
      * Maximum height of terrain
@@ -60,8 +63,7 @@ public class Terrain
     private float[][] heights;
 
     /**
-     * Constructs a terrain.
-     *
+     * Constructs a terrain from a heightmap file.
      * @param gridX x coordinate
      * @param gridZ z coordinate
      * @param loader loader
@@ -75,18 +77,34 @@ public class Terrain
         this.blendMap = blendMap;
         this.x = gridX * SIZE;
         this.z = gridZ * SIZE;
-        this.model = generateTerrain(loader, heightMap);
+        this.model = generateHeightmapTerrain(loader, heightMap);
+    }
+
+    /**
+     * Constructs a randomly generated terrain.
+     * @param gridX x coordinate
+     * @param gridZ z coordinate
+     * @param loader loader
+     * @param texturePack texture pack of terrain
+     * @param blendMap blend map of terrain
+     */
+    public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap)
+    {
+        this.texturePack = texturePack;
+        this.blendMap = blendMap;
+        this.x = gridX * SIZE;
+        this.z = gridZ * SIZE;
+        this.model = generateRandomTerrain(loader);
     }
 
     /**
      * Generates a model of a terrain using a height map.
-     *
      * @param loader loader
-     * @param heightMap name of height map
+     * @param heightMap filename of height map
      * @return model of terrain
      */
     @SuppressWarnings("ConstantConditions")
-    private RawModel generateTerrain(Loader loader, String heightMap)
+    private RawModel generateHeightmapTerrain(Loader loader, String heightMap)
     {
         BufferedImage image = null;
         try {
@@ -143,6 +161,63 @@ public class Terrain
     }
 
     /**
+     * Generates procedural terrain using a terrain generator.
+     * @param loader loader
+     * @return model of terrain
+     */
+    private RawModel generateRandomTerrain(Loader loader)
+    {
+        HeightsGenerator generator = new HeightsGenerator();
+
+        int VERTEX_COUNT = 128;
+
+        int count = VERTEX_COUNT * VERTEX_COUNT;
+        heights = new float[VERTEX_COUNT][VERTEX_COUNT];
+        float[] vertices = new float[count * 3];
+        float[] normals = new float[count * 3];
+        float[] textureCoords = new float[count * 2];
+        int[] indices = new int[6 * (VERTEX_COUNT - 1) * (VERTEX_COUNT)];
+        int vertexPointer = 0;
+        for (int i = 0; i < VERTEX_COUNT; i++)
+        {
+            for (int j = 0; j < VERTEX_COUNT; j++)
+            {
+                vertices[vertexPointer * 3] = (float) j / ((float) VERTEX_COUNT - 1) * SIZE;
+                float height = getHGHeight(j, i, generator);
+                vertices[vertexPointer * 3 + 1] = height;
+                heights[j][i] = height;
+                vertices[vertexPointer * 3 + 2] = (float) i / ((float) VERTEX_COUNT - 1) * SIZE;
+                Vector3f normal = calculateNormal(j, i, generator);
+                normals[vertexPointer * 3] = normal.x;
+                normals[vertexPointer * 3 + 1] = normal.y;
+                normals[vertexPointer * 3 + 2] = normal.z;
+                textureCoords[vertexPointer * 2] = (float) j / ((float) VERTEX_COUNT - 1);
+                textureCoords[vertexPointer * 2 + 1] = (float) i / ((float) VERTEX_COUNT - 1);
+                vertexPointer++;
+            }
+        }
+        int pointer = 0;
+        for (int gz = 0; gz < VERTEX_COUNT - 1; gz++)
+        {
+            for (int gx = 0; gx < VERTEX_COUNT - 1; gx++)
+            {
+                int topLeft = (gz * VERTEX_COUNT) + gx;
+                int topRight = topLeft + 1;
+                int bottomLeft = ((gz + 1) * VERTEX_COUNT) + gx;
+                int bottomRight = bottomLeft + 1;
+                indices[pointer++] = topLeft;
+                indices[pointer++] = bottomLeft;
+                indices[pointer++] = topRight;
+                indices[pointer++] = topRight;
+                indices[pointer++] = bottomLeft;
+                indices[pointer++] = bottomRight;
+            }
+        }
+
+        return loader.loadToVAO(vertices, textureCoords, normals, indices);
+    }
+
+    /**
      * Returns the normal of a pixel.
      * @param x x coordinate of vertex
      * @param z z coordinate of vertex
@@ -155,6 +230,25 @@ public class Terrain
         float heightR = getHeight(x + 1, z, image);
         float heightD = getHeight(x, z - 1, image);
         float heightU = getHeight(x, z + 1, image);
+        Vector3f normal = new Vector3f(heightL - heightR, 2f, heightD - heightU);
+        normal.normalise();
+
+        return normal;
+    }
+
+    /**
+     * Returns the normal of a pixel based on height generator.
+     * @param x x coordinate of vertex
+     * @param z z coordinate of vertex
+     * @param generator height generator
+     * @return normal as a Vector3f
+     */
+    private Vector3f calculateNormal(int x, int z, HeightsGenerator generator)
+    {
+        float heightL = getHGHeight(x - 1, z, generator);
+        float heightR = getHGHeight(x + 1, z, generator);
+        float heightD = getHGHeight(x, z - 1, generator);
+        float heightU = getHGHeight(x, z + 1, generator);
         Vector3f normal = new Vector3f(heightL - heightR, 2f, heightD - heightU);
         normal.normalise();
 
@@ -242,6 +336,18 @@ public class Terrain
         height *= MAX_HEIGHT;
 
         return height;
+    }
+
+    /**
+     * Returns the height of a pixel based on the height generator.
+     * @param x x coordinate of pixel
+     * @param z z coordinate of pixel
+     * @param generator height generator
+     * @return height of terrain at particular point
+     */
+    private float getHGHeight(int x, int z, HeightsGenerator generator)
+    {
+        return generator.generateHeight(x, z);
     }
 
     /**

@@ -77,6 +77,7 @@ public class MainGameLoop
 
         // ********** TERRAIN CREATION **********
         Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmapWater2");
+//        Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap);
         terrains.add(terrain);
         // **************************************
 

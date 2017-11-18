@@ -4,8 +4,6 @@ import fontRendering.TextMaster;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import javax.xml.soap.Text;
-
 /**
  * Represents a piece of text in the game.
  *

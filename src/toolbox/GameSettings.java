@@ -23,7 +23,7 @@ public class GameSettings
     /**
      * Enable/disable sky box
      */
-    public static boolean SKYBOX_ENABLED = false;
+    public static boolean SKYBOX_ENABLED = true;
 
     /**
      * Enable/disable night and day mode
