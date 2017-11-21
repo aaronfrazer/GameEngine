@@ -14,6 +14,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
 import shaders.StaticShader;
 import shaders.TerrainShader;
+import shadows.ShadowMapMasterRenderer;
 import skybox.SkyboxRenderer;
 import terrain.Terrain;
 import toolbox.GameSettings;
@@ -34,17 +35,17 @@ public class MasterRenderer
      * Field of view - the extent of the observable world
      * that is seen at any given moment
      */
-    private static final float FOV = 70;
+    public static final float FOV = 70;
 
     /**
      * Near plane - closest location that will be rendered
      */
-    private static final float NEAR_PLANE = 0.1f;
+    public static final float NEAR_PLANE = 0.1f;
 
     /**
-     * Far plane - farthest location that will be renederd
+     * Far plane - farthest location that will be rendered
      */
-    private static final float FAR_PLANE = 1000;
+    public static final float FAR_PLANE = 1000;
 
     /**
      * Projection matrix
@@ -77,6 +78,11 @@ public class MasterRenderer
     private SkyboxRenderer skyboxRenderer;
 
     /**
+     * Shadow map renderer
+     */
+    private ShadowMapMasterRenderer shadowMapRenderer;
+
+    /**
      * Renderer for entities with normal mapping
      */
     private NormalMappingRenderer normalMapRenderer;
@@ -102,7 +108,7 @@ public class MasterRenderer
      * Creates a master rendering program by initializing entity renderer and terrain renderer.
      * @param loader loader for sky box
      */
-    public MasterRenderer(Loader loader)
+    public MasterRenderer(Loader loader, Camera camera)
     {
         enableCulling();
         createProjectionMatrix();
@@ -110,6 +116,7 @@ public class MasterRenderer
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         if (GameSettings.SKYBOX_ENABLED) { skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix); }
         normalMapRenderer = new NormalMappingRenderer(projectionMatrix);
+        this.shadowMapRenderer = new ShadowMapMasterRenderer(camera);
     }
 
     /**
@@ -226,6 +233,21 @@ public class MasterRenderer
     }
 
     /**
+     * Renders all entities to the shadow map.
+     * @param entityList list of entities
+     * @param sun light
+     */
+    public void renderShadowMap(List<Entity> entityList, Light sun)
+    {
+        for (Entity entity : entityList)
+        {
+            processEntity(entity);
+        }
+        shadowMapRenderer.render(entities, sun);
+        entities.clear();
+    }
+
+    /**
      * Renders a terrain to the screen.
      * @param terrain terrain to be added
      */
@@ -310,6 +332,7 @@ public class MasterRenderer
         shader.cleanUp();
         terrainShader.cleanUp();
         normalMapRenderer.cleanUp();
+        shadowMapRenderer.cleanUp();
     }
 
     /**
@@ -317,12 +340,12 @@ public class MasterRenderer
      */
     private void createProjectionMatrix()
     {
+        projectionMatrix = new Matrix4f();
         float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
-        float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
+        float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))));
         float x_scale = y_scale / aspectRatio;
         float frustum_length = FAR_PLANE - NEAR_PLANE;
 
-        projectionMatrix = new Matrix4f();
         projectionMatrix.m00 = x_scale;
         projectionMatrix.m11 = y_scale;
         projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
@@ -358,4 +381,12 @@ public class MasterRenderer
         return FAR_PLANE;
     }
 
+    /**
+     * Returns the ID of shadow map texture.
+     * @return ID of shadow map texture
+     */
+    public int getShadowMapTexture()
+    {
+        return shadowMapRenderer.getShadowMap();
+    }
 }

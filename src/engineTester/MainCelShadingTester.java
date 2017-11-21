@@ -127,7 +127,7 @@ public class MainCelShadingTester
         cameraManager.setCurrentCamera(frcamera);
         //*************************************
 
-        MasterRenderer renderer = new MasterRenderer(loader);
+        MasterRenderer renderer = new MasterRenderer(loader, cameraManager.getCurrentCamera());
 
         //********** GUI TEXTURES **********
         List<GuiTexture> guiTextures = new ArrayList<>();
@@ -174,7 +174,7 @@ public class MainCelShadingTester
                     StaticShader.FRAGMENT_FILE = "src/shaders/fragmentShader.glsl";
                     TerrainShader.FRAGMENT_FILE = "src/shaders/terrainFragmentShader.glsl";
                     SkyboxShader.FRAGMENT_FILE = "src/skybox/skyboxFragmentShader.glsl";
-                    renderer = new MasterRenderer(loader);
+                    renderer = new MasterRenderer(loader, cameraManager.getCurrentCamera());
                     System.out.println("Cel shading is OFF");
                 } else
                 {
@@ -185,7 +185,7 @@ public class MainCelShadingTester
                     StaticShader.FRAGMENT_FILE = "src/shaders/celFragmentShader.glsl";
                     TerrainShader.FRAGMENT_FILE = "src/shaders/celTerrainFragmentShader.glsl";
                     SkyboxShader.FRAGMENT_FILE = "src/skybox/celSkyboxFragmentShader.glsl";
-                    renderer = new MasterRenderer(loader);
+                    renderer = new MasterRenderer(loader, cameraManager.getCurrentCamera());
                     System.out.println("Cel shading is ON");
                 }
             }

@@ -76,8 +76,8 @@ public class MainGameLoop
         // **************************************
 
         // ********** TERRAIN CREATION **********
-        Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmapWater2");
-//        Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap);
+//        Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmapWater2");
+        Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap);
         terrains.add(terrain);
         // **************************************
 
@@ -170,10 +170,6 @@ public class MainGameLoop
         lights.add(sun);
         // **************************************
 
-        MasterRenderer renderer = new MasterRenderer(loader);
-
-        GuiRenderer guiRenderer = new GuiRenderer(loader);
-
         // ********** CAMERA CREATION ***********
         CameraManager cameraManager = new CameraManager();
         FirstPersonCamera fpCamera = new FirstPersonCamera(player);
@@ -187,6 +183,10 @@ public class MainGameLoop
         cameraManager.setCurrentCamera(tpCamera);
         // **************************************
 
+        MasterRenderer renderer = new MasterRenderer(loader, cameraManager.getCurrentCamera());
+
+        GuiRenderer guiRenderer = new GuiRenderer(loader);
+
         MousePicker picker = new MousePicker(cameraManager.getCurrentCamera(), renderer.getProjectionMatrix(), terrain);
 
         //********** WATER RENDERING ************
@@ -196,6 +196,12 @@ public class MainGameLoop
         WaterTile water = new WaterTile(75, -75, 0);
         waters.add(water);
         // **************************************
+
+        //********** SHADOW RENDERING ************
+        GuiTexture shadowMap = new GuiTexture(renderer.getShadowMapTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
+        guiTextures.add(shadowMap);
+        // ***************************************
+
 
         //********** TEXT RENDERING *************
         TextMaster.init(loader);
@@ -310,6 +316,8 @@ public class MainGameLoop
 //            fireParticleSystem.generateParticles(new Vector3f(player.getPosition().x + 1, player.getPosition().y + 8, player.getPosition().z));
 
             ParticleMaster.update(camera);
+
+            renderer.renderShadowMap(entities, sun);
 
             entity.increaseRotation(0, 1, 0);
             entity2.increaseRotation(0, 1, 0);

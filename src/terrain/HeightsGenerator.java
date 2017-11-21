@@ -10,7 +10,7 @@ public class HeightsGenerator
     /**
      * Height of the terrain
      */
-    private static final float AMPLITUDE = 75f;
+    private static final float AMPLITUDE = 25f;
 
     /**
      * Number of noise functions used
