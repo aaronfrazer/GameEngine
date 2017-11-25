@@ -70,4 +70,15 @@ public class GameSettings
      * Brightness of the sun during nighttime/daytime hours
      */
     public static final float NIGHT_LIGHT_CONST_HOURS = 0.3f, DAY_LIGHT_CONST_HOURS = 1.0f;
+
+    /**
+     * Distance from camera at which shadows are displayed
+     * Note: increasing this value will lower the resolution of shadows
+     */
+    public static final float SHADOW_DISTANCE = 150.0f;
+
+    /**
+     * Transition period for shadows to appear.
+     */
+    public static final float TRANSITION_DISTANCE = 10.0f;
 }

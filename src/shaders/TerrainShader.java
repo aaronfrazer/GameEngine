@@ -52,6 +52,10 @@ public class TerrainShader extends ShaderProgram
     private int location_plane;
     private int location_density;
     private int location_gradient;
+    private int location_toShadowMapSpace;
+    private int location_shadowMap;
+    private int location_shadowDistance;
+    private int location_transitionDistance;
 
     /**
      * Creates a terrain shader program.
@@ -86,6 +90,10 @@ public class TerrainShader extends ShaderProgram
         location_plane = super.getUniformLocation("plane");
         location_density = super.getUniformLocation("density");
         location_gradient = super.getUniformLocation("gradient");
+        location_toShadowMapSpace = super.getUniformLocation("toShadowMapSpace");
+        location_shadowMap = super.getUniformLocation("shadowMap");
+        location_shadowDistance = super.getUniformLocation("shadowDistance");
+        location_transitionDistance = super.getUniformLocation("transitionDistance");
 
         location_lightPosition = new int[MAX_LIGHTS];
         location_lightColour = new int[MAX_LIGHTS];
@@ -105,6 +113,7 @@ public class TerrainShader extends ShaderProgram
         super.loadInt(location_gTexture, 2);
         super.loadInt(location_bTexture, 3);
         super.loadInt(location_blendMap, 4);
+        super.loadInt(location_shadowMap, 5);
     }
 
     /**
@@ -152,6 +161,32 @@ public class TerrainShader extends ShaderProgram
         super.loadFloat(location_gradient, gradient);
     }
 
+    /**
+     * Loads toShadowMapSpaceMatrix to a uniform variable (in vertex shdaer).
+     * @param matrix shadow map matrix
+     */
+    public void loadToShadowSpaceMatrix(Matrix4f matrix)
+    {
+        super.loadMatrix(location_toShadowMapSpace, matrix);
+    }
+
+    /**
+     * Loads shadowDistance to a uniform variable (in vertex shader).
+     * @param shadowDistance shadow distance
+     */
+    public void loadShadowDistance(float shadowDistance)
+    {
+        super.loadFloat(location_shadowDistance, shadowDistance);
+    }
+
+    /**
+     * Loads transitionDistance to a uniform variable (in vertex shader).
+     * @param transitionDistance transition distance
+     */
+    public void loadTransitionDistance(float transitionDistance)
+    {
+        super.loadFloat(location_transitionDistance, transitionDistance);
+    }
 
     /**
      * Loads a texture's properties to a uniform variable (in vertex shader code).

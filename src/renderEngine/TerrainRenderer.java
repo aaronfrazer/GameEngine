@@ -42,9 +42,11 @@ public class TerrainRenderer
     /**
      * Renders a list of terrains.
      * @param terrains list of terrains
+     * @param toShadowSpace shadow space matrix
      */
-    public void render(List<Terrain> terrains)
+    public void render(List<Terrain> terrains, Matrix4f toShadowSpace)
     {
+        shader.loadToShadowSpaceMatrix(toShadowSpace);
         for (Terrain terrain : terrains)
         {
             prepareTerrain(terrain);

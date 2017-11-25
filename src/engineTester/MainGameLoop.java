@@ -199,7 +199,7 @@ public class MainGameLoop
 
         //********** SHADOW RENDERING ************
         GuiTexture shadowMap = new GuiTexture(renderer.getShadowMapTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
-        guiTextures.add(shadowMap);
+//        guiTextures.add(shadowMap);
         // ***************************************
 
 

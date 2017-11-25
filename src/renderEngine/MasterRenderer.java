@@ -10,6 +10,7 @@ import models.TexturedModel;
 import normalMappingRenderer.NormalMappingRenderer;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
 import shaders.StaticShader;
@@ -221,7 +222,9 @@ public class MasterRenderer
         terrainShader.loadViewMatrix(camera);
         terrainShader.loadDensity(GameSettings.FOG_DENSITY);
         terrainShader.loadGradient(GameSettings.FOG_GRADIENT);
-        terrainRenderer.render(terrains);
+        terrainShader.loadShadowDistance(GameSettings.SHADOW_DISTANCE);
+        terrainShader.loadTransitionDistance(GameSettings.TRANSITION_DISTANCE);
+        terrainRenderer.render(terrains, shadowMapRenderer.getToShadowMapSpaceMatrix());
         terrainShader.stop();
 
         if (GameSettings.SKYBOX_ENABLED)
@@ -321,6 +324,8 @@ public class MasterRenderer
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glClearColor(GameSettings.FOG_RED, GameSettings.FOG_GREEN, GameSettings.FOG_BLUE, 1);
+        GL13.glActiveTexture(GL13.GL_TEXTURE5);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, getShadowMapTexture());
     }
 
     /**

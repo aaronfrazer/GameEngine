@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Vector4f;
 
 import entities.Camera;
 import renderEngine.MasterRenderer;
+import toolbox.GameSettings;
 
 /**
  * Represents a cubic, 3D area of the world in which objects cast
@@ -22,10 +23,12 @@ import renderEngine.MasterRenderer;
  */
 public class ShadowBox
 {
+    /**
+     * Distance from back of camera and object to allow shadow to be shown
+     */
     private static final float OFFSET = 10;
     private static final Vector4f UP = new Vector4f(0, 1, 0, 0);
     private static final Vector4f FORWARD = new Vector4f(0, 0, -1, 0);
-    private static final float SHADOW_DISTANCE = 100;
 
     private float minX, maxX;
     private float minY, maxY;
@@ -61,7 +64,7 @@ public class ShadowBox
         Vector3f forwardVector = new Vector3f(Matrix4f.transform(rotation, FORWARD, null));
 
         Vector3f toFar = new Vector3f(forwardVector);
-        toFar.scale(SHADOW_DISTANCE);
+        toFar.scale(GameSettings.SHADOW_DISTANCE);
         Vector3f toNear = new Vector3f(forwardVector);
         toNear.scale(MasterRenderer.NEAR_PLANE);
         Vector3f centerNear = Vector3f.add(toNear, cam.getPosition(), null);
@@ -226,7 +229,7 @@ public class ShadowBox
      */
     private void calculateWidthsAndHeights()
     {
-        farWidth = (float) (SHADOW_DISTANCE * Math.tan(Math.toRadians(MasterRenderer.FOV)));
+        farWidth = (float) (GameSettings.SHADOW_DISTANCE * Math.tan(Math.toRadians(MasterRenderer.FOV)));
         nearWidth = (float) (MasterRenderer.NEAR_PLANE
                 * Math.tan(Math.toRadians(MasterRenderer.FOV)));
         farHeight = farWidth / getAspectRatio();
