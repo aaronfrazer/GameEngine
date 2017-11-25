@@ -12,6 +12,7 @@ import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import models.TexturedModel;
+import toolbox.GameSettings;
 
 /**
  * This class is in charge of using all of the classes in the shadows package to
@@ -23,13 +24,6 @@ import models.TexturedModel;
  */
 public class ShadowMapMasterRenderer
 {
-    /**
-     * Resolution of shadows
-     * Note: increasing this value will affect performance
-     * TODO: Move this variable to GameSettings
-     */
-    private static final int SHADOW_MAP_SIZE = 4096;
-
     private ShadowFrameBuffer shadowFbo;
     private ShadowShader shader;
     private ShadowBox shadowBox;
@@ -53,7 +47,7 @@ public class ShadowMapMasterRenderer
     {
         shader = new ShadowShader();
         shadowBox = new ShadowBox(lightViewMatrix, camera);
-        shadowFbo = new ShadowFrameBuffer(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
+        shadowFbo = new ShadowFrameBuffer(GameSettings.SHADOW_MAP_SIZE, GameSettings.SHADOW_MAP_SIZE);
         entityRenderer = new ShadowMapEntityRenderer(shader, projectionViewMatrix);
     }
 
@@ -121,7 +115,7 @@ public class ShadowMapMasterRenderer
     /**
      * Prepare for the shadow render pass. This first updates the dimensions of
      * the orthographic "view cuboid" based on the information that was
-     * calculated in the {@link SHadowBox} class. The light's "view" matrix is
+     * calculated in the {@link ShadowBox} class. The light's "view" matrix is
      * also calculated based on the light's direction and the center position of
      * the "view cuboid" which was also calculated in the {@link ShadowBox}
      * class. These two matrices are multiplied together to create the

@@ -78,7 +78,13 @@ public class GameSettings
     public static final float SHADOW_DISTANCE = 150.0f;
 
     /**
-     * Transition period for shadows to appear.
+     * Transition period for shadows to appear
      */
     public static final float TRANSITION_DISTANCE = 10.0f;
+
+    /**
+     * Resolution of shadows
+     * Note: increasing this value will affect performance
+     */
+    public static final int SHADOW_MAP_SIZE = 4096;
 }

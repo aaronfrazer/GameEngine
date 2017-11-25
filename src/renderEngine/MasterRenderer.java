@@ -224,6 +224,7 @@ public class MasterRenderer
         terrainShader.loadGradient(GameSettings.FOG_GRADIENT);
         terrainShader.loadShadowDistance(GameSettings.SHADOW_DISTANCE);
         terrainShader.loadTransitionDistance(GameSettings.TRANSITION_DISTANCE);
+        terrainShader.loadMapSize(GameSettings.SHADOW_MAP_SIZE);
         terrainRenderer.render(terrains, shadowMapRenderer.getToShadowMapSpaceMatrix());
         terrainShader.stop();
 

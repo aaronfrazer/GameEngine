@@ -56,6 +56,7 @@ public class TerrainShader extends ShaderProgram
     private int location_shadowMap;
     private int location_shadowDistance;
     private int location_transitionDistance;
+    private int location_mapSize;
 
     /**
      * Creates a terrain shader program.
@@ -94,6 +95,7 @@ public class TerrainShader extends ShaderProgram
         location_shadowMap = super.getUniformLocation("shadowMap");
         location_shadowDistance = super.getUniformLocation("shadowDistance");
         location_transitionDistance = super.getUniformLocation("transitionDistance");
+        location_mapSize = super.getUniformLocation("mapSize");
 
         location_lightPosition = new int[MAX_LIGHTS];
         location_lightColour = new int[MAX_LIGHTS];
@@ -106,6 +108,9 @@ public class TerrainShader extends ShaderProgram
         }
     }
 
+    /**
+     * Loads terrain shader variables to their respective uniform variables in the vertex shader.
+     */
     public void connectTextureUnits()
     {
         super.loadInt(location_backgroundTexture, 0);
@@ -187,6 +192,16 @@ public class TerrainShader extends ShaderProgram
     {
         super.loadFloat(location_transitionDistance, transitionDistance);
     }
+
+    /**
+     * Loads mapSize to a uniform variable (in vertex shader).
+     * @param mapSize shadow map size
+     */
+    public void loadMapSize(float mapSize)
+    {
+        super.loadFloat(location_mapSize, mapSize);
+    }
+
 
     /**
      * Loads a texture's properties to a uniform variable (in vertex shader code).
