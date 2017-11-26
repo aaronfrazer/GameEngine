@@ -54,6 +54,11 @@ public class StaticShader extends ShaderProgram
     private int location_plane;
     private int location_density;
     private int location_gradient;
+    private int location_toShadowMapSpace;
+    private int location_shadowMap;
+    private int location_shadowDistance;
+    private int location_transitionDistance;
+    private int location_mapSize;
 
     /**
      * Creates a static shader program.
@@ -86,6 +91,11 @@ public class StaticShader extends ShaderProgram
         location_plane = super.getUniformLocation("plane");
         location_density = super.getUniformLocation("density");
         location_gradient = super.getUniformLocation("gradient");
+        location_toShadowMapSpace = super.getUniformLocation("toShadowMapSpace");
+        location_shadowMap = super.getUniformLocation("shadowMap");
+        location_shadowDistance = super.getUniformLocation("shadowDistance");
+        location_transitionDistance = super.getUniformLocation("transitionDistance");
+        location_mapSize = super.getUniformLocation("mapSize");
 
         location_lightPosition = new int[MAX_LIGHTS];
         location_lightColour = new int[MAX_LIGHTS];
@@ -96,6 +106,14 @@ public class StaticShader extends ShaderProgram
             location_lightColour[i] = super.getUniformLocation("lightColour[" + i + "]");
             location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
         }
+    }
+
+    /**
+     * Loads entity shader variables to their respective uniform variables in the vertex shader.
+     */
+    public void connectTextureUnits()
+    {
+        super.loadInt(location_shadowMap, 5);
     }
 
     /**
@@ -201,6 +219,42 @@ public class StaticShader extends ShaderProgram
     {
         Matrix4f viewMatrix = Maths.createViewMatrix(camera);
         super.loadMatrix(location_viewMatrix, viewMatrix);
+    }
+
+    /**
+     * Loads toShadowMapSpaceMatrix to a uniform variable (in vertex shdaer).
+     * @param matrix shadow map matrix
+     */
+    public void loadToShadowSpaceMatrix(Matrix4f matrix)
+    {
+        super.loadMatrix(location_toShadowMapSpace, matrix);
+    }
+
+    /**
+     * Loads shadowDistance to a uniform variable (in vertex shader).
+     * @param shadowDistance shadow distance
+     */
+    public void loadShadowDistance(float shadowDistance)
+    {
+        super.loadFloat(location_shadowDistance, shadowDistance);
+    }
+
+    /**
+     * Loads transitionDistance to a uniform variable (in vertex shader).
+     * @param transitionDistance transition distance
+     */
+    public void loadTransitionDistance(float transitionDistance)
+    {
+        super.loadFloat(location_transitionDistance, transitionDistance);
+    }
+
+    /**
+     * Loads mapSize to a uniform variable (in vertex shader).
+     * @param mapSize shadow map size
+     */
+    public void loadMapSize(float mapSize)
+    {
+        super.loadFloat(location_mapSize, mapSize);
     }
 
     /**

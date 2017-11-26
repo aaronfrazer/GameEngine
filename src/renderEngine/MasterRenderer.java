@@ -210,7 +210,10 @@ public class MasterRenderer
         shader.loadViewMatrix(camera);
         shader.loadDensity(GameSettings.FOG_DENSITY);
         shader.loadGradient(GameSettings.FOG_GRADIENT);
-        renderer.render(entities);
+        shader.loadShadowDistance(GameSettings.SHADOW_DISTANCE);
+        shader.loadTransitionDistance(GameSettings.TRANSITION_DISTANCE);
+        shader.loadMapSize(GameSettings.SHADOW_MAP_SIZE);
+        renderer.render(entities, shadowMapRenderer.getToShadowMapSpaceMatrix());
         shader.stop();
 
         normalMapRenderer.render(normalMapEntities, clipPlane, lights, camera);

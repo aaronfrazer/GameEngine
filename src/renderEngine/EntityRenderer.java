@@ -37,6 +37,7 @@ public class EntityRenderer
         this.shader = shader;
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
+        shader.connectTextureUnits();
         shader.stop();
     }
 
@@ -44,8 +45,9 @@ public class EntityRenderer
      * Renders a hash map of textured models and entities.
      * @param entities hash map of textured models and entities
      */
-    public void render(Map<TexturedModel, List<Entity>> entities)
+    public void render(Map<TexturedModel, List<Entity>> entities, Matrix4f toShadowSpace)
     {
+        shader.loadToShadowSpaceMatrix(toShadowSpace);
         if (GameSettings.WIREFRAME_ENABLED)
             GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
         else

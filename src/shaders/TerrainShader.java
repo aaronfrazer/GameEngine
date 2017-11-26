@@ -202,7 +202,6 @@ public class TerrainShader extends ShaderProgram
         super.loadFloat(location_mapSize, mapSize);
     }
 
-
     /**
      * Loads a texture's properties to a uniform variable (in vertex shader code).
      * @param damper texture's damper
