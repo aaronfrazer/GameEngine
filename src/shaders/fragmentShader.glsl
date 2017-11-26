@@ -9,14 +9,15 @@ in vec4 shadowCoords;
 
 out vec4 out_Color;
 
+uniform sampler2D shadowMap;
+uniform float mapSize;
+
 uniform sampler2D modelTexture;
 uniform vec3 lightColour[4];
 uniform vec3 attenuation[4];
 uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColour;
-uniform sampler2D shadowMap;
-uniform float mapSize;
 
 const int pcfCount = 2; // size of the pixels that should be rendered for shadows
 const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
