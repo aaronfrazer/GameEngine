@@ -22,14 +22,9 @@ public class DisplayManager
     private static final int HEIGHT = 720; // 720 is best
 
     /**
-     * X window location
+     * X and Y window location
      */
-    private static final int WINDOW_X = 0;
-
-    /**
-     * Y window location
-     */
-    private static final int WINDOW_Y = 0;
+    private static final int WINDOW_X = 0, WINDOW_Y = 0;
 
     /**
      * FPS game is run at
@@ -59,7 +54,7 @@ public class DisplayManager
         {
             Display.setLocation(WINDOW_X, WINDOW_Y); // Location of window
             Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
-            Display.create(new PixelFormat(), attribs);
+            Display.create(new PixelFormat().withSamples(8).withDepthBits(24), attribs);
             Display.setTitle("Our First Display!");
             GL11.glEnable(GL13.GL_MULTISAMPLE);
             Display.setResizable(true); // Resizable window

@@ -38,7 +38,7 @@ public class GameSettings
     /**
      * Amount of mipmapping for entities.
      */
-    public static final float MIPMAPPING = -0.8f;
+    public static final float MIPMAPPING = 0;
 
     /**
      * Fog/background color(seen only when sky box is disabled)
