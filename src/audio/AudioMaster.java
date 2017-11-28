@@ -34,10 +34,13 @@ public class AudioMaster
 
     /**
      * Sets some properties of the listener (you).
+     * @param x X position
+     * @param y Y position
+     * @param z Z position
      */
-    public static void setListenerData()
+    public static void setListenerData(float x, float y, float z)
     {
-        AL10.alListener3f(AL10.AL_POSITION, 0, 0, 0);
+        AL10.alListener3f(AL10.AL_POSITION, x, y, z);
         AL10.alListener3f(AL10.AL_VELOCITY, 0, 0, 0);
     }
 
