@@ -18,3 +18,12 @@ lwjgl_util.jar --> http://legacy.lwjgl.org/javadoc/
 PNGDecoder.jar --> http://twl.l33tlabs.org/dist/javadoc/
 <br/>
 slick-util.jar --> http://slick.ninjacave.com/javadoc/
+
+<br/>
+<br/>
+
+Next you will need to specify file extensions that should be interpreted by IntelliJ IDEA:
+<br/>
+1. File -> Settings...
+2. Build, Execution, Deployment -> Compiler
+3. Add these two lines of code to the Resource Patterns text area: "!?*.glsl" and "!?*.txt"
