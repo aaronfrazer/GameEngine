@@ -27,3 +27,13 @@ Next you will need to specify file extensions that should be interpreted by Inte
 1. File -> Settings...
 2. Build, Execution, Deployment -> Compiler
 3. Add these two lines of code to the Resource Patterns text area: "!?*.glsl" and "!?*.txt"
+
+<br/>
+<br/>
+
+How to export the game as JAR file:
+1. File -> Project Structure...
+2. Click Add (plus button) -> JAR -> From modules with dependencies...
+3. Browse to the Main class of the project (MainGameLoop)
+4. Select the directory of the MANIFEST.MF to be the Desktop.
+5. 
