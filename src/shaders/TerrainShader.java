@@ -25,12 +25,12 @@ public class TerrainShader extends ShaderProgram
     /**
      * Filepath of vertex shader
      */
-    private static final String VERTEX_FILE = "src/shaders/terrainVertexShader.glsl";
+    private static final String VERTEX_FILE = "shaders/terrainVertexShader.glsl";
 
     /**
      * Filepath of fragment shader
      */
-    public static String FRAGMENT_FILE = "src/shaders/terrainFragmentShader.glsl";
+    public static String FRAGMENT_FILE = "shaders/terrainFragmentShader.glsl";
 
     /**
      * Location of uniform variables in vertex/fragment programs

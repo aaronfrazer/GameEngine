@@ -12,12 +12,12 @@ public class GuiShader extends ShaderProgram
     /**
      * Filepath of GUI vertex shader file
      */
-    private static final String VERTEX_FILE = "src/guis/guiVertexShader.glsl";
+    private static final String VERTEX_FILE = "guis/guiVertexShader.glsl";
 
     /**
      * Filepath of GUI fragment shader file
      */
-    private static final String FRAGMENT_FILE = "src/guis/guiFragmentShader.glsl";
+    private static final String FRAGMENT_FILE = "guis/guiFragmentShader.glsl";
 
     /**
      * Location of transformation matrix variable

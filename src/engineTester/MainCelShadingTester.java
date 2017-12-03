@@ -171,9 +171,9 @@ public class MainCelShadingTester
                     GameSettings.FOG_RED = rand.nextFloat();
                     GameSettings.FOG_GREEN = rand.nextFloat();
                     GameSettings.FOG_BLUE = rand.nextFloat();
-                    StaticShader.FRAGMENT_FILE = "src/shaders/fragmentShader.glsl";
-                    TerrainShader.FRAGMENT_FILE = "src/shaders/terrainFragmentShader.glsl";
-                    SkyboxShader.FRAGMENT_FILE = "src/skybox/skyboxFragmentShader.glsl";
+                    StaticShader.FRAGMENT_FILE = "shaders/fragmentShader.glsl";
+                    TerrainShader.FRAGMENT_FILE = "shaders/terrainFragmentShader.glsl";
+                    SkyboxShader.FRAGMENT_FILE = "skybox/skyboxFragmentShader.glsl";
                     renderer = new MasterRenderer(loader, cameraManager.getCurrentCamera());
                     System.out.println("Cel shading is OFF");
                 } else
@@ -182,9 +182,9 @@ public class MainCelShadingTester
                     GameSettings.FOG_RED = 1.0f;
                     GameSettings.FOG_GREEN = 0.3f;
                     GameSettings.FOG_BLUE = 0.7f;
-                    StaticShader.FRAGMENT_FILE = "src/shaders/celFragmentShader.glsl";
-                    TerrainShader.FRAGMENT_FILE = "src/shaders/celTerrainFragmentShader.glsl";
-                    SkyboxShader.FRAGMENT_FILE = "src/skybox/celSkyboxFragmentShader.glsl";
+                    StaticShader.FRAGMENT_FILE = "shaders/celFragmentShader.glsl";
+                    TerrainShader.FRAGMENT_FILE = "shaders/celTerrainFragmentShader.glsl";
+                    SkyboxShader.FRAGMENT_FILE = "skybox/celSkyboxFragmentShader.glsl";
                     renderer = new MasterRenderer(loader, cameraManager.getCurrentCamera());
                     System.out.println("Cel shading is ON");
                 }

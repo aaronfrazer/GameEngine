@@ -14,12 +14,12 @@ public class ParticleShader extends ShaderProgram
     /**
      * Filepath of vertex shader
      */
-    private static final String VERTEX_FILE = "src/particles/particleVertexShader.glsl";
+    private static final String VERTEX_FILE = "particles/particleVertexShader.glsl";
 
     /**
      * Filepath of fragment shader
      */
-    private static final String FRAGMENT_FILE = "src/particles/particleFragmentShader.glsl";
+    private static final String FRAGMENT_FILE = "particles/particleFragmentShader.glsl";
 
     /**
      * Location of uniform variables in vertex/fragment programs

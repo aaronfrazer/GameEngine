@@ -17,12 +17,12 @@ public class WaterShader extends ShaderProgram
     /**
      * Filepath of vertex shader
      */
-    private final static String VERTEX_FILE = "src/water/waterVertexShader.glsl";
+    private final static String VERTEX_FILE = "water/waterVertexShader.glsl";
 
     /**
      * Filepath of fragment shader
      */
-    private final static String FRAGMENT_FILE = "src/water/waterFragmentShader.glsl";
+    private final static String FRAGMENT_FILE = "water/waterFragmentShader.glsl";
 
     /**
      * Location of uniform variables in vertex/fragment programs

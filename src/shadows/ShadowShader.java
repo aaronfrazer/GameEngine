@@ -14,12 +14,12 @@ public class ShadowShader extends ShaderProgram
     /**
      * Filepath of vertex shader
      */
-    private static final String VERTEX_FILE = "src/shadows/shadowVertexShader.glsl";
+    private static final String VERTEX_FILE = "shadows/shadowVertexShader.glsl";
 
     /**
      * Filepath of fragment shader
      */
-    private static final String FRAGMENT_FILE = "src/shadows/shadowFragmentShader.glsl";
+    private static final String FRAGMENT_FILE = "shadows/shadowFragmentShader.glsl";
 
     /**
      * Location of uniform variables in vertex/fragment programs

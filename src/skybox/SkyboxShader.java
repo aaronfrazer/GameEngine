@@ -17,8 +17,8 @@ public class SkyboxShader extends ShaderProgram
     /**
      * Filepath of vertex/fragment shaders
      */
-    private static final String VERTEX_FILE = "src/skybox/skyboxVertexShader.glsl";
-    public static String FRAGMENT_FILE = "src/skybox/skyboxFragmentShader.glsl";
+    private static final String VERTEX_FILE = "skybox/skyboxVertexShader.glsl";
+    public static String FRAGMENT_FILE = "skybox/skyboxFragmentShader.glsl";
 
     /**
      * Rotation speed of skybox in degrees per second

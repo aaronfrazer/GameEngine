@@ -28,12 +28,12 @@ public class NormalMappingShader extends ShaderProgram
     /**
      * Filepath of vertex shader
      */
-    private static final String VERTEX_FILE = "src/normalMappingRenderer/normalMapVShader.glsl";
+    private static final String VERTEX_FILE = "normalMappingRenderer/normalMapVShader.glsl";
 
     /**
      * Filepath of fragment shader
      */
-    private static final String FRAGMENT_FILE = "src/normalMappingRenderer/normalMapFShader.glsl";
+    private static final String FRAGMENT_FILE = "normalMappingRenderer/normalMapFShader.glsl";
 
     /**
      * Location of uniform variables in vertex/fragment shader programs

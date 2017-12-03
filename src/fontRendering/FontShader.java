@@ -14,12 +14,12 @@ public class FontShader extends ShaderProgram
     /**
      * Filepath of vertex shader
      */
-    private static final String VERTEX_FILE = "src/fontRendering/fontVertexShader.glsl";
+    private static final String VERTEX_FILE = "fontRendering/fontVertexShader.glsl";
 
     /**
      * Filepath of fragment shader
      */
-    private static final String FRAGMENT_FILE = "src/fontRendering/fontFragmentShader.glsl";
+    private static final String FRAGMENT_FILE = "fontRendering/fontFragmentShader.glsl";
 
     /**
      * Location of uniform variables in vertex/fragment programs

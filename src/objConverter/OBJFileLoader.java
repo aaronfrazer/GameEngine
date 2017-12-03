@@ -28,14 +28,6 @@ public class OBJFileLoader
      */
     public static RawModel loadOBJ(String objFileName, Loader loader)
     {
-        FileReader isr = null;
-        File objFile = new File(MODELS_LOC + objFileName + ".obj");
-        try {
-            isr = new FileReader(objFile);
-        } catch (FileNotFoundException e) {
-            System.err.println("File not found: " + MODELS_LOC + objFileName + ".obj");
-        }
-        BufferedReader reader = new BufferedReader(isr);
         String line;
         List<Vertex> vertices = new ArrayList<>();
         List<Vector2f> textures = new ArrayList<>();
@@ -43,6 +35,14 @@ public class OBJFileLoader
         List<Integer> indices = new ArrayList<>();
         try
         {
+            FileReader isr = null;
+            File objFile = new File(MODELS_LOC + objFileName + ".obj");
+            try {
+                isr = new FileReader(objFile);
+            } catch (FileNotFoundException e) {
+                System.err.println("File not found: " + MODELS_LOC + objFileName + ".obj");
+            }
+            BufferedReader reader = new BufferedReader(isr);
             while (true)
             {
                 line = reader.readLine();
