@@ -87,4 +87,9 @@ public class GameSettings
      * Note: increasing this value will affect performance
      */
     public static final int SHADOW_MAP_SIZE = 4096;
+
+    /**
+     * Contrast of the screen.
+     */
+    public static final float CONTRAST = 0.0f;
 }

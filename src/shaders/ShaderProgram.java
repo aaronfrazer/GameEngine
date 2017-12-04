@@ -203,6 +203,7 @@ public abstract class ShaderProgram
     {
         StringBuilder shaderSource = new StringBuilder();
         try {
+            System.out.println("Reading file: " + file);
             InputStream in = ShaderProgram.class.getClassLoader().getResourceAsStream(file);
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             String line;

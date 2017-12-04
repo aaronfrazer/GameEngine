@@ -24,6 +24,8 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 import particles.*;
+import postProcessing.Fbo;
+import postProcessing.PostProcessing;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -293,6 +295,11 @@ public class MainGameLoop
         magicParticleSystem.randomizeRotation();
         // **************************************
 
+        // ****** Post-processing effects *******
+        Fbo fbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_RENDER_BUFFER);
+        PostProcessing.init(loader);
+        // **************************************
+
         float time = 0;
         float CHANGE_SPEED = 0.5f;
 
@@ -343,12 +350,15 @@ public class MainGameLoop
             // render to screen
             GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
             buffers.unbindCurrentFrameBuffer();
+            fbo.bindFrameBuffer();
             renderer.renderScene(player, entities, normalMapEntities, terrains, lights, cameraManager, picker, new Vector4f(0, -1, 0, 100000));
 //            renderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
             waterRenderer.render(waters, camera, sun, waterShader);
 
             // Particles have to be rendered after 3D stuff, but before 2D stuff
             ParticleMaster.renderParticles(camera);
+            fbo.unbindFrameBuffer();
+            PostProcessing.doPostProcessing(fbo.getColourTexture());
 
             TextMaster.render(); // render text on top of everything
 
@@ -401,6 +411,8 @@ public class MainGameLoop
         }
 
         // ********* Clean Up Below *************
+        PostProcessing.cleanUp();
+        fbo.cleanUp();
         ParticleMaster.cleanUp();
         TextMaster.cleanUp();
         buffers.cleanUp();
