@@ -1,7 +1,5 @@
 package engineTester;
 
-import buttons.Button;
-import buttons.ColorButton;
 import cameras.*;
 import entities.Camera;
 import entities.Entity;
@@ -32,6 +30,7 @@ import terrain.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
+import toolbox.FPSCounter;
 import toolbox.InputHelper;
 import toolbox.MousePicker;
 import toolbox.VirtualClock;
@@ -246,6 +245,17 @@ public class MainGameLoop
         shadowText.setOutlineColour(0, 0, 0);
 //        shadowText.add();
 
+        // FPS text
+        GUIText fpsText = new GUIText("", 2, font, new Vector2f(0.96f, 0.0f), 1f, false);
+        fpsText.setColour(1, 1, 0);
+        fpsText.setDistanceFieldWidth(0.5f);
+        fpsText.setDistanceFieldEdge(0.1f);
+        fpsText.setBorderWidth(0.4f);
+        fpsText.setBorderEdge(0.5f);
+        fpsText.setOffset(0.0f, 0.0f);
+        fpsText.setOutlineColour(0, 0, 0);
+        fpsText.add();
+
         // **************************************
 
         // ********* BUTTON RENDERING ***********
@@ -298,6 +308,7 @@ public class MainGameLoop
         // ********* Game Loop Below ************
         while (!Display.isCloseRequested())
         {
+            FPSCounter.startCounter();
             VirtualClock.update();
             InputHelper.update();
             cameraManager.update(cameraManager);
@@ -400,6 +411,7 @@ public class MainGameLoop
             guiRenderer.render(guiTextures);
 
             DisplayManager.updateDisplay();
+            FPSCounter.stopCounter(fpsText);
         }
 
         // ********* Clean Up Below *************

@@ -243,7 +243,7 @@ public class Loader
      */
     public void deleteVaoFromCache(int vaoID)
     {
-        System.out.println("Deleting VAO: " + vaoID);
+//        System.out.println("Deleting VAO: " + vaoID);
         List<Integer> associatedVbos = vaoCache.remove(vaoID);
         for (int vboID : associatedVbos)
         {
