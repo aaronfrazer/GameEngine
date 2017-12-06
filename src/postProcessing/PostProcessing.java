@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL30;
 
 import models.RawModel;
 import renderEngine.Loader;
+import toolbox.GameSettings;
 
 /**
  * Represents post-processing in the game.  Post-processing is applied after an image
@@ -66,11 +67,18 @@ public class PostProcessing
     public static void doPostProcessing(int colourTexture)
     {
         start();
-        hBlur2.render(colourTexture);
-        vBlur2.render(hBlur2.getOutputTexture());
-        hBlur.render(vBlur2.getOutputTexture());
-        vBlur.render(hBlur.getOutputTexture());
-        contrastChanger.render(vBlur.getOutputTexture());
+
+        if (GameSettings.GAUSSIAN_BLUR)
+        {
+            hBlur2.render(colourTexture);
+            vBlur2.render(hBlur2.getOutputTexture());
+            hBlur.render(vBlur2.getOutputTexture());
+            vBlur.render(hBlur.getOutputTexture());
+            contrastChanger.render(vBlur.getOutputTexture());
+        } else {
+            contrastChanger.render(colourTexture);
+        }
+
         end();
     }
 

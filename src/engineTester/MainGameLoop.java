@@ -198,13 +198,6 @@ public class MainGameLoop
         waters.add(water);
         // **************************************
 
-        //********** SHADOW RENDERING ************
-        // TODO: Remove all code in here once shadows have been implemented
-        GuiTexture shadowMap = new GuiTexture(renderer.getShadowMapTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
-//        guiTextures.add(shadowMap);
-        // ***************************************
-
-
         //********** TEXT RENDERING *************
         TextMaster.init(loader);
         FontType font = new FontType(loader.loadFontTextureAtlas("candara"), new File("res/font/candara.fnt"));

@@ -36,6 +36,11 @@ public class GameSettings
     public static boolean CEL_SHADING = false;
 
     /**
+     * Enable/disable gaussian blur to screen
+     */
+    public static boolean GAUSSIAN_BLUR = false;
+
+    /**
      * Amount of mipmapping for entities.
      */
     public static final float MIPMAPPING = 0;
