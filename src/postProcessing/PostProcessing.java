@@ -1,5 +1,8 @@
 package postProcessing;
 
+import gaussianBlur.HorizontalBlur;
+import gaussianBlur.VerticalBlur;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
@@ -18,9 +21,29 @@ public class PostProcessing
     private static RawModel quad;
 
     /**
-     * Contrast changer
+     * Contrast changer stage
      */
     private static ContrastChanger contrastChanger;
+
+    /**
+     * Horizontal blur stage
+     */
+    private static HorizontalBlur hBlur;
+
+    /**
+     * Vertical blur stage
+     */
+    private static VerticalBlur vBlur;
+
+    /**
+     * Second horizontal blur stage
+     */
+    private static HorizontalBlur hBlur2;
+
+    /**
+     * Second vertical blur stage
+     */
+    private static VerticalBlur vBlur2;
 
     /**
      * Creates a 2D quad that fills up the display.
@@ -30,6 +53,10 @@ public class PostProcessing
     {
         quad = loader.loadToVAO(POSITIONS, 2);
         contrastChanger = new ContrastChanger();
+        hBlur = new HorizontalBlur(Display.getWidth() / 8, Display.getHeight() / 8);
+        vBlur = new VerticalBlur(Display.getWidth() / 8, Display.getHeight() / 8);
+        hBlur2 = new HorizontalBlur(Display.getWidth() / 2, Display.getHeight() / 2);
+        vBlur2 = new VerticalBlur(Display.getWidth() / 2, Display.getHeight() / 2);
     }
 
     /**
@@ -39,7 +66,11 @@ public class PostProcessing
     public static void doPostProcessing(int colourTexture)
     {
         start();
-        contrastChanger.render(colourTexture);
+        hBlur2.render(colourTexture);
+        vBlur2.render(hBlur2.getOutputTexture());
+        hBlur.render(vBlur2.getOutputTexture());
+        vBlur.render(hBlur.getOutputTexture());
+        contrastChanger.render(vBlur.getOutputTexture());
         end();
     }
 
@@ -49,6 +80,10 @@ public class PostProcessing
     public static void cleanUp()
     {
         contrastChanger.cleanUp();
+        hBlur.cleanUp();
+        vBlur.cleanUp();
+        hBlur2.cleanUp();
+        vBlur2.cleanUp();
     }
 
     /**

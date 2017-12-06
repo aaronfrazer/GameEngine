@@ -11,14 +11,14 @@ public class ImageRenderer
     /**
      * Frame Buffer Object
      */
-    private Fbo fbo;
+    public Fbo fbo;
 
     /**
      * Creates an image renderer to render an image to an FBO.
      * @param width width of FBO
      * @param height height of FBO
      */
-    protected ImageRenderer(int width, int height)
+    public ImageRenderer(int width, int height)
     {
         this.fbo = new Fbo(width, height, Fbo.NONE);
     }
@@ -26,14 +26,14 @@ public class ImageRenderer
     /**
      * Creates an image renderer to the screen.
      */
-    protected ImageRenderer()
+    public ImageRenderer()
     {
     }
 
     /**
      * Renders a quad to either the screen or to another FBO.
      */
-    protected void renderQuad()
+    public void renderQuad()
     {
         if (fbo != null)
         {
@@ -51,7 +51,7 @@ public class ImageRenderer
      * Returns the output texture of this ImageRenderer's FBO.
      * @return color texture of FBO
      */
-    protected int getOutputTexture()
+    public int getOutputTexture()
     {
         return fbo.getColourTexture();
     }
@@ -59,7 +59,7 @@ public class ImageRenderer
     /**
      * Cleans up resources of this ImageRenderer's FBO.
      */
-    protected void cleanUp()
+    public void cleanUp()
     {
         if (fbo != null)
         {
