@@ -35,23 +35,41 @@ public class Fbo
 
     private int frameBuffer;
 
-    private int colourTexture;
+    /**
+     * Should this frame buffer be multisampled?
+     */
+    private boolean multisample = false;
+
+    private int colorTexture;
     private int depthTexture;
 
     private int depthBuffer;
-    private int colourBuffer;
+    private int colorBuffer;
 
     /**
      * Creates an FBO with a specified width, height, and a depth buffer attachment.
-     * @param width           width of the FBO
-     * @param height          height of the FBO
-     * @param depthBufferType int indicating the type of depth buffer attachment that this FBO should use
+     * @param width           width of FBO
+     * @param height          height of FBO
+     * @param depthBufferType int indicating type of depth buffer attachment that this FBO should use
      */
     public Fbo(int width, int height, int depthBufferType)
     {
         this.width = width;
         this.height = height;
-        initialiseFrameBuffer(depthBufferType);
+        initializeFrameBuffer(depthBufferType);
+    }
+
+    /**
+     * Creates a multisampled FBO with specified dimensions.
+     * @param width width of FBO
+     * @param height height of FBO
+     */
+    public Fbo(int width, int height)
+    {
+        this.width = width;
+        this.height = height;
+        this.multisample = true;
+        initializeFrameBuffer(DEPTH_RENDER_BUFFER);
     }
 
     /**
@@ -60,10 +78,10 @@ public class Fbo
     public void cleanUp()
     {
         GL30.glDeleteFramebuffers(frameBuffer);
-        GL11.glDeleteTextures(colourTexture);
+        GL11.glDeleteTextures(colorTexture);
         GL11.glDeleteTextures(depthTexture);
         GL30.glDeleteRenderbuffers(depthBuffer);
-        GL30.glDeleteRenderbuffers(colourBuffer);
+        GL30.glDeleteRenderbuffers(colorBuffer);
     }
 
     /**
@@ -101,9 +119,9 @@ public class Fbo
      * Returns the ID of the texture containing the color buffer of this FBO.
      * @return texture ID
      */
-    public int getColourTexture()
+    public int getColorTexture()
     {
-        return colourTexture;
+        return colorTexture;
     }
 
     /**
@@ -116,13 +134,43 @@ public class Fbo
     }
 
     /**
+     * Resolves an FBO into another FBO so that there is an anti-aliased image of the scene.
+     * @param outputFbo output FBO that will be resolved into
+     */
+    public void resolveToFbo(Fbo outputFbo)
+    {
+        GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, outputFbo.frameBuffer);
+        GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, this.frameBuffer);
+        GL30.glBlitFramebuffer(0, 0, width, height, 0, 0, outputFbo.width, outputFbo.height,GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT, GL11.GL_NEAREST);
+        this.unbindFrameBuffer();
+    }
+
+    /**
+     * Resolved this FBO to the screen.
+     */
+    public void resolveToScreen()
+    {
+        GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, 0);
+        GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, this.frameBuffer);
+        GL11.glDrawBuffer(GL11.GL_BACK);
+        GL30.glBlitFramebuffer(0, 0, width, height, 0, 0, Display.getHeight(), Display.getWidth(),GL11.GL_COLOR_BUFFER_BIT, GL11.GL_NEAREST);
+        this.unbindFrameBuffer();
+    }
+
+    /**
      * Creates an FBO along with a color buffer texture attachment and possibly a depth buffer.
      * @param type type of depth buffer attachment to be attached to this FBO
      */
-    private void initialiseFrameBuffer(int type)
+    private void initializeFrameBuffer(int type)
     {
         createFrameBuffer();
-        createTextureAttachment();
+        if (multisample)
+        {
+            createMultisampleColorAttachment();
+        } else
+        {
+            createTextureAttachment();
+        }
         if (type == DEPTH_RENDER_BUFFER)
         {
             createDepthBufferAttachment();
@@ -150,15 +198,14 @@ public class Fbo
      */
     private void createTextureAttachment()
     {
-        colourTexture = GL11.glGenTextures();
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, colourTexture);
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE,
-                (ByteBuffer) null);
+        colorTexture = GL11.glGenTextures();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, colorTexture);
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, (ByteBuffer) null);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-        GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, colourTexture,
+        GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, colorTexture,
                 0);
     }
 
@@ -169,11 +216,22 @@ public class Fbo
     {
         depthTexture = GL11.glGenTextures();
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, depthTexture);
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL14.GL_DEPTH_COMPONENT24, width, height, 0, GL11.GL_DEPTH_COMPONENT,
-                GL11.GL_FLOAT, (ByteBuffer) null);
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL14.GL_DEPTH_COMPONENT24, width, height, 0, GL11.GL_DEPTH_COMPONENT, GL11.GL_FLOAT, (ByteBuffer) null);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
         GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL11.GL_TEXTURE_2D, depthTexture, 0);
+    }
+
+    /**
+     * Adds a color buffer attachment to the FBO in the form of a render buffer.
+     * This can't be used for samping in the shaders.
+     */
+    private void createMultisampleColorAttachment()
+    {
+        colorBuffer = GL30.glGenRenderbuffers();
+        GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, colorBuffer);
+        GL30.glRenderbufferStorageMultisample(GL30.GL_RENDERBUFFER, 4, GL11.GL_RGBA8, width, height);
+        GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL30.GL_RENDERBUFFER, colorBuffer);
     }
 
     /**
@@ -184,9 +242,14 @@ public class Fbo
     {
         depthBuffer = GL30.glGenRenderbuffers();
         GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, depthBuffer);
-        GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL14.GL_DEPTH_COMPONENT24, width, height);
-        GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL30.GL_RENDERBUFFER,
-                depthBuffer);
+        if (!multisample)
+        {
+            GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL14.GL_DEPTH_COMPONENT24, width, height);
+        } else
+        {
+            GL30.glRenderbufferStorageMultisample(GL30.GL_RENDERBUFFER, 4, GL14.GL_DEPTH_COMPONENT24, width, height);
+        }
+        GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL30.GL_RENDERBUFFER, depthBuffer);
     }
 
 }

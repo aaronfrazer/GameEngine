@@ -298,7 +298,8 @@ public class MainGameLoop
         // **************************************
 
         // ****** Post-processing effects *******
-        Fbo fbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_RENDER_BUFFER);
+        Fbo multisampleFbo = new Fbo(Display.getWidth(), Display.getHeight());
+        Fbo outputFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
         PostProcessing.init(loader);
         // **************************************
 
@@ -353,16 +354,16 @@ public class MainGameLoop
             // render to screen
             GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
             buffers.unbindCurrentFrameBuffer();
-            fbo.bindFrameBuffer();
+            multisampleFbo.bindFrameBuffer();
             renderer.renderScene(player, entities, normalMapEntities, terrains, lights, cameraManager, picker, new Vector4f(0, -1, 0, 100000));
 //            renderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));
             waterRenderer.render(waters, camera, sun, waterShader);
 
             // Particles have to be rendered after 3D stuff, but before 2D stuff
             ParticleMaster.renderParticles(camera);
-            fbo.unbindFrameBuffer();
-            PostProcessing.doPostProcessing(fbo.getColourTexture());
-
+            multisampleFbo.unbindFrameBuffer();
+            multisampleFbo.resolveToFbo(outputFbo);
+            PostProcessing.doPostProcessing(outputFbo.getColorTexture());
             TextMaster.render(); // render text on top of everything
 
             // Apply glowing text effect
@@ -416,7 +417,8 @@ public class MainGameLoop
 
         // ********* Clean Up Below *************
         PostProcessing.cleanUp();
-        fbo.cleanUp();
+        outputFbo.cleanUp();
+        multisampleFbo.cleanUp();
         ParticleMaster.cleanUp();
         TextMaster.cleanUp();
         buffers.cleanUp();

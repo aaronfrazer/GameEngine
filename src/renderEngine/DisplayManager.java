@@ -49,12 +49,11 @@ public class DisplayManager
         ContextAttribs attribs = new ContextAttribs(3, 3)
                 .withForwardCompatible(true)
                 .withProfileCore(true);
-
         try
         {
             Display.setLocation(WINDOW_X, WINDOW_Y); // Location of window
             Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
-            Display.create(new PixelFormat().withSamples(8).withDepthBits(24), attribs);
+            Display.create(new PixelFormat().withDepthBits(24), attribs);
             Display.setTitle("Our First Display!");
             GL11.glEnable(GL13.GL_MULTISAMPLE);
             Display.setResizable(true); // Resizable window

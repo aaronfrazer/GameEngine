@@ -53,7 +53,7 @@ public class ImageRenderer
      */
     public int getOutputTexture()
     {
-        return fbo.getColourTexture();
+        return fbo.getColorTexture();
     }
 
     /**
