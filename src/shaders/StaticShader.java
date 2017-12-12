@@ -59,6 +59,9 @@ public class StaticShader extends ShaderProgram
     private int location_shadowDistance;
     private int location_transitionDistance;
     private int location_mapSize;
+    private int location_modelTexture;
+    private int location_specularMap;
+    private int location_usesSpecularMap;
 
     /**
      * Creates a static shader program.
@@ -96,6 +99,9 @@ public class StaticShader extends ShaderProgram
         location_shadowDistance = super.getUniformLocation("shadowDistance");
         location_transitionDistance = super.getUniformLocation("transitionDistance");
         location_mapSize = super.getUniformLocation("mapSize");
+        location_modelTexture = super.getUniformLocation("modelTexture");
+        location_specularMap = super.getUniformLocation("specularMap");
+        location_usesSpecularMap = super.getUniformLocation("usesSpecularMap");
 
         location_lightPosition = new int[MAX_LIGHTS];
         location_lightColour = new int[MAX_LIGHTS];
@@ -114,6 +120,17 @@ public class StaticShader extends ShaderProgram
     public void connectTextureUnits()
     {
         super.loadInt(location_shadowMap, 5);
+        super.loadInt(location_modelTexture, 0);
+        super.loadInt(location_specularMap, 1);
+    }
+
+    /**
+     * Loads useSpecularMap variable into a uniform variable (in vertex shader code).
+     * @param useMap true if specular map is to be used
+     */
+    public void loadUseSpecularMap(boolean useMap)
+    {
+        super.loadBoolean(location_usesSpecularMap, useMap);
     }
 
     /**

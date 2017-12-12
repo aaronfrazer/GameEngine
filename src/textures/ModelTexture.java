@@ -17,6 +17,11 @@ public class ModelTexture
     private int normalMap;
 
     /**
+     * Specular map of this texture
+     */
+    private int specularMap;
+
+    /**
      * Texture's shininess
      */
     private float shineDamper = 1;
@@ -36,6 +41,11 @@ public class ModelTexture
      * Fake lighting is used for objects that need help with lighting
      */
     private boolean useFakeLighting = false;
+
+    /**
+     * Does this model have a specular map?
+     */
+    private boolean hasSpecularMap = false;
 
     /**
      * Number of rows in texture atlas
@@ -71,30 +81,12 @@ public class ModelTexture
     }
 
     /**
-     * Sets the normal map of this texture.
-     * @param normalMap normal map
-     */
-    public void setNormalMap(int normalMap)
-    {
-        this.normalMap = normalMap;
-    }
-
-    /**
      * Returns the shininess of the texture.
      * @return shininess
      */
     public float getShineDamper()
     {
         return shineDamper;
-    }
-
-    /**
-     * Sets the shininess of the texture.
-     * @param shineDamper shine damper
-     */
-    public void setShineDamper(float shineDamper)
-    {
-        this.shineDamper = shineDamper;
     }
 
     /**
@@ -107,12 +99,21 @@ public class ModelTexture
     }
 
     /**
-     * Sets the reflectivity of the texture.
-     * @param reflectivity reflectivity
+     * Returns the number of rows used by the texture atlas for this texture.
+     * @return number of rows
      */
-    public void setReflectivity(float reflectivity)
+    public int getNumberOfRows()
     {
-        this.reflectivity = reflectivity;
+        return numberOfRows;
+    }
+
+    /**
+     * Returns the specular map of this model texture.
+     * @return specular map ID
+     */
+    public int getSpecularMap()
+    {
+        return specularMap;
     }
 
     /**
@@ -125,21 +126,57 @@ public class ModelTexture
     }
 
     /**
-     * Sets the transparency of this model.
-     * @param hasTransparency true if has transparency
-     */
-    public void setHasTransparency(boolean hasTransparency)
-    {
-        this.hasTransparency = hasTransparency;
-    }
-
-    /**
      * Returns true if this model uses fake lighting
      * @return true if using fake lighting
      */
     public boolean isUseFakeLighting()
     {
         return useFakeLighting;
+    }
+
+    /**
+     * Returns true if this model texture is using a specular map.
+     * @return true if using specular map
+     */
+    public boolean hasSpecularMap()
+    {
+        return hasSpecularMap;
+    }
+
+    /**
+     * Sets the normal map of this texture.
+     * @param normalMap normal map
+     */
+    public void setNormalMap(int normalMap)
+    {
+        this.normalMap = normalMap;
+    }
+
+    /**
+     * Sets the shininess of the texture.
+     * @param shineDamper shine damper
+     */
+    public void setShineDamper(float shineDamper)
+    {
+        this.shineDamper = shineDamper;
+    }
+
+    /**
+     * Sets the reflectivity of the texture.
+     * @param reflectivity reflectivity
+     */
+    public void setReflectivity(float reflectivity)
+    {
+        this.reflectivity = reflectivity;
+    }
+
+    /**
+     * Sets the transparency of this model.
+     * @param hasTransparency true if has transparency
+     */
+    public void setHasTransparency(boolean hasTransparency)
+    {
+        this.hasTransparency = hasTransparency;
     }
 
     /**
@@ -152,19 +189,22 @@ public class ModelTexture
     }
 
     /**
-     * Returns the number of rows used by the texture atlas for this texture.
-     * @return number of rows
-     */
-    public int getNumberOfRows()
-    {
-        return numberOfRows;
-    }
-
-    /**
      * Sets the number of rows used by the texture atlas for this texture.
      * @param numberOfRows number of rows
      */
     public void setNumberOfRows(int numberOfRows) {
         this.numberOfRows = numberOfRows;
+    }
+
+    /**
+     * Sets specular/glowing information map of this model texture.
+     * Red = specular
+     * Green = glowing
+     * @param specMap ID of specular map
+     */
+    public void setExtraInfoMap(int specMap)
+    {
+        this.specularMap = specMap;
+        this.hasSpecularMap = true;
     }
 }

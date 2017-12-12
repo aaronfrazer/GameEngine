@@ -161,3 +161,8 @@ Each particle system could have a set amount of particle objects allocated
 to it when it is created.  And then you can use the same object using a boolean
 flag for when a particle is dead.  And then reset the variables in the dead
 particle when a new particle needs to be created.
+
+Specular highlights for entities:
+red = shininess
+green = glow
+blue = reflectivity (TODO: maybe later in Tutorial 46)

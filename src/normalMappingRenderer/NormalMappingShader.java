@@ -28,12 +28,12 @@ public class NormalMappingShader extends ShaderProgram
     /**
      * Filepath of vertex shader
      */
-    private static final String VERTEX_FILE = "normalMappingRenderer/normalMapVShader.glsl";
+    private static final String VERTEX_FILE = "normalMappingRenderer/normalMapVertexShader.glsl";
 
     /**
      * Filepath of fragment shader
      */
-    private static final String FRAGMENT_FILE = "normalMappingRenderer/normalMapFShader.glsl";
+    private static final String FRAGMENT_FILE = "normalMappingRenderer/normalMapFragmentShader.glsl";
 
     /**
      * Location of uniform variables in vertex/fragment shader programs
@@ -54,6 +54,8 @@ public class NormalMappingShader extends ShaderProgram
     private int location_normalMap;
     private int location_density;
     private int location_gradient;
+    private int location_specularMap;
+    private int location_usesSpecularMap;
 
     /**
      * Creates a normal mapping shader program.
@@ -88,6 +90,8 @@ public class NormalMappingShader extends ShaderProgram
         location_normalMap = super.getUniformLocation("normalMap");
         location_density = super.getUniformLocation("density");
         location_gradient = super.getUniformLocation("gradient");
+        location_specularMap = super.getUniformLocation("specularMap");
+        location_usesSpecularMap = super.getUniformLocation("usesSpecularMap");
 
         location_lightPositionEyeSpace = new int[MAX_LIGHTS];
         location_lightColour = new int[MAX_LIGHTS];
@@ -98,6 +102,25 @@ public class NormalMappingShader extends ShaderProgram
             location_lightColour[i] = super.getUniformLocation("lightColour[" + i + "]");
             location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
         }
+    }
+
+    /**
+     * Loads model's texture and normal map into uniform variable (in vertex shader).
+     */
+    protected void connectTextureUnits()
+    {
+        super.loadInt(location_modelTexture, 0);
+        super.loadInt(location_normalMap, 1);
+        super.loadInt(location_specularMap, 2);
+    }
+
+    /**
+     * Loads useSpecularMap variable into a uniform variable (in vertex shader code).
+     * @param useMap true if specular map is to be used
+     */
+    public void loadUseSpecularMap(boolean useMap)
+    {
+        super.loadBoolean(location_usesSpecularMap, useMap);
     }
 
     /**
@@ -215,15 +238,6 @@ public class NormalMappingShader extends ShaderProgram
     protected void loadClipPlane(Vector4f plane)
     {
         super.load4DVector(location_plane, plane);
-    }
-
-    /**
-     * Loads model's texture and normal map into uniform variable (in vertex shader).
-     */
-    protected void connectTextureUnits()
-    {
-        super.loadInt(location_modelTexture, 0);
-        super.loadInt(location_normalMap, 1);
     }
 
     /**

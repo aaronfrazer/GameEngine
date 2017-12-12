@@ -124,6 +124,26 @@ public class MainGameLoop
         boulderModel.getTexture().setReflectivity(0.5f);
         //***************************************
 
+        //********* SPECULAR MAP MODELS CREATION **********
+        TexturedModel cherryModel = new TexturedModel(OBJFileLoader.loadOBJ("cherryTreeModel", loader),
+                new ModelTexture(loader.loadGameTexture("cherryTreeTexture")));
+        cherryModel.getTexture().setHasTransparency(true);
+        cherryModel.getTexture().setShineDamper(10);
+        cherryModel.getTexture().setReflectivity(0.5f);
+        cherryModel.getTexture().setExtraInfoMap(loader.loadGameTexture("cherryTreeSpecular"));
+
+        TexturedModel barrelModelSpecular = new TexturedModel(ObjFileLoaderNM.loadOBJ("barrelModel", loader),
+                new ModelTexture(loader.loadGameTexture("barrelTexture")));
+        barrelModelSpecular.getTexture().setNormalMap(loader.loadGameTexture("barrelNormal"));
+        barrelModelSpecular.getTexture().setShineDamper(10);
+        barrelModelSpecular.getTexture().setReflectivity(0.5f);
+        barrelModelSpecular.getTexture().setExtraInfoMap(loader.loadGameTexture("barrelSpecular"));
+
+        TexturedModel lanternModel = new TexturedModel(OBJFileLoader.loadOBJ("lanternModel", loader),
+                new ModelTexture(loader.loadGameTexture("lanternTexture")));
+        lanternModel.getTexture().setExtraInfoMap(loader.loadGameTexture("lanternGlowing"));
+        //*************************************************
+
         // ************* ENTITIES ***************
         Random random = new Random(5666778);
         for (int i = 0; i < 60; i++)
@@ -137,11 +157,9 @@ public class MainGameLoop
                     float y = terrain.getHeightOfTerrain(x, z);
                     entities.add(new Entity(fern, 3, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 0.9f));
                 }
-
             }
             if (i % 2 == 0)
             {
-
                 float x = random.nextFloat() * 150;
                 float z = random.nextFloat() * -150;
                 if ((x <= 50 || x >= 100) && (z >= -50 || z <= -100))
@@ -150,19 +168,33 @@ public class MainGameLoop
                     entities.add(new Entity(pine, 1, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, random.nextFloat() * 0.6f + 0.8f));
                 }
             }
+            if (i % 1 == 0)
+            {
+                float x = random.nextFloat() * 150;
+                float z = random.nextFloat() * -150;
+                if ((x <= 50 || x >= 100) && (z >= -50 || z <= -100))
+                {
+                    float y = terrain.getHeightOfTerrain(x, z);
+                    entities.add(new Entity(cherryModel, 1, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, random.nextFloat() * 0.6f + 2.0f));
+                }
+            }
         }
         entities.add(new Entity(rocks, new Vector3f(75, 4.6f, -75), 0, 0, 0, 75));
         Player player = new Player(personTexturedModel, new Vector3f(75, 5, -75), 0, 100, 0, 0.6f);
         entities.add(player);
+        Entity lanternEntity = new Entity(lanternModel, new Vector3f(55, terrain.getHeightOfTerrain(55, -75), -75), 0, 0, 0, 1f);
+        entities.add(lanternEntity);
         // **************************************
 
         // ******* NORMAL MAP ENTITIES **********
-        Entity entity = new Entity(barrelModel, new Vector3f(75, 10, -75), 0, 0, 0, 1f);
+        Entity entity = new Entity(barrelModel, new Vector3f(95, 10, -75), 0, 0, 0, 1f);
+        Entity entityB = new Entity(barrelModelSpecular, new Vector3f(75, 10, -75), 0, 0, 0, 1f);
         Entity entity2 = new Entity(boulderModel, new Vector3f(85, 10, -75), 0, 0, 0, 1f);
         Entity entity3 = new Entity(crateModel, new Vector3f(65, 10, -75), 0, 0, 0, 0.04f);
-//        normalMapEntities.add(entity);
-//        normalMapEntities.add(entity2);
-//        normalMapEntities.add(entity3);
+        normalMapEntities.add(entity);
+        normalMapEntities.add(entityB);
+        normalMapEntities.add(entity2);
+        normalMapEntities.add(entity3);
         // **************************************
 
         // *********** LIGHT CREATION ***********
@@ -332,6 +364,7 @@ public class MainGameLoop
             renderer.renderShadowMap(entities, sun);
 
             entity.increaseRotation(0, 1, 0);
+            entityB.increaseRotation(0, 1, 0);
             entity2.increaseRotation(0, 1, 0);
             entity3.increaseRotation(0, 1, 0);
             GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
