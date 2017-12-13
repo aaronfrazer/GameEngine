@@ -14,6 +14,7 @@ import models.RawModel;
 import models.TexturedModel;
 import normalMappingObjConverter.ObjFileLoaderNM;
 import objConverter.OBJFileLoader;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
@@ -30,10 +31,7 @@ import terrain.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
-import toolbox.FPSCounter;
-import toolbox.InputHelper;
-import toolbox.MousePicker;
-import toolbox.VirtualClock;
+import toolbox.*;
 import water.WaterFrameBuffers;
 import water.WaterRenderer;
 import water.WaterShader;
@@ -278,7 +276,7 @@ public class MainGameLoop
 //        shadowText.add();
 
         // FPS text
-        GUIText fpsText = new GUIText("", 2, font, new Vector2f(0.96f, 0.0f), 1f, false);
+        GUIText fpsText = new GUIText("", 2, font, new Vector2f(0.95f, 0.05f), 1f, false);
         fpsText.setColour(1, 1, 0);
         fpsText.setDistanceFieldWidth(0.5f);
         fpsText.setDistanceFieldEdge(0.1f);
@@ -439,6 +437,31 @@ public class MainGameLoop
             // Glowing text
 
             // Update buttons
+
+            // Testing Gaussian Blur and Bloom Effect
+            if (InputHelper.isKeyPressed(Keyboard.KEY_G))
+            {
+                // apply gaussian blur
+                if (GameSettings.GAUSSIAN_BLUR)
+                {
+                    GameSettings.GAUSSIAN_BLUR = false;
+                } else
+                {
+                    GameSettings.GAUSSIAN_BLUR = true;
+                }
+            }
+
+            if (InputHelper.isKeyPressed(Keyboard.KEY_B))
+            {
+                // apply bloom effect
+                if (GameSettings.BLOOM_EFFECT)
+                {
+                    GameSettings.BLOOM_EFFECT = false;
+                } else
+                {
+                    GameSettings.BLOOM_EFFECT = true;
+                }
+            }
 
 //            simpleButton.update();
 //            colorButton.update();

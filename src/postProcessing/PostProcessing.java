@@ -1,5 +1,7 @@
 package postProcessing;
 
+import bloom.BrightFilter;
+import bloom.CombineFilter;
 import gaussianBlur.HorizontalBlur;
 import gaussianBlur.VerticalBlur;
 import org.lwjgl.opengl.Display;
@@ -27,6 +29,11 @@ public class PostProcessing
     private static ContrastChanger contrastChanger;
 
     /**
+     * Bright filter to apply bloom effect
+     */
+    private static BrightFilter brightFilter;
+
+    /**
      * Horizontal blur stage
      */
     private static HorizontalBlur hBlur;
@@ -47,6 +54,11 @@ public class PostProcessing
     private static VerticalBlur vBlur2;
 
     /**
+     * Combine filter
+     */
+    private static CombineFilter combineFilter;
+
+    /**
      * Creates a 2D quad that fills up the display.
      * @param loader loader
      */
@@ -54,10 +66,12 @@ public class PostProcessing
     {
         quad = loader.loadToVAO(POSITIONS, 2);
         contrastChanger = new ContrastChanger();
+        brightFilter = new BrightFilter(Display.getWidth()/2, Display.getHeight()/2);
         hBlur = new HorizontalBlur(Display.getWidth() / 8, Display.getHeight() / 8);
         vBlur = new VerticalBlur(Display.getWidth() / 8, Display.getHeight() / 8);
         hBlur2 = new HorizontalBlur(Display.getWidth() / 2, Display.getHeight() / 2);
         vBlur2 = new VerticalBlur(Display.getWidth() / 2, Display.getHeight() / 2);
+        combineFilter = new CombineFilter();
     }
 
     /**
@@ -70,13 +84,38 @@ public class PostProcessing
 
         if (GameSettings.GAUSSIAN_BLUR)
         {
-            hBlur2.render(colourTexture);
-            vBlur2.render(hBlur2.getOutputTexture());
-            hBlur.render(vBlur2.getOutputTexture());
-            vBlur.render(hBlur.getOutputTexture());
-            contrastChanger.render(vBlur.getOutputTexture());
+            if (GameSettings.BLOOM_EFFECT)
+            {
+                // apply bloom effect
+                brightFilter.render(colourTexture);
+                hBlur2.render(brightFilter.getOutputTexture());
+                vBlur2.render(hBlur2.getOutputTexture());
+                hBlur.render(vBlur2.getOutputTexture());
+                vBlur.render(hBlur.getOutputTexture());
+                VerticalBlur vBlurA = vBlur;
+                combineFilter.render(vBlurA.getOutputTexture(), vBlur.getOutputTexture());
+            } else
+            { // gaussian blur
+                hBlur2.render(colourTexture);
+                vBlur2.render(hBlur2.getOutputTexture());
+                hBlur.render(vBlur2.getOutputTexture());
+                vBlur.render(hBlur.getOutputTexture());
+                contrastChanger.render(vBlur.getOutputTexture());
+            }
         } else {
-            contrastChanger.render(colourTexture);
+            if (GameSettings.BLOOM_EFFECT)
+            { // bloom effect
+                brightFilter.render(colourTexture);
+                hBlur2.render(brightFilter.getOutputTexture());
+                vBlur2.render(hBlur2.getOutputTexture());
+                hBlur.render(vBlur2.getOutputTexture());
+                vBlur.render(hBlur.getOutputTexture());
+                contrastChanger.render(vBlur.getOutputTexture());
+                combineFilter.render(colourTexture, vBlur.getOutputTexture());
+            } else
+            { // no effects
+                contrastChanger.render(colourTexture);
+            }
         }
 
         end();
@@ -88,10 +127,12 @@ public class PostProcessing
     public static void cleanUp()
     {
         contrastChanger.cleanUp();
+        brightFilter.cleanUp();
         hBlur.cleanUp();
         vBlur.cleanUp();
         hBlur2.cleanUp();
         vBlur2.cleanUp();
+        combineFilter.cleanUp();
     }
 
     /**

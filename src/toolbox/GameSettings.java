@@ -41,6 +41,11 @@ public class GameSettings
     public static boolean GAUSSIAN_BLUR = false;
 
     /**
+     * Enable/disable bloom effect on screen
+     */
+    public static boolean BLOOM_EFFECT = true;
+
+    /**
      * Amount of mipmapping for entities.
      */
     public static final float MIPMAPPING = 0;
