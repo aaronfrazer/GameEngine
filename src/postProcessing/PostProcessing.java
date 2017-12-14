@@ -77,36 +77,23 @@ public class PostProcessing
     /**
      * Applies post-processing effect between start() and end() calls.
      * @param colourTexture color texture ID
+*      @param brightTexture bright texture ID
      */
-    public static void doPostProcessing(int colourTexture)
+    public static void doPostProcessing(int colourTexture, int brightTexture)
     {
         start();
 
         if (GameSettings.GAUSSIAN_BLUR)
         {
-            if (GameSettings.BLOOM_EFFECT)
-            {
-                // apply bloom effect
-                brightFilter.render(colourTexture);
-                hBlur2.render(brightFilter.getOutputTexture());
-                vBlur2.render(hBlur2.getOutputTexture());
-                hBlur.render(vBlur2.getOutputTexture());
-                vBlur.render(hBlur.getOutputTexture());
-                VerticalBlur vBlurA = vBlur;
-                combineFilter.render(vBlurA.getOutputTexture(), vBlur.getOutputTexture());
-            } else
-            { // gaussian blur
-                hBlur2.render(colourTexture);
-                vBlur2.render(hBlur2.getOutputTexture());
-                hBlur.render(vBlur2.getOutputTexture());
-                vBlur.render(hBlur.getOutputTexture());
-                contrastChanger.render(vBlur.getOutputTexture());
-            }
+            hBlur2.render(colourTexture);
+            vBlur2.render(hBlur2.getOutputTexture());
+            hBlur.render(vBlur2.getOutputTexture());
+            vBlur.render(hBlur.getOutputTexture());
+            contrastChanger.render(vBlur.getOutputTexture());
         } else {
             if (GameSettings.BLOOM_EFFECT)
             { // bloom effect
-                brightFilter.render(colourTexture);
-                hBlur2.render(brightFilter.getOutputTexture());
+                hBlur2.render(brightTexture);
                 vBlur2.render(hBlur2.getOutputTexture());
                 hBlur.render(vBlur2.getOutputTexture());
                 vBlur.render(hBlur.getOutputTexture());

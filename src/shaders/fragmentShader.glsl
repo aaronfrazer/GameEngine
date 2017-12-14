@@ -1,4 +1,4 @@
-#version 140
+#version 330
 
 in vec2 pass_textureCoordinates;
 in vec3 surfaceNormal;
@@ -7,7 +7,8 @@ in vec3 toCameraVector;
 in float visibility;
 in vec4 shadowCoords;
 
-out vec4 out_Color;
+layout (location = 0) out vec4 out_Color;
+layout (location = 1) out vec4 out_BrightColor;
 
 uniform sampler2D shadowMap;
 uniform float mapSize;
@@ -69,10 +70,13 @@ void main(void) {
 		discard;
 	}
 
+    out_BrightColor = vec4(0.0);
+
 	if (usesSpecularMap > 0.5) {
 	    vec4 mapInfo = texture(specularMap, pass_textureCoordinates);
 	    totalSpecular *= mapInfo.r; // red for shininess
 	    if (mapInfo.g > 0.5) { // green colors will glow
+	        out_BrightColor = textureColour + vec4(totalSpecular,1.0);
 	        totalDiffuse = vec3(1.0);
 	    }
 	}

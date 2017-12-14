@@ -330,6 +330,7 @@ public class MainGameLoop
         // ****** Post-processing effects *******
         Fbo multisampleFbo = new Fbo(Display.getWidth(), Display.getHeight());
         Fbo outputFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
+        Fbo outputFbo2 = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
         PostProcessing.init(loader);
         // **************************************
 
@@ -393,8 +394,9 @@ public class MainGameLoop
             // Particles have to be rendered after 3D stuff, but before 2D stuff
             ParticleMaster.renderParticles(camera);
             multisampleFbo.unbindFrameBuffer();
-            multisampleFbo.resolveToFbo(outputFbo);
-            PostProcessing.doPostProcessing(outputFbo.getColorTexture());
+            multisampleFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT0, outputFbo);
+            multisampleFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT1, outputFbo2);
+            PostProcessing.doPostProcessing(outputFbo.getColorTexture(), outputFbo2.getColorTexture());
             TextMaster.render(); // render text on top of everything
 
             // Apply glowing text effect
@@ -445,9 +447,11 @@ public class MainGameLoop
                 if (GameSettings.GAUSSIAN_BLUR)
                 {
                     GameSettings.GAUSSIAN_BLUR = false;
+                    System.out.println("Gaussian blur: OFF");
                 } else
                 {
                     GameSettings.GAUSSIAN_BLUR = true;
+                    System.out.println("Gaussian blur: ON");
                 }
             }
 
@@ -457,9 +461,11 @@ public class MainGameLoop
                 if (GameSettings.BLOOM_EFFECT)
                 {
                     GameSettings.BLOOM_EFFECT = false;
+                    System.out.println("Bloom Effect: OFF");
                 } else
                 {
                     GameSettings.BLOOM_EFFECT = true;
+                    System.out.println("Bloom Effect: ON");
                 }
             }
 
@@ -474,6 +480,7 @@ public class MainGameLoop
         // ********* Clean Up Below *************
         PostProcessing.cleanUp();
         outputFbo.cleanUp();
+        outputFbo2.cleanUp();
         multisampleFbo.cleanUp();
         ParticleMaster.cleanUp();
         TextMaster.cleanUp();
